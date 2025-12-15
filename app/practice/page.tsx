@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { PracticeFilters } from '@/components/practice/PracticeFilters';
 import { PracticeList } from '@/components/practice/PracticeList';
 import { practiceProblems } from '@/data/practice/problems';
@@ -8,8 +9,17 @@ import { practiceProblems } from '@/data/practice/problems';
 const topics = Array.from(new Set(practiceProblems.flatMap((p) => p.topics))).sort();
 
 export default function PracticePage() {
+  const searchParams = useSearchParams();
   const [selectedTopic, setSelectedTopic] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
+
+  // Set filters from URL params on mount
+  useEffect(() => {
+    const difficultyParam = searchParams.get('difficulty');
+    const topicParam = searchParams.get('topic');
+    if (difficultyParam) setSelectedDifficulty(difficultyParam);
+    if (topicParam) setSelectedTopic(topicParam);
+  }, [searchParams]);
 
   const filtered = useMemo(() => {
     return practiceProblems.filter((problem) => {

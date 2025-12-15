@@ -20,12 +20,7 @@ export default function PracticeDetailPage({ params }: PracticeDetailPageProps) 
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10 space-y-4">
-      <div className="space-y-1">
-        <p className="text-sm text-green-400 font-semibold">Coding Practice</p>
-        <h1 className="text-3xl font-bold text-white">{problem.title}</h1>
-        <p className="text-gray-400">Difficulty: {problem.difficulty.toUpperCase()}</p>
-      </div>
+    <div className="h-screen flex flex-col bg-gray-900">
       <PracticePlayground problem={problem} />
     </div>
   );

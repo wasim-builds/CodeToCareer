@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { topics } from '@/data/quiz/topics';
+import { practiceProblems } from '@/data/practice/problems';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuiz } from '@/contexts/QuizContext';
 import { FiSearch, FiPlay, FiBook, FiAward, FiTrendingUp, FiZap, FiTarget } from 'react-icons/fi';
@@ -84,6 +85,13 @@ export default function Home() {
                 Start Quiz
               </Link>
               <Link
+                href="/practice"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg text-lg transition-colors"
+              >
+                <FiZap className="w-5 h-5" />
+                Code Practice
+              </Link>
+              <Link
                 href="/theory"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-lg text-lg transition-colors border border-gray-600"
               >
@@ -98,7 +106,7 @@ export default function Home() {
       {/* Stats Section */}
       <section className="py-12 border-y border-gray-800">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
             <div className="text-center">
               <div className="text-4xl font-bold text-green-400 mb-2">35+</div>
               <div className="text-gray-400">Topics</div>
@@ -108,11 +116,15 @@ export default function Home() {
               <div className="text-gray-400">Questions</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-purple-400 mb-2">{progress.totalQuizzes}</div>
+              <div className="text-4xl font-bold text-purple-400 mb-2">{practiceProblems.length}</div>
+              <div className="text-gray-400">Code Problems</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-orange-400 mb-2">{progress.totalQuizzes}</div>
               <div className="text-gray-400">Quizzes Taken</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-orange-400 mb-2">
+              <div className="text-4xl font-bold text-pink-400 mb-2">
                 {progress.averageScore > 0 ? `${progress.averageScore.toFixed(0)}%` : '0%'}
               </div>
               <div className="text-gray-400">Your Avg Score</div>
@@ -207,6 +219,124 @@ export default function Home() {
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">Earn Badges</h3>
               <p className="text-gray-400">Stay motivated with streaks, badges, and achievements</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Coding Practice Section */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2">💻 Coding Practice</h2>
+              <p className="text-gray-400">Master algorithms and problem-solving with hands-on challenges</p>
+            </div>
+            <Link
+              href="/practice"
+              className="text-green-500 hover:text-green-400 font-medium flex items-center gap-1"
+            >
+              View All Problems →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Easy Problems Card */}
+            <Link
+              href="/practice?difficulty=easy"
+              className="group bg-gradient-to-br from-green-600/10 to-green-600/5 border border-green-600/30 hover:border-green-500 rounded-xl p-6 transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                  <FiZap className="w-6 h-6 text-green-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Easy</h3>
+                  <p className="text-sm text-green-400">Perfect for beginners</p>
+                </div>
+              </div>
+              <p className="text-gray-400 text-sm mb-4">
+                Start with fundamentals like arrays, strings, and basic algorithms
+              </p>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-500">15+ Problems</span>
+                <span className="text-green-500 group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </Link>
+
+            {/* Medium Problems Card */}
+            <Link
+              href="/practice?difficulty=medium"
+              className="group bg-gradient-to-br from-yellow-600/10 to-yellow-600/5 border border-yellow-600/30 hover:border-yellow-500 rounded-xl p-6 transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+                  <FiTarget className="w-6 h-6 text-yellow-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Medium</h3>
+                  <p className="text-sm text-yellow-400">Level up your skills</p>
+                </div>
+              </div>
+              <p className="text-gray-400 text-sm mb-4">
+                Tackle sliding windows, two pointers, and tree traversals
+              </p>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-500">20+ Problems</span>
+                <span className="text-yellow-500 group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </Link>
+
+            {/* Hard Problems Card */}
+            <Link
+              href="/practice?difficulty=hard"
+              className="group bg-gradient-to-br from-red-600/10 to-red-600/5 border border-red-600/30 hover:border-red-500 rounded-xl p-6 transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center">
+                  <FiAward className="w-6 h-6 text-red-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Hard</h3>
+                  <p className="text-sm text-red-400">Challenge yourself</p>
+                </div>
+              </div>
+              <p className="text-gray-400 text-sm mb-4">
+                Master dynamic programming, graphs, and advanced algorithms
+              </p>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-500">10+ Problems</span>
+                <span className="text-red-500 group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </Link>
+          </div>
+
+          {/* Featured Problem of the Day */}
+          <div className="mt-8 bg-gradient-to-r from-purple-600/10 via-blue-600/10 to-green-600/10 border border-purple-500/30 rounded-xl p-6">
+            <div className="flex items-start justify-between gap-4 flex-wrap">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm font-semibold text-purple-400">⭐ Problem of the Day</span>
+                  <span className="text-xs px-2 py-1 rounded-full font-semibold text-yellow-400 bg-yellow-400/10">
+                    MEDIUM
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Two Sum</h3>
+                <p className="text-gray-400 text-sm mb-3">
+                  Given an array of integers and a target, return indices of two numbers that add up to the target.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">Array</span>
+                  <span className="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">Hash Table</span>
+                </div>
+              </div>
+              <Link
+                href="/practice/two-sum"
+                className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors flex items-center gap-2"
+              >
+                <FiPlay className="w-4 h-4" />
+                Solve Now
+              </Link>
             </div>
           </div>
         </div>
