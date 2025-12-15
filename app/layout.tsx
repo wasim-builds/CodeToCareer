@@ -1,21 +1,24 @@
 import type { Metadata } from 'next'
-import { Gravitas_One } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { CartProvider } from '@/contexts/CartContext'
 import { WishlistProvider } from '@/contexts/WishlistContext'
 import { ThemeProvider } from '@/contexts/ThemeContext'
+import { QuizProvider } from '@/contexts/QuizContext'
+import { AuthProvider } from '@/contexts/AuthContext'
+import { GamificationProvider } from '@/contexts/GamificationContext'
+import { PracticeProvider } from '@/contexts/PracticeContext'
 
-const gravitasOne = Gravitas_One({ 
+const inter = Inter({ 
   subsets: ['latin'],
-  variable: '--font-gravitas',
-  weight: '400',
+  variable: '--font-inter',
 })
 
 export const metadata: Metadata = {
-  title: "Professor's candle-shop - Premium Handmade Candles",
-  description: 'Discover our collection of premium handmade candles for every season and occasion.',
+  title: "CodeToCareer - Master Technical Skills for Your Dream Job",
+  description: 'Your journey from code to career. Master 35+ technical topics with 5000+ interview questions. Learn theory, take quizzes, and land your dream tech job.',
 }
 
 export default function RootLayout({
@@ -25,18 +28,26 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${gravitasOne.variable} font-gravitas bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors`}>
-        <ThemeProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <Header />
-              <main className="min-h-screen">
-                {children}
-              </main>
-              <Footer />
-            </WishlistProvider>
-          </CartProvider>
-        </ThemeProvider>
+      <body className={`${inter.variable} font-inter bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors`}>
+        <AuthProvider>
+          <GamificationProvider>
+            <ThemeProvider>
+              <CartProvider>
+                <WishlistProvider>
+                  <QuizProvider>
+                    <PracticeProvider>
+                      <Header />
+                      <main className="min-h-screen">
+                        {children}
+                      </main>
+                      <Footer />
+                    </PracticeProvider>
+                  </QuizProvider>
+                </WishlistProvider>
+              </CartProvider>
+            </ThemeProvider>
+          </GamificationProvider>
+        </AuthProvider>
       </body>
     </html>
   )

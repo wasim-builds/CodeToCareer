@@ -232,8 +232,6 @@ export const products: Product[] = [
   },
 ];
 
-import { Collection } from '@/types';
-
 export const collections: Collection[] = [
   { id: '1', name: 'Christmas Special', slug: 'christmas-special' },
   { id: '2', name: 'Autumn Fever', slug: 'autumn-fever' },

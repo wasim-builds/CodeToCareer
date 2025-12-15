@@ -1,0 +1,95 @@
+import { TheoryTopic } from '@/types/theory';
+
+export const pythonTheory: TheoryTopic = {
+  topicId: 'python',
+  topicName: 'Python',
+  category: 'Languages',
+  description: 'Python programming language fundamentals and advanced concepts',
+  sections: [
+    {
+      id: 'basics',
+      title: 'Python Basics',
+      content: '',
+      subsections: [
+        { id: 'q1', title: 'What is Python and what are its key features?', content: 'Python is a high-level, interpreted programming language known for its simplicity and readability. Key features include: dynamic typing, automatic memory management, extensive standard library, support for multiple programming paradigms (OOP, functional, procedural), and cross-platform compatibility.' },
+        { id: 'q2', title: 'What are Python\'s data types?', content: 'Python has several built-in data types: Numbers (int, float, complex), Strings, Lists, Tuples, Dictionaries, Sets, Booleans, and None. Python uses dynamic typing, so variables don\'t need explicit type declarations.' },
+        { id: 'q3', title: 'What is the difference between list and tuple?', content: 'Lists are mutable (can be modified) and defined with square brackets []. Tuples are immutable (cannot be modified) and defined with parentheses (). Lists are used for collections that may change, while tuples are used for fixed collections and can be used as dictionary keys.' },
+        { id: 'q4', title: 'What is a dictionary in Python?', content: 'A dictionary is an unordered collection of key-value pairs, defined with curly braces {}. Keys must be immutable types (strings, numbers, tuples). Dictionaries are mutable and allow fast lookups by key. Example: {"name": "John", "age": 30}' },
+        { id: 'q5', title: 'What are Python\'s naming conventions?', content: 'Python follows PEP 8: variables and functions use snake_case (my_variable), classes use PascalCase (MyClass), constants use UPPER_CASE (MAX_SIZE), private attributes use leading underscore (_private), and special methods use double underscores (__init__).' },
+        { id: 'q6', title: 'What is PEP 8?', content: 'PEP 8 is Python\'s official style guide that defines coding conventions for readability and consistency. It covers indentation (4 spaces), line length (79-99 characters), naming conventions, imports organization, whitespace usage, and comments.' },
+        { id: 'q7', title: 'What is the difference between == and is?', content: '== compares values for equality, while is checks if two variables refer to the same object in memory. == uses the __eq__ method, while is checks object identity. For immutable types like strings and numbers, Python may cache objects, so is might work, but == is safer for value comparison.' },
+        { id: 'q8', title: 'What are Python\'s scope rules (LEGB)?', content: 'LEGB stands for Local, Enclosing, Global, Built-in - the order Python searches for names. Local scope is within a function, Enclosing is in nested functions, Global is at module level, and Built-in contains Python\'s built-in names. The global and nonlocal keywords can modify scope behavior.' },
+        { id: 'q9', title: 'What is a Python module?', content: 'A module is a file containing Python code (functions, classes, variables). Modules help organize code into logical units and can be imported using import statement. Python has a large standard library with many built-in modules, and you can create custom modules.' },
+        { id: 'q10', title: 'What is a Python package?', content: 'A package is a collection of modules organized in directories. A package must contain an __init__.py file (can be empty in Python 3.3+). Packages allow hierarchical organization of modules and can be imported using dot notation (package.module).' }
+      ]
+    },
+    {
+      id: 'functions',
+      title: 'Functions and Methods',
+      content: '',
+      subsections: [
+        { id: 'q11', title: 'What is a lambda function?', content: 'A lambda function is an anonymous function defined with the lambda keyword. It can take any number of arguments but only one expression. Syntax: lambda arguments: expression. Example: lambda x: x * 2. Commonly used with map(), filter(), and sorted().' },
+        { id: 'q12', title: 'What are *args and **kwargs?', content: '*args allows passing a variable number of positional arguments as a tuple. **kwargs allows passing a variable number of keyword arguments as a dictionary. They enable flexible function definitions. Example: def func(*args, **kwargs): pass' },
+        { id: 'q13', title: 'What is a decorator?', content: 'A decorator is a function that modifies or extends another function\'s behavior without permanently modifying it. Decorators use @ syntax and are applied above function definitions. They\'re useful for logging, timing, authentication, and caching.' },
+        { id: 'q14', title: 'What is a generator?', content: 'A generator is a function that returns an iterator using yield instead of return. Generators are memory-efficient as they produce values lazily (on-demand) rather than storing all values in memory. They can be used in for loops and with next() function.' },
+        { id: 'q15', title: 'What is list comprehension?', content: 'List comprehension is a concise way to create lists. Syntax: [expression for item in iterable if condition]. It\'s more readable and often faster than equivalent for loops. Example: [x*2 for x in range(10) if x % 2 == 0] creates even numbers doubled.' },
+        { id: 'q16', title: 'What is a closure?', content: 'A closure is a nested function that has access to variables in the enclosing (outer) function\'s scope, even after the outer function has finished executing. Closures are created when a nested function references a variable from its enclosing scope.' },
+        { id: 'q17', title: 'What is the difference between a function and a method?', content: 'A function is defined independently and called with its name. A method is a function that belongs to a class and is called on an instance of that class. Methods receive self (or cls for class methods) as the first parameter automatically.' },
+        { id: 'q18', title: 'What are class methods and static methods?', content: 'Class methods take cls as first parameter and can access class attributes. Defined with @classmethod. Static methods don\'t take self or cls and are defined with @staticmethod. They\'re utility functions related to the class but don\'t need instance or class data.' },
+        { id: 'q19', title: 'What is method overloading in Python?', content: 'Python doesn\'t support traditional method overloading (multiple methods with same name, different parameters). Instead, you can use default arguments, *args, **kwargs, or type checking to achieve similar functionality. Python\'s duck typing also provides flexibility.' },
+        { id: 'q20', title: 'What is recursion in Python?', content: 'Recursion is when a function calls itself. Python supports recursion but has a default recursion limit (usually 1000) to prevent stack overflow. Recursive functions need a base case to terminate. Useful for problems like tree traversal, factorial, and Fibonacci.' }
+      ]
+    },
+    {
+      id: 'oop',
+      title: 'Object-Oriented Programming',
+      content: '',
+      subsections: [
+        { id: 'q21', title: 'What is __init__ in Python?', content: '__init__ is a special method (constructor) called when an object is instantiated. It initializes the object\'s attributes. It takes self as the first parameter and any additional parameters needed for initialization. It doesn\'t return a value (implicitly returns None).' },
+        { id: 'q22', title: 'What is self in Python?', content: 'self is a reference to the current instance of the class. It\'s the first parameter of instance methods and allows access to instance attributes and methods. When calling a method, Python automatically passes the instance as self, so you don\'t pass it explicitly.' },
+        { id: 'q23', title: 'What is inheritance in Python?', content: 'Inheritance allows a class (child) to inherit attributes and methods from another class (parent). Syntax: class Child(Parent):. The child class can override parent methods and add new functionality. Python supports multiple inheritance, allowing a class to inherit from multiple parents.' },
+        { id: 'q24', title: 'What is method overriding?', content: 'Method overriding occurs when a child class defines a method with the same name as a parent class method. The child\'s method replaces the parent\'s method for instances of the child class. Use super() to call the parent\'s method from the child class.' },
+        { id: 'q25', title: 'What is the MRO (Method Resolution Order)?', content: 'MRO determines the order in which Python searches for methods in inheritance hierarchies. Python uses C3 linearization algorithm. You can view MRO using ClassName.__mro__ or ClassName.mro(). It ensures consistent method resolution in multiple inheritance scenarios.' },
+        { id: 'q26', title: 'What are magic methods (dunder methods)?', content: 'Magic methods are special methods with double underscores (__method__) that define how objects behave with built-in operations. Examples: __init__, __str__, __repr__, __len__, __add__, __eq__, __getitem__. They enable operator overloading and integration with Python\'s built-in functions.' },
+        { id: 'q27', title: 'What is __str__ vs __repr__?', content: '__str__ returns a human-readable string representation, used by str() and print(). __repr__ returns an unambiguous string representation, ideally valid Python code that could recreate the object. __repr__ is used by repr() and is the fallback for __str__ if not defined.' },
+        { id: 'q28', title: 'What is encapsulation in Python?', content: 'Encapsulation is achieved using naming conventions: single underscore (_) for protected attributes and double underscore (__) for name mangling (making attributes harder to access). Python doesn\'t have true private attributes, but these conventions signal intended usage.' },
+        { id: 'q29', title: 'What is polymorphism in Python?', content: 'Polymorphism allows objects of different types to be treated through the same interface. Python achieves this through duck typing - "if it walks like a duck and quacks like a duck, it\'s a duck." Methods can work with any object that implements the required interface, regardless of type.' },
+        { id: 'q30', title: 'What is an abstract base class (ABC)?', content: 'ABC is a class that cannot be instantiated and requires subclasses to implement abstract methods. Defined using the abc module. Use @abstractmethod decorator to mark methods that must be implemented. ABCs enforce interface contracts and help with code organization.' }
+      ]
+    },
+    {
+      id: 'advanced',
+      title: 'Advanced Python Concepts',
+      content: '',
+      subsections: [
+        { id: 'q31', title: 'What is the Global Interpreter Lock (GIL)?', content: 'GIL is a mutex that allows only one thread to execute Python bytecode at a time in CPython. This prevents true parallel execution of threads for CPU-bound tasks. GIL doesn\'t affect I/O-bound operations. To achieve parallelism, use multiprocessing instead of multithreading for CPU-bound work.' },
+        { id: 'q32', title: 'What is the difference between multiprocessing and multithreading?', content: 'Multithreading uses threads within a single process (shared memory, limited by GIL). Multiprocessing uses separate processes (separate memory, true parallelism). Use multithreading for I/O-bound tasks, multiprocessing for CPU-bound tasks. Each has overhead: threads have GIL limitation, processes have memory overhead.' },
+        { id: 'q33', title: 'What are Python iterators?', content: 'Iterators are objects that implement __iter__() and __next__() methods. They allow sequential access to elements in a collection. Iterators are memory-efficient and lazy. The iter() function creates an iterator, and next() retrieves the next item. StopIteration exception signals the end.' },
+        { id: 'q34', title: 'What is the difference between iterator and iterable?', content: 'An iterable is an object that can return an iterator (implements __iter__()). An iterator is an object that implements __iter__() and __next__(). All iterators are iterables, but not all iterables are iterators. Lists, tuples, and strings are iterables but not iterators.' },
+        { id: 'q35', title: 'What is context management (with statement)?', content: 'Context managers ensure proper setup and teardown of resources using the with statement. They implement __enter__() and __exit__() methods. The with statement automatically calls __enter__() at the start and __exit__() at the end, even if an exception occurs. Useful for file handling, database connections.' },
+        { id: 'q36', title: 'What are Python exceptions?', content: 'Exceptions are errors detected during execution. Python has built-in exceptions (ValueError, TypeError, KeyError, etc.) and allows custom exceptions. Use try/except/finally blocks to handle exceptions. The raise statement raises exceptions, and except clauses catch and handle them.' },
+        { id: 'q37', title: 'What is exception handling best practice?', content: 'Best practices: catch specific exceptions rather than bare except, use finally for cleanup, don\'t suppress exceptions silently, provide meaningful error messages, use else clause for code that runs when no exception occurs, and create custom exceptions for domain-specific errors.' },
+        { id: 'q38', title: 'What is Python\'s memory management?', content: 'Python uses automatic memory management with reference counting and garbage collection. Reference counting tracks object references and frees memory when count reaches zero. Garbage collector handles circular references. Objects are stored on the heap, and variables are references to objects.' },
+        { id: 'q39', title: 'What are Python metaclasses?', content: 'Metaclasses are classes of classes. They define how classes are created. The default metaclass is type. You can create custom metaclasses by inheriting from type and overriding __new__ or __init__. Metaclasses are advanced and used for frameworks, ORMs, and code generation.' },
+        { id: 'q40', title: 'What is monkey patching?', content: 'Monkey patching is dynamically modifying or extending a class or module at runtime. You can add, modify, or replace methods or attributes after the class is defined. While flexible, it can make code harder to understand and maintain. Use sparingly and document well.' }
+      ]
+    },
+    {
+      id: 'libraries',
+      title: 'Python Libraries and Tools',
+      content: '',
+      subsections: [
+        { id: 'q41', title: 'What is pip?', content: 'pip is Python\'s package installer. It installs packages from PyPI (Python Package Index) and other repositories. Common commands: pip install package, pip uninstall package, pip list (show installed), pip freeze (show with versions), pip show package (package info). Use virtual environments to manage dependencies.' },
+        { id: 'q42', title: 'What are virtual environments?', content: 'Virtual environments isolate Python packages for different projects. Created with python -m venv env_name or virtualenv. Activate with source env_name/bin/activate (Linux/Mac) or env_name\\Scripts\\activate (Windows). They prevent package conflicts between projects and allow different Python versions.' },
+        { id: 'q43', title: 'What is the difference between pip and conda?', content: 'pip is Python\'s standard package manager for PyPI packages. conda is a cross-language package manager that can install Python packages and non-Python dependencies. conda manages environments and can install different Python versions. pip is simpler for pure Python projects, conda is better for data science with C dependencies.' },
+        { id: 'q44', title: 'What is requirements.txt?', content: 'requirements.txt lists project dependencies with versions. Generated with pip freeze > requirements.txt. Install with pip install -r requirements.txt. It ensures consistent environments across development, testing, and production. Can specify version ranges (package>=1.0,<2.0).' },
+        { id: 'q45', title: 'What is __pycache__?', content: '__pycache__ is a directory containing compiled Python bytecode (.pyc files). Python creates these for faster module loading. Bytecode is platform-independent but Python-version-specific. You can delete __pycache__ directories - Python will regenerate them. Often added to .gitignore.' },
+        { id: 'q46', title: 'What is __init__.py used for?', content: '__init__.py marks a directory as a Python package. It can be empty or contain initialization code. In Python 3.3+, __init__.py is optional for implicit namespace packages, but it\'s still recommended. It can define __all__ to control from package import * behavior.' },
+        { id: 'q47', title: 'What is the difference between import and from import?', content: 'import module imports the entire module, access with module.function(). from module import function imports specific items directly. from module import * imports all (not recommended). import is clearer about namespaces, from import is more concise but can cause name conflicts.' },
+        { id: 'q48', title: 'What is if __name__ == "__main__"?', content: 'This idiom allows code to run only when the script is executed directly, not when imported as a module. It\'s the entry point for scripts. Code under this block runs when python script.py is called, but not when the module is imported. Useful for testing and script execution.' },
+        { id: 'q49', title: 'What is Python\'s standard library?', content: 'Python\'s standard library includes modules for common tasks: os (operating system), sys (system parameters), datetime (dates/times), json (JSON handling), re (regular expressions), collections (specialized containers), itertools (iterators), functools (functional tools), and many more. No installation needed.' },
+        { id: 'q50', title: 'What are Python best practices?', content: 'Follow PEP 8 style guide, use virtual environments, write docstrings, use type hints (Python 3.5+), handle exceptions properly, use list comprehensions for readability, prefer explicit over implicit, follow DRY (Don\'t Repeat Yourself), write unit tests, use meaningful variable names, and keep functions small and focused.' }
+      ]
+    }
+  ]
+};

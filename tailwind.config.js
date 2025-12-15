@@ -23,8 +23,8 @@ module.exports = {
         },
       },
       fontFamily: {
-        'gravitas': ['var(--font-gravitas)', 'cursive'],
-        'sans': ['var(--font-gravitas)', 'cursive'],
+        'inter': ['var(--font-inter)', 'sans-serif'],
+        'sans': ['var(--font-inter)', 'sans-serif'],
       },
     },
   },
