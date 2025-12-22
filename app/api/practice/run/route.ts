@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Script, createContext } from 'node:vm';
+import { exec } from 'node:child_process';
+import { promisify } from 'node:util';
+import { writeFile, mkdir } from 'node:fs/promises';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
+
+const execAsync = promisify(exec);
 
 export const runtime = 'nodejs';
 
 interface RunPayload {
-  language: 'javascript' | 'typescript';
+  language: 'javascript' | 'typescript' | 'python' | 'java' | 'cpp' | 'c' | 'csharp';
   code: string;
   functionName: string;
   tests: {
@@ -15,7 +22,7 @@ interface RunPayload {
   }[];
 }
 
-const EXECUTION_TIMEOUT_MS = 800;
+const EXECUTION_TIMEOUT_MS = 5000;
 
 function buildFunction(code: string) {
   const context = createContext({ module: { exports: {} }, exports: {} });
@@ -51,6 +58,151 @@ function deepEqual(a: unknown, b: unknown): boolean {
     return aKeys.every((key) => deepEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key]));
   }
   return false;
+}
+
+async function runPythonCode(code: string, functionName: string, test: RunPayload['tests'][number]) {
+  const tempDir = join(tmpdir(), `py-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+  await mkdir(tempDir, { recursive: true });
+  
+  try {
+    const args = getArgs(test.input);
+    const sourceFile = join(tempDir, 'solution.py');
+    
+    const pythonCode = `
+import json
+import sys
+
+${code}
+
+if __name__ == '__main__':
+    try:
+        args = ${JSON.stringify(args)}
+        result = ${functionName}(*args)
+        print(json.dumps(result, default=str))
+    except Exception as e:
+        print(json.dumps({"error": str(e)}), file=sys.stderr)
+        sys.exit(1)
+`;
+    
+    await writeFile(sourceFile, pythonCode);
+    const { stdout, stderr } = await execAsync(`python3 "${sourceFile}"`, { 
+      timeout: EXECUTION_TIMEOUT_MS,
+      cwd: tempDir 
+    });
+    
+    if (stderr && stderr.includes('"error"')) {
+      const errorData = JSON.parse(stderr);
+      throw new Error(errorData.error);
+    }
+    
+    const actual = JSON.parse(stdout.trim());
+    const pass = deepEqual(actual, test.output);
+    
+    return { id: test.id, pass, expected: test.output, actual, type: test.type };
+  } catch (error: any) {
+    return {
+      id: test.id,
+      pass: false,
+      expected: test.output,
+      actual: null,
+      type: test.type,
+      error: error.message || 'Execution error',
+    };
+  } finally {
+    await execAsync(`rm -rf "${tempDir}"`).catch(() => {});
+  }
+}
+
+async function runJavaCode(code: string, functionName: string, test: RunPayload['tests'][number]) {
+  const tempDir = join(tmpdir(), `java-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+  await mkdir(tempDir, { recursive: true });
+  
+  try {
+    const args = getArgs(test.input);
+    const argsJson = JSON.stringify(args);
+    
+    // Extract class name from code
+    const classMatch = code.match(/class\s+(\w+)/);
+    const className = classMatch ? classMatch[1] : 'Solution';
+    
+    const sourceFile = join(tempDir, `${className}.java`);
+    const mainFile = join(tempDir, 'Main.java');
+    
+    await writeFile(sourceFile, code);
+    
+    const mainCode = `
+import com.google.gson.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+            Gson gson = new Gson();
+            String result = gson.toJson(new int[]{0, 1}); // Placeholder
+            System.out.println(result);
+        } catch (Exception e) {
+            System.err.println("{\\"error\\": \\"" + e.getMessage() + "\\"}");
+            System.exit(1);
+        }
+    }
+}
+`;
+    await writeFile(mainFile, mainCode);
+    
+    // For now, return a simplified response
+    return {
+      id: test.id,
+      pass: false,
+      expected: test.output,
+      actual: null,
+      type: test.type,
+      error: 'Java execution requires additional setup (Gson library). Use JavaScript/TypeScript/Python for now.',
+    };
+  } catch (error: any) {
+    return {
+      id: test.id,
+      pass: false,
+      expected: test.output,
+      actual: null,
+      type: test.type,
+      error: error.message,
+    };
+  } finally {
+    await execAsync(`rm -rf "${tempDir}"`).catch(() => {});
+  }
+}
+
+async function runCppCode(code: string, functionName: string, test: RunPayload['tests'][number]) {
+  return {
+    id: test.id,
+    pass: false,
+    expected: test.output,
+    actual: null,
+    type: test.type,
+    error: 'C++ execution requires additional setup. Use JavaScript/TypeScript/Python for now.',
+  };
+}
+
+async function runCCode(code: string, functionName: string, test: RunPayload['tests'][number]) {
+  return {
+    id: test.id,
+    pass: false,
+    expected: test.output,
+    actual: null,
+    type: test.type,
+    error: 'C execution requires additional setup. Use JavaScript/TypeScript/Python for now.',
+  };
+}
+
+async function runCSharpCode(code: string, functionName: string, test: RunPayload['tests'][number]) {
+  return {
+    id: test.id,
+    pass: false,
+    expected: test.output,
+    actual: null,
+    type: test.type,
+    error: 'C# execution requires additional setup. Use JavaScript/TypeScript/Python for now.',
+  };
 }
 
 async function runSingleTest(fn: (...args: unknown[]) => unknown | Promise<unknown>, test: RunPayload['tests'][number]) {
@@ -92,7 +244,7 @@ export async function POST(req: NextRequest) {
 
   const { language, code, functionName, tests } = payload;
 
-  if (!['javascript', 'typescript'].includes(language)) {
+  if (!['javascript', 'typescript', 'python', 'java', 'cpp', 'c', 'csharp'].includes(language)) {
     return NextResponse.json({ error: 'Unsupported language' }, { status: 400 });
   }
 
@@ -105,15 +257,40 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const fn = buildFunction(code);
-    if (fn.name && functionName && fn.name !== functionName) {
-      // Non-blocking, but helpful to catch wrong export
-    }
-
-    const results = [] as Awaited<ReturnType<typeof runSingleTest>>[];
-    for (const test of tests) {
-      const res = await runSingleTest(fn, test);
-      results.push(res);
+    const results = [] as any[];
+    
+    if (language === 'python') {
+      for (const test of tests) {
+        const res = await runPythonCode(code, functionName, test);
+        results.push(res);
+      }
+    } else if (language === 'java') {
+      for (const test of tests) {
+        const res = await runJavaCode(code, functionName, test);
+        results.push(res);
+      }
+    } else if (language === 'cpp') {
+      for (const test of tests) {
+        const res = await runCppCode(code, functionName, test);
+        results.push(res);
+      }
+    } else if (language === 'c') {
+      for (const test of tests) {
+        const res = await runCCode(code, functionName, test);
+        results.push(res);
+      }
+    } else if (language === 'csharp') {
+      for (const test of tests) {
+        const res = await runCSharpCode(code, functionName, test);
+        results.push(res);
+      }
+    } else {
+      // JavaScript/TypeScript - use VM
+      const fn = buildFunction(code);
+      for (const test of tests) {
+        const res = await runSingleTest(fn, test);
+        results.push(res);
+      }
     }
 
     return NextResponse.json({ results });

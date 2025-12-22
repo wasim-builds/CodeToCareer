@@ -20,6 +20,7 @@ export interface GamificationData {
   level: number;
   badges: Badge[];
   quizzesCompletedToday: number;
+  activityDates: string[]; // Array of date strings with activity
 }
 
 interface GamificationContextType {
@@ -65,6 +66,7 @@ const initialData: GamificationData = {
   level: 1,
   badges: defaultBadges,
   quizzesCompletedToday: 0,
+  activityDates: [],
 };
 
 const GamificationContext = createContext<GamificationContextType | undefined>(undefined);
@@ -106,9 +108,14 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
     const today = new Date().toDateString();
     const lastActivity = data.lastActivityDate;
 
+    // Add today to activity dates if not already there
+    const activityDates = data.activityDates.includes(today) 
+      ? data.activityDates 
+      : [...data.activityDates, today];
+
     if (lastActivity === today) {
       // Already counted today
-      saveData({ ...data, quizzesCompletedToday: data.quizzesCompletedToday + 1 });
+      saveData({ ...data, quizzesCompletedToday: data.quizzesCompletedToday + 1, activityDates });
       return;
     }
 
@@ -133,6 +140,7 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
       longestStreak: newLongest,
       lastActivityDate: today,
       quizzesCompletedToday: 1,
+      activityDates,
     });
   };
 

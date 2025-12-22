@@ -14,7 +14,7 @@ export interface PracticeTestCase {
 }
 
 export interface PracticeStarterCode {
-  language: 'javascript' | 'typescript';
+  language: 'javascript' | 'typescript' | 'python' | 'java' | 'cpp';
   code: string;
   functionName: string;
 }
@@ -32,12 +32,16 @@ export interface PracticeProblem {
   starterCode: PracticeStarterCode[];
   tests: PracticeTestCase[];
   solution: string;
+  /**
+   * Optional: Track if the user has solved this problem
+   */
+  solved?: boolean;
 }
 
 export interface PracticeAttempt {
   problemId: string;
   status: 'passed' | 'failed';
-  language: 'javascript' | 'typescript';
+  language: 'javascript' | 'typescript' | 'python' | 'java' | 'cpp';
   code: string;
   runtimeMs?: number;
   createdAt: string;

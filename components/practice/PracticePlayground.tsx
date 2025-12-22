@@ -29,8 +29,34 @@ const SUPPORTED_LANGUAGES = [
 ];
 
 export function PracticePlayground({ problem }: PracticePlaygroundProps) {
-  const [selectedLanguage, setSelectedLanguage] = useState('python');
-  const [code, setCode] = useState(getStarterCode('python'));
+  // Language icons mapping
+  const LANGUAGE_CONFIG: Record<string, { label: string; icon: string }> = {
+    python: { label: 'Python', icon: '🐍' },
+    javascript: { label: 'JavaScript', icon: '📜' },
+    typescript: { label: 'TypeScript', icon: '📘' },
+    java: { label: 'Java', icon: '☕' },
+    cpp: { label: 'C++', icon: '⚙️' },
+    c: { label: 'C', icon: '🔧' },
+    csharp: { label: 'C#', icon: '💜' },
+  };
+
+  // Get available languages from problem's starter code
+  const availableLanguages = useMemo(() => 
+    problem.starterCode.map(sc => ({
+      value: sc.language,
+      label: LANGUAGE_CONFIG[sc.language]?.label || sc.language,
+      icon: LANGUAGE_CONFIG[sc.language]?.icon || '📝'
+    })),
+    [problem.starterCode]
+  );
+
+  // Initialize with first available language from problem
+  const initialLanguage = problem.starterCode[0]?.language || 'javascript';
+  const [selectedLanguage, setSelectedLanguage] = useState(initialLanguage);
+  const [code, setCode] = useState(() => {
+    const starterCode = problem.starterCode.find(s => s.language === initialLanguage);
+    return starterCode?.code || '';
+  });
   const [results, setResults] = useState<RunResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [activeTab, setActiveTab] = useState<'description' | 'submissions'>('description');
@@ -38,16 +64,19 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
   const { addAttempt, getAttemptsForProblem } = usePractice();
 
   function getStarterCode(lang: string): string {
-    const templates: Record<string, string> = {
-      python: `def ${problem.starterCode[0]?.functionName || 'solution'}(nums, target):\n    # Write your code here\n    pass`,
-      javascript: `function ${problem.starterCode[0]?.functionName || 'solution'}(nums, target) {\n    // Write your code here\n}\n\nmodule.exports = ${problem.starterCode[0]?.functionName || 'solution'};`,
-      typescript: `function ${problem.starterCode[0]?.functionName || 'solution'}(nums: number[], target: number): number[] {\n    // Write your code here\n    return [];\n}\n\nexport default ${problem.starterCode[0]?.functionName || 'solution'};`,
-      java: `class Solution {\n    public int[] ${problem.starterCode[0]?.functionName || 'solution'}(int[] nums, int target) {\n        // Write your code here\n        return new int[]{};\n    }\n}`,
-      cpp: `#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> ${problem.starterCode[0]?.functionName || 'solution'}(vector<int>& nums, int target) {\n        // Write your code here\n        return {};\n    }\n};`,
-      c: `#include <stdlib.h>\n\nint* ${problem.starterCode[0]?.functionName || 'solution'}(int* nums, int numsSize, int target, int* returnSize) {\n    // Write your code here\n    *returnSize = 0;\n    return NULL;\n}`,
-      csharp: `public class Solution {\n    public int[] ${problem.starterCode[0]?.functionName || 'Solution'}(int[] nums, int target) {\n        // Write your code here\n        return new int[]{};\n    }\n}`,
-    };
-    return templates[lang] || templates.python;
+    // Try to find the starter code for the selected language
+    const starterForLang = problem.starterCode.find(s => s.language === lang);
+    if (starterForLang) {
+      return starterForLang.code;
+    }
+    
+    // Fallback to first available language if selected language not found
+    if (problem.starterCode.length > 0) {
+      return problem.starterCode[0].code;
+    }
+    
+    // Ultimate fallback
+    return `// No starter code available for ${lang}`;
   }
 
   const passCount = results.filter((r) => r.pass).length;
@@ -115,7 +144,7 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
   }
 
   function handleLanguageChange(lang: string) {
-    setSelectedLanguage(lang);
+    setSelectedLanguage(lang as any);
     setCode(getStarterCode(lang));
   }
 
@@ -330,7 +359,7 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
                         </div>
                         <div className="flex items-center gap-4 text-xs text-gray-400">
                           <span className="px-2 py-1 bg-gray-700 rounded">
-                            {SUPPORTED_LANGUAGES.find((l) => l.value === attempt.language)?.label || attempt.language}
+                            {availableLanguages.find((l) => l.value === attempt.language)?.label || attempt.language}
                           </span>
                           {attempt.runtimeMs !== undefined && <span>Runtime: {attempt.runtimeMs}ms</span>}
                         </div>
@@ -350,7 +379,7 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
             <div className="relative group">
               <button className="flex items-center gap-2 px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded text-sm transition-colors">
                 <FiCode className="w-4 h-4" />
-                <span>{SUPPORTED_LANGUAGES.find((l) => l.value === selectedLanguage)?.label || 'Select Language'}</span>
+                <span>{availableLanguages.find((l) => l.value === selectedLanguage)?.label || 'Select Language'}</span>
                 <FiChevronDown className="w-4 h-4" />
               </button>
               

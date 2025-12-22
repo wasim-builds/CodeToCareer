@@ -4,10 +4,13 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { FiUser, FiMail, FiPhone, FiCalendar, FiAward, FiTrendingUp, FiEdit2, FiSave, FiX, FiLogOut, FiArrowLeft } from 'react-icons/fi'
+import { useGamification } from '@/contexts/GamificationContext'
+import { ActivityCalendar } from '@/components/ActivityCalendar'
+import { FiUser, FiMail, FiPhone, FiCalendar, FiAward, FiTrendingUp, FiEdit2, FiSave, FiX, FiLogOut, FiArrowLeft, FiTarget } from 'react-icons/fi'
 
 export default function ProfilePage() {
   const { user, isLoading, updateProfile, logout } = useAuth()
+  const { data: gamificationData, achievements } = useGamification()
   const router = useRouter()
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
@@ -139,7 +142,83 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Activity Calendar */}
+        <ActivityCalendar />
+{/* Achievements Section */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mt-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Achievements</h2>
+            <div className="flex items-center gap-2 bg-purple-50 dark:bg-purple-900/20 px-3 py-1.5 rounded-lg">
+              <FiAward className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+              <span className="text-sm font-semibold text-purple-600 dark:text-purple-400">
+                {gamificationData.badges.length} Unlocked
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {achievements.map((achievement) => {
+              const isUnlocked = gamificationData.badges.includes(achievement.id);
+              const progress = achievement.type === 'quizzes' 
+                ? (user?.quizzesTaken || 0) 
+                : achievement.type === 'streak'
+                ? gamificationData.currentStreak
+                : achievement.type === 'score'
+                ? (user?.averageScore || 0)
+                : 0;
+              
+              const progressPercent = Math.min((progress / achievement.requirement) * 100, 100);
+
+              return (
+                <div
+                  key={achievement.id}
+                  className={`
+                    relative group flex flex-col items-center p-4 rounded-xl border-2 transition-all
+                    ${isUnlocked 
+                      ? 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border-yellow-300 dark:border-yellow-700 hover:scale-105' 
+                      : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 opacity-60'
+                    }
+                  `}
+                >
+                  <div className={`text-4xl mb-2 ${!isUnlocked && 'grayscale opacity-40'}`}>
+                    {achievement.icon}
+                  </div>
+                  <h3 className="text-xs font-semibold text-center text-gray-900 dark:text-white mb-1">
+                    {achievement.name}
+                  </h3>
+                  <p className="text-xs text-center text-gray-500 dark:text-gray-400">
+                    {achievement.description}
+                  </p>
+                  
+                  {!isUnlocked && (
+                    <div className="mt-2 w-full">
+                      <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
+                        <div 
+                          className="bg-green-500 h-1.5 rounded-full transition-all"
+                          style={{ width: `${progressPercent}%` }}
+                        />
+                      </div>
+                      <p className="text-xs text-center text-gray-500 dark:text-gray-400 mt-1">
+                        {progress}/{achievement.requirement}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {isUnlocked && (
+                    <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
           {/* User Details */}
           <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Personal Information</h2>
