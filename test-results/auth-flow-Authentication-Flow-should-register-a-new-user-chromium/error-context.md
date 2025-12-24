@@ -1,0 +1,123 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "CodeToCareer" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e6]:
+        - button "Switch to dark mode" [ref=e7] [cursor=pointer]:
+          - img [ref=e8]
+        - link "Login" [ref=e10] [cursor=pointer]:
+          - /url: /login
+          - img [ref=e11]
+          - generic [ref=e14]: Login
+  - main [ref=e15]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - link "Back to home" [ref=e19] [cursor=pointer]:
+          - /url: /
+          - img [ref=e20]
+          - text: Back to home
+        - heading "Create Account" [level=2] [ref=e22]
+        - paragraph [ref=e23]: Sign up to start learning
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - generic [ref=e27]: Full Name
+            - generic [ref=e28]:
+              - generic:
+                - img
+              - textbox "Full Name" [ref=e29]:
+                - /placeholder: Enter your full name
+                - text: Test User
+          - generic [ref=e30]:
+            - generic [ref=e31]: Email Address
+            - generic [ref=e32]:
+              - generic:
+                - img
+              - textbox "Email Address" [ref=e33]:
+                - /placeholder: Enter your email
+                - text: test@example.com
+          - generic [ref=e34]:
+            - generic [ref=e35]: Password
+            - generic [ref=e36]:
+              - generic:
+                - img
+              - textbox "Password" [ref=e37]:
+                - /placeholder: Create a password
+                - text: password123
+          - generic [ref=e38]:
+            - generic [ref=e39]: Confirm Password
+            - generic [ref=e40]:
+              - generic:
+                - img
+              - textbox "Confirm Password" [active] [ref=e41]:
+                - /placeholder: Confirm your password
+        - button "Sign up" [ref=e43] [cursor=pointer]
+        - paragraph [ref=e45]:
+          - text: Already have an account?
+          - link "Sign in" [ref=e46] [cursor=pointer]:
+            - /url: /login
+  - contentinfo [ref=e47]:
+    - generic [ref=e48]:
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - link "CodeToCareer" [ref=e51] [cursor=pointer]:
+            - /url: /
+          - paragraph [ref=e52]: Your journey from code to career starts here. Master technical skills with 35+ topics, 5000+ interview questions, and gamified learning.
+          - generic [ref=e53]:
+            - link [ref=e54] [cursor=pointer]:
+              - /url: https://github.com
+              - img [ref=e55]
+            - link [ref=e57] [cursor=pointer]:
+              - /url: https://twitter.com
+              - img [ref=e58]
+            - link [ref=e60] [cursor=pointer]:
+              - /url: https://linkedin.com
+              - img [ref=e61]
+            - link [ref=e65] [cursor=pointer]:
+              - /url: mailto:contact@codetocareer.com
+              - img [ref=e66]
+        - generic [ref=e69]:
+          - heading "Quick Links" [level=3] [ref=e70]
+          - list [ref=e71]:
+            - listitem [ref=e72]:
+              - link "Start Quiz" [ref=e73] [cursor=pointer]:
+                - /url: /quiz
+            - listitem [ref=e74]:
+              - link "Theory Learning" [ref=e75] [cursor=pointer]:
+                - /url: /theory
+            - listitem [ref=e76]:
+              - link "My Profile" [ref=e77] [cursor=pointer]:
+                - /url: /profile
+            - listitem [ref=e78]:
+              - link "Login" [ref=e79] [cursor=pointer]:
+                - /url: /login
+        - generic [ref=e80]:
+          - heading "Popular Topics" [level=3] [ref=e81]
+          - list [ref=e82]:
+            - listitem [ref=e83]:
+              - link "Python" [ref=e84] [cursor=pointer]:
+                - /url: /quiz/python
+            - listitem [ref=e85]:
+              - link "JavaScript" [ref=e86] [cursor=pointer]:
+                - /url: /quiz/javascript
+            - listitem [ref=e87]:
+              - link "React" [ref=e88] [cursor=pointer]:
+                - /url: /quiz/react
+            - listitem [ref=e89]:
+              - link "DSA" [ref=e90] [cursor=pointer]:
+                - /url: /quiz/dsa
+            - listitem [ref=e91]:
+              - link "SQL" [ref=e92] [cursor=pointer]:
+                - /url: /quiz/sql
+      - generic [ref=e93]:
+        - paragraph [ref=e94]: © 2025 CodeToCareer. All rights reserved.
+        - paragraph [ref=e95]:
+          - text: Made with
+          - img [ref=e96]
+          - text: for students
+  - alert [ref=e98]
+```

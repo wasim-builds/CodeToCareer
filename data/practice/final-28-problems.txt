@@ -1,0 +1,35 @@
+Final 28 Problems to Add:
+
+Graph & Advanced Problems:
+1. Number of Islands
+2. Clone Graph
+3. Course Schedule
+4. Course Schedule II
+5. Word Ladder
+6. Word Search
+7. Word Search II
+8. Surrounded Regions
+9. Pacific Atlantic Water Flow
+10. Graph Valid Tree
+
+Dynamic Programming:
+11. Longest Increasing Subsequence
+12. Longest Common Subsequence
+13. Edit Distance
+14. Distinct Subsequences
+15. Interleaving String
+16. Scramble String
+17. Regular Expression Matching
+18. Wildcard Matching
+
+Array & String:
+19. Find Minimum in Rotated Sorted Array
+20. Search in Rotated Sorted Array II
+21. Find Peak Element
+22. Median of Two Sorted Arrays
+23. Longest Substring Without Repeating Characters
+24. Minimum Window Substring
+25. Sliding Window Maximum
+26. Longest Palindromic Substring
+27. Group Anagrams
+28. Valid Parentheses

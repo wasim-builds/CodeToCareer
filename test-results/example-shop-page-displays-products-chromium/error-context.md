@@ -1,0 +1,358 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "CodeToCareer" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e6]:
+        - button "Switch to dark mode" [ref=e7] [cursor=pointer]:
+          - img [ref=e8]
+        - link "Login" [ref=e10] [cursor=pointer]:
+          - /url: /login
+          - img [ref=e11]
+          - generic [ref=e14]: Login
+  - main [ref=e15]:
+    - generic [ref=e16]:
+      - heading "SHOP ALL PRODUCTS" [level=1] [ref=e17]
+      - generic [ref=e18]:
+        - complementary [ref=e19]:
+          - generic [ref=e20]:
+            - generic [ref=e21]:
+              - heading "Sort by" [level=2] [ref=e22]
+              - combobox [ref=e23]:
+                - option "Popularity" [selected]
+                - option "Newness"
+                - 'option "Price: low to high"'
+                - 'option "Price: high to low"'
+            - generic [ref=e24]:
+              - heading "Categories" [level=2] [ref=e25]
+              - generic [ref=e26]:
+                - button "All" [ref=e27] [cursor=pointer]
+                - button "Candles" [ref=e28] [cursor=pointer]
+                - button "Cups & Mugs" [ref=e29] [cursor=pointer]
+            - generic [ref=e30]:
+              - heading "Collections" [level=2] [ref=e31]
+              - generic [ref=e32]:
+                - button "All Collections" [ref=e33] [cursor=pointer]
+                - button "Christmas Special" [ref=e34] [cursor=pointer]
+                - button "Autumn Fever" [ref=e35] [cursor=pointer]
+                - button "Home Decor" [ref=e36] [cursor=pointer]
+                - button "Spring Flower" [ref=e37] [cursor=pointer]
+                - button "Aromatherapy" [ref=e38] [cursor=pointer]
+                - button "Whipped Wax" [ref=e39] [cursor=pointer]
+                - button "Waxmelts" [ref=e40] [cursor=pointer]
+                - button "Limited Editions" [ref=e41] [cursor=pointer]
+                - button "Sale" [ref=e42] [cursor=pointer]
+        - generic [ref=e43]:
+          - paragraph [ref=e45]: Showing 16 results
+          - generic [ref=e46]:
+            - generic [ref=e47]:
+              - link "Autumn Acorn" [ref=e48] [cursor=pointer]:
+                - /url: /product/1
+                - img "Autumn Acorn" [ref=e50]
+              - generic [ref=e51]:
+                - link "Autumn Acorn" [ref=e52] [cursor=pointer]:
+                  - /url: /product/1
+                  - heading "Autumn Acorn" [level=3] [ref=e53]
+                - generic [ref=e56]: ₹14.95
+                - generic [ref=e57]:
+                  - button "Add to wishlist" [ref=e58] [cursor=pointer]:
+                    - img [ref=e59]
+                  - button "Add to cart" [ref=e61] [cursor=pointer]:
+                    - img [ref=e62]
+                    - text: Add to cart
+            - generic [ref=e66]:
+              - link "Ayran Işığı SALE" [ref=e67] [cursor=pointer]:
+                - /url: /product/5
+                - generic [ref=e68]:
+                  - img "Ayran Işığı" [ref=e69]
+                  - generic [ref=e70]: SALE
+              - generic [ref=e71]:
+                - link "Ayran Işığı" [ref=e72] [cursor=pointer]:
+                  - /url: /product/5
+                  - heading "Ayran Işığı" [level=3] [ref=e73]
+                - generic [ref=e76]:
+                  - generic [ref=e77]: ₹31.95
+                  - generic [ref=e78]: ₹24.95
+                - generic [ref=e79]:
+                  - button "Add to wishlist" [ref=e80] [cursor=pointer]:
+                    - img [ref=e81]
+                  - button "Add to cart" [ref=e83] [cursor=pointer]:
+                    - img [ref=e84]
+                    - text: Add to cart
+            - generic [ref=e88]:
+              - link "Autumn Apple" [ref=e89] [cursor=pointer]:
+                - /url: /product/2
+                - img "Autumn Apple" [ref=e91]
+              - generic [ref=e92]:
+                - link "Autumn Apple" [ref=e93] [cursor=pointer]:
+                  - /url: /product/2
+                  - heading "Autumn Apple" [level=3] [ref=e94]
+                - generic [ref=e97]: ₹25.95
+                - generic [ref=e98]:
+                  - button "Add to wishlist" [ref=e99] [cursor=pointer]:
+                    - img [ref=e100]
+                  - button "Add to cart" [ref=e102] [cursor=pointer]:
+                    - img [ref=e103]
+                    - text: Add to cart
+            - generic [ref=e107]:
+              - link "Autumn Harvest" [ref=e108] [cursor=pointer]:
+                - /url: /product/4
+                - img "Autumn Harvest" [ref=e110]
+              - generic [ref=e111]:
+                - link "Autumn Harvest" [ref=e112] [cursor=pointer]:
+                  - /url: /product/4
+                  - heading "Autumn Harvest" [level=3] [ref=e113]
+                - generic [ref=e116]: ₹26.95
+                - generic [ref=e117]:
+                  - button "Add to wishlist" [ref=e118] [cursor=pointer]:
+                    - img [ref=e119]
+                  - button "Add to cart" [ref=e121] [cursor=pointer]:
+                    - img [ref=e122]
+                    - text: Add to cart
+            - generic [ref=e126]:
+              - link "Big + Little Boo Mugs SALE Only 3 left" [ref=e127] [cursor=pointer]:
+                - /url: /product/6
+                - generic [ref=e128]:
+                  - img "Big + Little Boo Mugs" [ref=e129]
+                  - generic [ref=e130]: SALE
+                  - generic [ref=e131]: Only 3 left
+              - generic [ref=e132]:
+                - link "Big + Little Boo Mugs" [ref=e133] [cursor=pointer]:
+                  - /url: /product/6
+                  - heading "Big + Little Boo Mugs" [level=3] [ref=e134]
+                - generic [ref=e137]:
+                  - generic [ref=e138]: ₹19.95
+                  - generic [ref=e139]: ₹15.95
+                - generic [ref=e140]:
+                  - button "Add to wishlist" [ref=e141] [cursor=pointer]:
+                    - img [ref=e142]
+                  - button "Add to cart" [ref=e144] [cursor=pointer]:
+                    - img [ref=e145]
+                    - text: Add to cart
+            - generic [ref=e149]:
+              - link "Autumn Dreams" [ref=e150] [cursor=pointer]:
+                - /url: /product/3
+                - img "Autumn Dreams" [ref=e152]
+              - generic [ref=e153]:
+                - link "Autumn Dreams" [ref=e154] [cursor=pointer]:
+                  - /url: /product/3
+                  - heading "Autumn Dreams" [level=3] [ref=e155]
+                - generic [ref=e159]: ₹22.95 – ₹29.95
+                - generic [ref=e160]:
+                  - button "Add to wishlist" [ref=e161] [cursor=pointer]:
+                    - img [ref=e162]
+                  - link "Select options" [ref=e164] [cursor=pointer]:
+                    - /url: /product/3
+            - generic [ref=e165]:
+              - link "Billy" [ref=e166] [cursor=pointer]:
+                - /url: /product/7
+                - img "Billy" [ref=e168]
+              - generic [ref=e169]:
+                - link "Billy" [ref=e170] [cursor=pointer]:
+                  - /url: /product/7
+                  - heading "Billy" [level=3] [ref=e171]
+                - generic [ref=e174]: ₹5.95
+                - generic [ref=e175]:
+                  - button "Add to wishlist" [ref=e176] [cursor=pointer]:
+                    - img [ref=e177]
+                  - button "Add to cart" [ref=e179] [cursor=pointer]:
+                    - img [ref=e180]
+                    - text: Add to cart
+            - generic [ref=e184]:
+              - link "Birthday Cake" [ref=e185] [cursor=pointer]:
+                - /url: /product/8
+                - img "Birthday Cake" [ref=e187]
+              - generic [ref=e188]:
+                - link "Birthday Cake" [ref=e189] [cursor=pointer]:
+                  - /url: /product/8
+                  - heading "Birthday Cake" [level=3] [ref=e190]
+                - generic [ref=e194]: ₹9.95 – ₹19.95
+                - generic [ref=e195]:
+                  - button "Add to wishlist" [ref=e196] [cursor=pointer]:
+                    - img [ref=e197]
+                  - link "Select options" [ref=e199] [cursor=pointer]:
+                    - /url: /product/8
+            - generic [ref=e200]:
+              - link "Bloom Bouquet" [ref=e201] [cursor=pointer]:
+                - /url: /product/9
+                - img "Bloom Bouquet" [ref=e203]
+              - generic [ref=e204]:
+                - link "Bloom Bouquet" [ref=e205] [cursor=pointer]:
+                  - /url: /product/9
+                  - heading "Bloom Bouquet" [level=3] [ref=e206]
+                - generic [ref=e210]: ₹21.95 – ₹23.90
+                - generic [ref=e211]:
+                  - button "Add to wishlist" [ref=e212] [cursor=pointer]:
+                    - img [ref=e213]
+                  - link "Select options" [ref=e215] [cursor=pointer]:
+                    - /url: /product/9
+            - generic [ref=e216]:
+              - link "Blooming Heart" [ref=e217] [cursor=pointer]:
+                - /url: /product/10
+                - img "Blooming Heart" [ref=e219]
+              - generic [ref=e220]:
+                - link "Blooming Heart" [ref=e221] [cursor=pointer]:
+                  - /url: /product/10
+                  - heading "Blooming Heart" [level=3] [ref=e222]
+                - generic [ref=e226]: ₹23.95 – ₹28.95
+                - generic [ref=e227]:
+                  - button "Add to wishlist" [ref=e228] [cursor=pointer]:
+                    - img [ref=e229]
+                  - link "Select options" [ref=e231] [cursor=pointer]:
+                    - /url: /product/10
+            - generic [ref=e232]:
+              - link "Blooming Rose" [ref=e233] [cursor=pointer]:
+                - /url: /product/11
+                - img "Blooming Rose" [ref=e235]
+              - generic [ref=e236]:
+                - link "Blooming Rose" [ref=e237] [cursor=pointer]:
+                  - /url: /product/11
+                  - heading "Blooming Rose" [level=3] [ref=e238]
+                - generic [ref=e242]: ₹25.95 – ₹27.90
+                - generic [ref=e243]:
+                  - button "Add to wishlist" [ref=e244] [cursor=pointer]:
+                    - img [ref=e245]
+                  - link "Select options" [ref=e247] [cursor=pointer]:
+                    - /url: /product/11
+            - generic [ref=e248]:
+              - link "Blooming Rose SALE" [ref=e249] [cursor=pointer]:
+                - /url: /product/12
+                - generic [ref=e250]:
+                  - img "Blooming Rose" [ref=e251]
+                  - generic [ref=e252]: SALE
+              - generic [ref=e253]:
+                - link "Blooming Rose" [ref=e254] [cursor=pointer]:
+                  - /url: /product/12
+                  - heading "Blooming Rose" [level=3] [ref=e255]
+                - generic [ref=e258]:
+                  - generic [ref=e259]: ₹22.95
+                  - generic [ref=e260]: ₹16.95
+                - generic [ref=e261]:
+                  - button "Add to wishlist" [ref=e262] [cursor=pointer]:
+                    - img [ref=e263]
+                  - button "Add to cart" [ref=e265] [cursor=pointer]:
+                    - img [ref=e266]
+                    - text: Add to cart
+            - generic [ref=e270]:
+              - link "Blossom Fields" [ref=e271] [cursor=pointer]:
+                - /url: /product/13
+                - img "Blossom Fields" [ref=e273]
+              - generic [ref=e274]:
+                - link "Blossom Fields" [ref=e275] [cursor=pointer]:
+                  - /url: /product/13
+                  - heading "Blossom Fields" [level=3] [ref=e276]
+                - generic [ref=e280]: ₹15.95 – ₹26.95
+                - generic [ref=e281]:
+                  - button "Add to wishlist" [ref=e282] [cursor=pointer]:
+                    - img [ref=e283]
+                  - link "Select options" [ref=e285] [cursor=pointer]:
+                    - /url: /product/13
+            - generic [ref=e286]:
+              - link "Blossom Heart" [ref=e287] [cursor=pointer]:
+                - /url: /product/14
+                - img "Blossom Heart" [ref=e289]
+              - generic [ref=e290]:
+                - link "Blossom Heart" [ref=e291] [cursor=pointer]:
+                  - /url: /product/14
+                  - heading "Blossom Heart" [level=3] [ref=e292]
+                - generic [ref=e295]: ₹26.95
+                - generic [ref=e296]:
+                  - button "Add to wishlist" [ref=e297] [cursor=pointer]:
+                    - img [ref=e298]
+                  - button "Add to cart" [ref=e300] [cursor=pointer]:
+                    - img [ref=e301]
+                    - text: Add to cart
+            - generic [ref=e305]:
+              - link "Blue Daisy Mug" [ref=e306] [cursor=pointer]:
+                - /url: /product/15
+                - img "Blue Daisy Mug" [ref=e308]
+              - generic [ref=e309]:
+                - link "Blue Daisy Mug" [ref=e310] [cursor=pointer]:
+                  - /url: /product/15
+                  - heading "Blue Daisy Mug" [level=3] [ref=e311]
+                - generic [ref=e314]: ₹12.95
+                - generic [ref=e315]:
+                  - button "Add to wishlist" [ref=e316] [cursor=pointer]:
+                    - img [ref=e317]
+                  - button "Add to cart" [ref=e319] [cursor=pointer]:
+                    - img [ref=e320]
+                    - text: Add to cart
+            - generic [ref=e324]:
+              - link "Blueberry Cup" [ref=e325] [cursor=pointer]:
+                - /url: /product/16
+                - img "Blueberry Cup" [ref=e327]
+              - generic [ref=e328]:
+                - link "Blueberry Cup" [ref=e329] [cursor=pointer]:
+                  - /url: /product/16
+                  - heading "Blueberry Cup" [level=3] [ref=e330]
+                - generic [ref=e333]: ₹13.95
+                - generic [ref=e334]:
+                  - button "Add to wishlist" [ref=e335] [cursor=pointer]:
+                    - img [ref=e336]
+                  - button "Add to cart" [ref=e338] [cursor=pointer]:
+                    - img [ref=e339]
+                    - text: Add to cart
+  - contentinfo [ref=e343]:
+    - generic [ref=e344]:
+      - generic [ref=e345]:
+        - generic [ref=e346]:
+          - link "CodeToCareer" [ref=e347] [cursor=pointer]:
+            - /url: /
+          - paragraph [ref=e348]: Your journey from code to career starts here. Master technical skills with 35+ topics, 5000+ interview questions, and gamified learning.
+          - generic [ref=e349]:
+            - link [ref=e350] [cursor=pointer]:
+              - /url: https://github.com
+              - img [ref=e351]
+            - link [ref=e353] [cursor=pointer]:
+              - /url: https://twitter.com
+              - img [ref=e354]
+            - link [ref=e356] [cursor=pointer]:
+              - /url: https://linkedin.com
+              - img [ref=e357]
+            - link [ref=e361] [cursor=pointer]:
+              - /url: mailto:contact@codetocareer.com
+              - img [ref=e362]
+        - generic [ref=e365]:
+          - heading "Quick Links" [level=3] [ref=e366]
+          - list [ref=e367]:
+            - listitem [ref=e368]:
+              - link "Start Quiz" [ref=e369] [cursor=pointer]:
+                - /url: /quiz
+            - listitem [ref=e370]:
+              - link "Theory Learning" [ref=e371] [cursor=pointer]:
+                - /url: /theory
+            - listitem [ref=e372]:
+              - link "My Profile" [ref=e373] [cursor=pointer]:
+                - /url: /profile
+            - listitem [ref=e374]:
+              - link "Login" [ref=e375] [cursor=pointer]:
+                - /url: /login
+        - generic [ref=e376]:
+          - heading "Popular Topics" [level=3] [ref=e377]
+          - list [ref=e378]:
+            - listitem [ref=e379]:
+              - link "Python" [ref=e380] [cursor=pointer]:
+                - /url: /quiz/python
+            - listitem [ref=e381]:
+              - link "JavaScript" [ref=e382] [cursor=pointer]:
+                - /url: /quiz/javascript
+            - listitem [ref=e383]:
+              - link "React" [ref=e384] [cursor=pointer]:
+                - /url: /quiz/react
+            - listitem [ref=e385]:
+              - link "DSA" [ref=e386] [cursor=pointer]:
+                - /url: /quiz/dsa
+            - listitem [ref=e387]:
+              - link "SQL" [ref=e388] [cursor=pointer]:
+                - /url: /quiz/sql
+      - generic [ref=e389]:
+        - paragraph [ref=e390]: © 2025 CodeToCareer. All rights reserved.
+        - paragraph [ref=e391]:
+          - text: Made with
+          - img [ref=e392]
+          - text: for students
+  - alert [ref=e394]
+```

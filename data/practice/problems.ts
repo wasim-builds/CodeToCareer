@@ -54,7 +54,7 @@ export const practiceProblems: PracticeProblem[] = [
       { id: 'h1', type: 'hidden', input: { nums: [3, 3], target: 6 }, output: [0, 1] }
     ],
     solution: 'Use a map from value to index. Iterate nums, for each num check if target - num is in map, return the pair; otherwise store num with its index. O(n) time, O(n) space.'
-      ,solved: false
+    , solved: false
   },
   {
     id: 'valid-anagram',
@@ -283,7 +283,7 @@ export const practiceProblems: PracticeProblem[] = [
     ],
     hints: [
       'Use iterative binary search with two pointers (lo/hi).',
-      'Avoid overflow with mid = lo + Math.floor((hi - lo) / 2).' 
+      'Avoid overflow with mid = lo + Math.floor((hi - lo) / 2).'
     ],
     starterCode: [
       {
@@ -460,7 +460,7 @@ export const practiceProblems: PracticeProblem[] = [
       }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums1: [1,2,3,0,0,0], m: 3, nums2: [2,5,6], n: 3 }, output: [1,2,2,3,5,6] }
+      { id: 's1', type: 'sample', input: { nums1: [1, 2, 3, 0, 0, 0], m: 3, nums2: [2, 5, 6], n: 3 }, output: [1, 2, 2, 3, 5, 6] }
     ],
     solution: 'Merge from the end using three pointers. Compare elements and place larger one at the end of nums1.'
   },
@@ -504,7 +504,7 @@ export const practiceProblems: PracticeProblem[] = [
       }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [3,2,2,3], val: 3 }, output: 2 }
+      { id: 's1', type: 'sample', input: { nums: [3, 2, 2, 3], val: 3 }, output: 2 }
     ],
     solution: 'Use two pointers. When nums[i] != val, copy to nums[k++]. Return k.'
   },
@@ -525,7 +525,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'removeDuplicates', code: 'function removeDuplicates(nums) {\n  // Write your code here\n}\n\nmodule.exports = removeDuplicates;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [1,1,2] }, output: 2 }
+      { id: 's1', type: 'sample', input: { nums: [1, 1, 2] }, output: 2 }
     ],
     solution: 'Keep pointer k for unique position. If nums[i] != nums[k-1], nums[k++] = nums[i].'
   },
@@ -569,7 +569,7 @@ export const practiceProblems: PracticeProblem[] = [
       }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [3,2,3] }, output: 3 }
+      { id: 's1', type: 'sample', input: { nums: [3, 2, 3] }, output: 3 }
     ],
     solution: 'Use Boyer-Moore voting: track candidate and count. When count=0, pick new candidate.'
   },
@@ -590,7 +590,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'maxProfit', code: 'function maxProfit(prices) {\n  // Write your code here\n}\n\nmodule.exports = maxProfit;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { prices: [7,1,5,3,6,4] }, output: 5 }
+      { id: 's1', type: 'sample', input: { prices: [7, 1, 5, 3, 6, 4] }, output: 5 }
     ],
     solution: 'Track minPrice and maxProfit. For each price, update maxProfit = max(maxProfit, price - minPrice).'
   },
@@ -724,7 +724,7 @@ export const practiceProblems: PracticeProblem[] = [
       }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { strs: ['flower','flow','flight'] }, output: 'fl' }
+      { id: 's1', type: 'sample', input: { strs: ['flower', 'flow', 'flight'] }, output: 'fl' }
     ],
     solution: 'Use first string as prefix. Compare with each string, trim prefix until match.'
   },
@@ -951,7 +951,7 @@ export const practiceProblems: PracticeProblem[] = [
       { id: 's1', type: 'sample', input: { citations: [3, 0, 6, 1, 5] }, output: 3 },
       { id: 'h1', type: 'hidden', input: { citations: [1, 3, 1] }, output: 1 }
     ],
-    solution: 'Either sort descending and find first index where citations[i] < i+1, or use counting buckets to run in O(n).' 
+    solution: 'Either sort descending and find first index where citations[i] < i+1, or use counting buckets to run in O(n).'
   },
   {
     id: 'insert-delete-getrandom-o1',
@@ -993,7 +993,7 @@ export const practiceProblems: PracticeProblem[] = [
       }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { operations: ['RandomizedSet','insert','remove','insert','getRandom'], args: [[],[1],[2],[2],[]] }, output: [null, true, false, true, 2] }
+      { id: 's1', type: 'sample', input: { operations: ['RandomizedSet', 'insert', 'remove', 'insert', 'getRandom'], args: [[], [1], [2], [2], []] }, output: [null, true, false, true, 2] }
     ],
     solution: 'Store values in array and map value->index. Remove by swapping with last element then pop. getRandom picks random index.'
   },
@@ -1287,7 +1287,7 @@ export const practiceProblems: PracticeProblem[] = [
       { id: 's1', type: 'sample', input: { haystack: 'sadbutsad', needle: 'sad' }, output: 0 },
       { id: 'h1', type: 'hidden', input: { haystack: 'leetcode', needle: 'leeto' }, output: -1 }
     ],
-    solution: 'Scan haystack and compare slices; stop at n-m. Advanced: build prefix function (KMP) for O(n+m).' 
+    solution: 'Scan haystack and compare slices; stop at n-m. Advanced: build prefix function (KMP) for O(n+m).'
   },
   {
     id: 'text-justification',
@@ -1306,7 +1306,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'fullJustify', code: 'function fullJustify(words, maxWidth) {\n  // Write your code here\n}\n\nmodule.exports = fullJustify;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { words: ['This','is','an','example','of','text','justification.'], maxWidth: 16 }, output: ['This    is    an', 'example  of text', 'justification.  '] }
+      { id: 's1', type: 'sample', input: { words: ['This', 'is', 'an', 'example', 'of', 'text', 'justification.'], maxWidth: 16 }, output: ['This    is    an', 'example  of text', 'justification.  '] }
     ],
     solution: 'Pack words greedily per line; distribute extra spaces between gaps; for single-word or last line, left-justify and pad right.'
   },
@@ -1370,7 +1370,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'maxArea', code: 'function maxArea(height) {\n  // Write your code here\n}\n\nmodule.exports = maxArea;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { height: [1,8,6,2,5,4,8,3,7] }, output: 49 }
+      { id: 's1', type: 'sample', input: { height: [1, 8, 6, 2, 5, 4, 8, 3, 7] }, output: 49 }
     ],
     solution: 'Two pointers: l=0, r=n-1. Calculate area, move pointer with smaller height inward.'
   },
@@ -1567,7 +1567,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'rob', code: 'function rob(nums) {\n  // Write your code here\n}\n\nmodule.exports = rob;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [1,2,3,1] }, output: 4 }
+      { id: 's1', type: 'sample', input: { nums: [1, 2, 3, 1] }, output: 4 }
     ],
     solution: 'DP: max(rob this + rob[i-2], skip this = rob[i-1]). Optimize to two variables.'
   },
@@ -1588,7 +1588,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'coinChange', code: 'function coinChange(coins, amount) {\n  // Write your code here\n}\n\nmodule.exports = coinChange;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { coins: [1,2,5], amount: 11 }, output: 3 }
+      { id: 's1', type: 'sample', input: { coins: [1, 2, 5], amount: 11 }, output: 3 }
     ],
     solution: 'DP: dp[i] = min(dp[i], dp[i-coin] + 1) for each coin. Initialize dp with Infinity.'
   },
@@ -1654,7 +1654,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'plusOne', code: 'function plusOne(digits) {\n  // Write your code here\n}\n\nmodule.exports = plusOne;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { digits: [1,2,3] }, output: [1,2,4] }
+      { id: 's1', type: 'sample', input: { digits: [1, 2, 3] }, output: [1, 2, 4] }
     ],
     solution: 'Iterate from end. If digit < 9, increment and return. Else set to 0. If all 9s, prepend 1.'
   },
@@ -1680,7 +1680,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'numIslands', code: 'function numIslands(grid) {\n  // Write your code here\n}\n\nmodule.exports = numIslands;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { grid: [['1','1','0'],['1','1','0'],['0','0','1']] }, output: 2 }
+      { id: 's1', type: 'sample', input: { grid: [['1', '1', '0'], ['1', '1', '0'], ['0', '0', '1']] }, output: 2 }
     ],
     solution: 'DFS/BFS from each unvisited land cell, marking all connected land. Count number of DFS calls.'
   },
@@ -1701,7 +1701,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'canFinish', code: 'function canFinish(numCourses, prerequisites) {\n  // Write your code here\n}\n\nmodule.exports = canFinish;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { numCourses: 2, prerequisites: [[1,0]] }, output: true }
+      { id: 's1', type: 'sample', input: { numCourses: 2, prerequisites: [[1, 0]] }, output: true }
     ],
     solution: 'Build adjacency list. DFS with three states: unvisited, visiting, visited. Cycle if visiting node encountered.'
   },
@@ -1744,7 +1744,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'permute', code: 'function permute(nums) {\n  // Write your code here\n}\n\nmodule.exports = permute;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [1,2,3] }, output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]] }
+      { id: 's1', type: 'sample', input: { nums: [1, 2, 3] }, output: [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]] }
     ],
     solution: 'Backtrack: for each position, try each unused number. Add to result when path complete.'
   },
@@ -1765,7 +1765,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'subsets', code: 'function subsets(nums) {\n  // Write your code here\n}\n\nmodule.exports = subsets;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [1,2,3] }, output: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]] }
+      { id: 's1', type: 'sample', input: { nums: [1, 2, 3] }, output: [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]] }
     ],
     solution: 'Backtrack: at each index, add current subset, then recurse with/without next element.'
   },
@@ -1786,7 +1786,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'combinationSum', code: 'function combinationSum(candidates, target) {\n  // Write your code here\n}\n\nmodule.exports = combinationSum;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { candidates: [2,3,6,7], target: 7 }, output: [[2,2,3],[7]] }
+      { id: 's1', type: 'sample', input: { candidates: [2, 3, 6, 7], target: 7 }, output: [[2, 2, 3], [7]] }
     ],
     solution: 'Backtrack: try each candidate from start index. Recurse with reduced target. Allow reuse.'
   },
@@ -1807,7 +1807,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'generateParenthesis', code: 'function generateParenthesis(n) {\n  // Write your code here\n}\n\nmodule.exports = generateParenthesis;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { n: 3 }, output: ['((()))','(()())','(())()','()(())','()()()'] }
+      { id: 's1', type: 'sample', input: { n: 3 }, output: ['((()))', '(()())', '(())()', '()(())', '()()()'] }
     ],
     solution: 'Backtrack: add "(" if open < n, add ")" if close < open. Base case: string length = 2n.'
   },
@@ -1830,8 +1830,8 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'singleNumber', code: 'function singleNumber(nums) {\n  // Write your code here\n}\n\nmodule.exports = singleNumber;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [2,2,1] }, output: 1 },
-      { id: 's2', type: 'sample', input: { nums: [4,1,2,1,2] }, output: 4 }
+      { id: 's1', type: 'sample', input: { nums: [2, 2, 1] }, output: 1 },
+      { id: 's2', type: 'sample', input: { nums: [4, 1, 2, 1, 2] }, output: 4 }
     ],
     solution: 'XOR all elements. Duplicates cancel out, leaving only the single number. O(n) time, O(1) space.'
   },
@@ -1874,8 +1874,8 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'countBits', code: 'function countBits(n) {\n  // Write your code here\n}\n\nmodule.exports = countBits;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { n: 2 }, output: [0,1,1] },
-      { id: 's2', type: 'sample', input: { n: 5 }, output: [0,1,1,2,1,2] }
+      { id: 's1', type: 'sample', input: { n: 2 }, output: [0, 1, 1] },
+      { id: 's2', type: 'sample', input: { n: 5 }, output: [0, 1, 1, 2, 1, 2] }
     ],
     solution: 'DP: ans[i] = ans[i >> 1] + (i & 1). Right shift removes last bit, check if it was 1.'
   },
@@ -1897,7 +1897,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'findKthLargest', code: 'function findKthLargest(nums, k) {\n  // Write your code here\n}\n\nmodule.exports = findKthLargest;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [3,2,1,5,6,4], k: 2 }, output: 5 }
+      { id: 's1', type: 'sample', input: { nums: [3, 2, 1, 5, 6, 4], k: 2 }, output: 5 }
     ],
     solution: 'Min heap of size k: add elements, remove min if size > k. Or quickselect: partition and recurse.'
   },
@@ -1918,7 +1918,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'topKFrequent', code: 'function topKFrequent(nums, k) {\n  // Write your code here\n}\n\nmodule.exports = topKFrequent;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [1,1,1,2,2,3], k: 2 }, output: [1,2] }
+      { id: 's1', type: 'sample', input: { nums: [1, 1, 1, 2, 2, 3], k: 2 }, output: [1, 2] }
     ],
     solution: 'Count frequencies. Heap of size k with frequencies, or bucket sort by frequency.'
   },
@@ -1983,7 +1983,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'wordBreak', code: 'function wordBreak(s, wordDict) {\n  // Write your code here\n}\n\nmodule.exports = wordBreak;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { s: 'leetcode', wordDict: ['leet','code'] }, output: true }
+      { id: 's1', type: 'sample', input: { s: 'leetcode', wordDict: ['leet', 'code'] }, output: true }
     ],
     solution: 'DP: dp[i] = any(dp[j] && s[j:i] in dict) for j < i. Base: dp[0] = true.'
   },
@@ -2004,7 +2004,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'lengthOfLIS', code: 'function lengthOfLIS(nums) {\n  // Write your code here\n}\n\nmodule.exports = lengthOfLIS;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [10,9,2,5,3,7,101,18] }, output: 4 }
+      { id: 's1', type: 'sample', input: { nums: [10, 9, 2, 5, 3, 7, 101, 18] }, output: 4 }
     ],
     solution: 'DP O(n²): dp[i] = max(dp[j]+1) where j<i and nums[j]<nums[i]. Or O(n log n) with binary search.'
   },
@@ -2026,7 +2026,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'MinStack', code: 'class MinStack {\n  constructor() {}\n  push(val) {}\n  pop() {}\n  top() {}\n  getMin() {}\n}\n\nmodule.exports = MinStack;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { operations: ['push','push','push','getMin'], args: [[-2],[0],[-3],[]] }, output: [null,null,null,-3] }
+      { id: 's1', type: 'sample', input: { operations: ['push', 'push', 'push', 'getMin'], args: [[-2], [0], [-3], []] }, output: [null, null, null, -3] }
     ],
     solution: 'Two stacks: main stack and min stack. Push: add to both (min = min of val and current min). Pop: remove from both.'
   },
@@ -2047,7 +2047,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'LRUCache', code: 'class LRUCache {\n  constructor(capacity) {}\n  get(key) {}\n  put(key, value) {}\n}\n\nmodule.exports = LRUCache;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { operations: ['LRUCache','put','put','get'], args: [[2],[1,1],[2,2],[1]] }, output: [null,null,null,1] }
+      { id: 's1', type: 'sample', input: { operations: ['LRUCache', 'put', 'put', 'get'], args: [[2], [1, 1], [2, 2], [1]] }, output: [null, null, null, 1] }
     ],
     solution: 'Hash map + doubly linked list. Get: move to head. Put: add to head, remove tail if over capacity.'
   },
@@ -2069,7 +2069,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'rotate', code: 'function rotate(nums, k) {\n  // Write your code here\n}\n\nmodule.exports = rotate;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [1,2,3,4,5,6,7], k: 3 }, output: [5,6,7,1,2,3,4] }
+      { id: 's1', type: 'sample', input: { nums: [1, 2, 3, 4, 5, 6, 7], k: 3 }, output: [5, 6, 7, 1, 2, 3, 4] }
     ],
     solution: 'Three reversals: reverse all, reverse [0:k], reverse [k:n]. O(n) time, O(1) space.'
   },
@@ -2090,7 +2090,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'productExceptSelf', code: 'function productExceptSelf(nums) {\n  // Write your code here\n}\n\nmodule.exports = productExceptSelf;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [1,2,3,4] }, output: [24,12,8,6] }
+      { id: 's1', type: 'sample', input: { nums: [1, 2, 3, 4] }, output: [24, 12, 8, 6] }
     ],
     solution: 'Two passes: build prefix products in result, then multiply by suffix products. O(n) time, O(1) extra space.'
   },
@@ -2111,7 +2111,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'findMin', code: 'function findMin(nums) {\n  // Write your code here\n}\n\nmodule.exports = findMin;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [3,4,5,1,2] }, output: 1 }
+      { id: 's1', type: 'sample', input: { nums: [3, 4, 5, 1, 2] }, output: 1 }
     ],
     solution: 'Binary search: if nums[mid] > nums[right], search right half, else search left half.'
   },
@@ -2132,7 +2132,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'typescript', functionName: 'search', code: 'function search(nums, target) {\n  // Write your code here\n}\n\nmodule.exports = search;' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [4,5,6,7,0,1,2], target: 0 }, output: 4 }
+      { id: 's1', type: 'sample', input: { nums: [4, 5, 6, 7, 0, 1, 2], target: 0 }, output: 4 }
     ],
     solution: 'Binary search: check which half is sorted, then check if target is in sorted half.'
   },
@@ -2160,7 +2160,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'python', functionName: 'threeSum', code: 'def threeSum(nums):\n    # Write your code here\n    return []' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { nums: [-1,0,1,2,-1,-4] }, output: [[-1,-1,2],[-1,0,1]] }
+      { id: 's1', type: 'sample', input: { nums: [-1, 0, 1, 2, -1, -4] }, output: [[-1, -1, 2], [-1, 0, 1]] }
     ],
     solution: 'Sort nums. For each i, use two pointers j and k to find pairs such that nums[i] + nums[j] + nums[k] == 0. Skip duplicates.'
   },
@@ -2187,7 +2187,7 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'python', functionName: 'groupAnagrams', code: 'def groupAnagrams(strs):\n    # Write your code here\n    return []' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { strs: ["eat","tea","tan","ate","nat","bat"] }, output: [["eat","tea","ate"],["tan","nat"],["bat"]] }
+      { id: 's1', type: 'sample', input: { strs: ["eat", "tea", "tan", "ate", "nat", "bat"] }, output: [["eat", "tea", "ate"], ["tan", "nat"], ["bat"]] }
     ],
     solution: 'For each string, sort it and use as a key in a hash map to group anagrams.'
   },
@@ -2214,390 +2214,1306 @@ export const practiceProblems: PracticeProblem[] = [
       { language: 'python', functionName: 'isValidSudoku', code: 'def isValidSudoku(board):\n    # Write your code here\n    return False' }
     ],
     tests: [
-      { id: 's1', type: 'sample', input: { board: [["5","3",".",".","7",".",".",".","."] /* ... */] }, output: true }
+      { id: 's1', type: 'sample', input: { board: [["5", "3", ".", ".", "7", ".", ".", ".", "."] /* ... */] }, output: true }
     ],
     solution: 'Check each row, column, and 3x3 box for duplicates using sets.'
   },
-    {
-      id: 'rotate-image',
-      slug: 'rotate-image',
-      title: 'Rotate Image',
-      difficulty: 'medium',
-      topics: ['Array', 'Matrix'],
-      prompt: 'You are given an n x n 2D matrix representing an image, rotate the image by 90 degrees (clockwise) in-place.',
-      constraints: [
-        'matrix.length == n',
-        'matrix[i].length == n',
-        '1 <= n <= 20'
-      ],
-      examples: [
-        { input: 'matrix = [[1,2,3],[4,5,6],[7,8,9]]', output: '[[7,4,1],[8,5,2],[9,6,3]]' }
-      ],
-      hints: [
-        'Transpose the matrix, then reverse each row.'
-      ],
-      starterCode: [
-        { language: 'javascript', functionName: 'rotate', code: 'function rotate(matrix) {\n  // Write your code here\n}\n\nmodule.exports = rotate;' },
-        { language: 'typescript', functionName: 'rotate', code: 'function rotate(matrix: number[][]): void {\n  // Write your code here\n}\n\nexport default rotate;' },
-        { language: 'python', functionName: 'rotate', code: 'def rotate(matrix):\n    # Write your code here\n    pass' }
-      ],
-      tests: [
-        { id: 's1', type: 'sample', input: { matrix: [[1,2,3],[4,5,6],[7,8,9]] }, output: [[7,4,1],[8,5,2],[9,6,3]] }
-      ],
-      solution: 'First transpose the matrix, then reverse each row.'
-    },
-    {
-      id: 'spiral-matrix',
-      slug: 'spiral-matrix',
-      title: 'Spiral Matrix',
-      difficulty: 'medium',
-      topics: ['Array', 'Matrix'],
-      prompt: 'Given an m x n matrix, return all elements of the matrix in spiral order.',
-      constraints: [
-        '1 <= m, n <= 10'
-      ],
-      examples: [
-        { input: 'matrix = [[1,2,3],[4,5,6],[7,8,9]]', output: '[1,2,3,6,9,8,7,4,5]' }
-      ],
-      hints: [
-        'Simulate the process by keeping track of boundaries.'
-      ],
-      starterCode: [
-        { language: 'javascript', functionName: 'spiralOrder', code: 'function spiralOrder(matrix) {\n  // Write your code here\n  return [];\n}\n\nmodule.exports = spiralOrder;' },
-        { language: 'typescript', functionName: 'spiralOrder', code: 'function spiralOrder(matrix: number[][]): number[] {\n  // Write your code here\n  return [];\n}\n\nexport default spiralOrder;' },
-        { language: 'python', functionName: 'spiralOrder', code: 'def spiralOrder(matrix):\n    # Write your code here\n    return []' }
-      ],
-      tests: [
-        { id: 's1', type: 'sample', input: { matrix: [[1,2,3],[4,5,6],[7,8,9]] }, output: [1,2,3,6,9,8,7,4,5] }
-      ],
-      solution: 'Use four pointers to track the boundaries and iterate inwards.'
-    },
-    {
-      id: 'set-matrix-zeroes',
-      slug: 'set-matrix-zeroes',
-      title: 'Set Matrix Zeroes',
-      difficulty: 'medium',
-      topics: ['Array', 'Matrix'],
-      prompt: 'Given an m x n integer matrix, if an element is 0, set its entire row and column to 0. Do it in-place.',
-      constraints: [
-        'm == matrix.length',
-        'n == matrix[0].length',
-        '1 <= m, n <= 200'
-      ],
-      examples: [
-        { input: 'matrix = [[1,1,1],[1,0,1],[1,1,1]]', output: '[[1,0,1],[0,0,0],[1,0,1]]' }
-      ],
-      hints: [
-        'Use first row and column as markers.'
-      ],
-      starterCode: [
-        { language: 'javascript', functionName: 'setZeroes', code: 'function setZeroes(matrix) {\n  // Write your code here\n}\n\nmodule.exports = setZeroes;' },
-        { language: 'typescript', functionName: 'setZeroes', code: 'function setZeroes(matrix: number[][]): void {\n  // Write your code here\n}\n\nexport default setZeroes;' },
-        { language: 'python', functionName: 'setZeroes', code: 'def setZeroes(matrix):\n    # Write your code here\n    pass' }
-      ],
-      tests: [
-        { id: 's1', type: 'sample', input: { matrix: [[1,1,1],[1,0,1],[1,1,1]] }, output: [[1,0,1],[0,0,0],[1,0,1]] }
-      ],
-      solution: 'Use first row and column as markers to record which rows/columns should be zero.'
-    },
-      {
-        id: 'search-a-2d-matrix',
-        slug: 'search-a-2d-matrix',
-        title: 'Search a 2D Matrix',
-        difficulty: 'medium',
-        topics: ['Array', 'Binary Search', 'Matrix'],
-        prompt: 'Write an efficient algorithm that searches for a value in an m x n matrix. This matrix has the following properties: Integers in each row are sorted from left to right. The first integer of each row is greater than the last integer of the previous row.',
-        constraints: [
-          'm == matrix.length',
-          'n == matrix[0].length',
-          '1 <= m, n <= 100'
-        ],
-        examples: [
-          { input: 'matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3', output: 'true' }
-        ],
-        hints: [
-          'Treat the matrix as a 1D array and use binary search.'
-        ],
-        starterCode: [
-          { language: 'javascript', functionName: 'searchMatrix', code: 'function searchMatrix(matrix, target) {\n  // Write your code here\n  return false;\n}\n\nmodule.exports = searchMatrix;' },
-          { language: 'typescript', functionName: 'searchMatrix', code: 'function searchMatrix(matrix: number[][], target: number): boolean {\n  // Write your code here\n  return false;\n}\n\nexport default searchMatrix;' },
-          { language: 'python', functionName: 'searchMatrix', code: 'def searchMatrix(matrix, target):\n    # Write your code here\n    return False' }
-        ],
-        tests: [
-          { id: 's1', type: 'sample', input: { matrix: [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target: 3 }, output: true }
-        ],
-        solution: 'Use binary search on the virtual 1D array representation of the matrix.'
-      },
-      {
-        id: 'word-search',
-        slug: 'word-search',
-        title: 'Word Search',
-        difficulty: 'medium',
-        topics: ['Array', 'Backtracking', 'Matrix'],
-        prompt: 'Given an m x n grid of characters board and a string word, return true if word exists in the grid.',
-        constraints: [
-          'm == board.length',
-          'n == board[i].length',
-          '1 <= m, n <= 6',
-          '1 <= word.length <= 15'
-        ],
-        examples: [
-          { input: 'board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"', output: 'true' }
-        ],
-        hints: [
-          'Use backtracking to search for the word.'
-        ],
-        starterCode: [
-          { language: 'javascript', functionName: 'exist', code: 'function exist(board, word) {\n  // Write your code here\n  return false;\n}\n\nmodule.exports = exist;' },
-          { language: 'typescript', functionName: 'exist', code: 'function exist(board: string[][], word: string): boolean {\n  // Write your code here\n  return false;\n}\n\nexport default exist;' },
-          { language: 'python', functionName: 'exist', code: 'def exist(board, word):\n    # Write your code here\n    return False' }
-        ],
-        tests: [
-          { id: 's1', type: 'sample', input: { board: [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word: "ABCCED" }, output: true }
-        ],
-        solution: 'Use DFS with backtracking to search for the word in the grid.'
-      },
-      {
-        id: 'combination-sum-ii',
-        slug: 'combination-sum-ii',
-        title: 'Combination Sum II',
-        difficulty: 'medium',
-        topics: ['Array', 'Backtracking'],
-        prompt: 'Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target. Each number in candidates may only be used once in the combination.',
-        constraints: [
-          '1 <= candidates.length <= 100',
-          '1 <= candidates[i] <= 50',
-          '1 <= target <= 30'
-        ],
-        examples: [
-          { input: 'candidates = [10,1,2,7,6,1,5], target = 8', output: '[[1,1,6],[1,2,5],[1,7],[2,6]]' }
-        ],
-        hints: [
-          'Sort the array and use backtracking, skipping duplicates.'
-        ],
-        starterCode: [
-          { language: 'javascript', functionName: 'combinationSum2', code: 'function combinationSum2(candidates, target) {\n  // Write your code here\n  return [];\n}\n\nmodule.exports = combinationSum2;' },
-          { language: 'typescript', functionName: 'combinationSum2', code: 'function combinationSum2(candidates: number[], target: number): number[][] {\n  // Write your code here\n  return [];\n}\n\nexport default combinationSum2;' },
-          { language: 'python', functionName: 'combinationSum2', code: 'def combinationSum2(candidates, target):\n    # Write your code here\n    return []' }
-        ],
-        tests: [
-          { id: 's1', type: 'sample', input: { candidates: [10,1,2,7,6,1,5], target: 8 }, output: [[1,1,6],[1,2,5],[1,7],[2,6]] }
-        ],
-        solution: 'Sort candidates, use backtracking, and skip duplicates to find all unique combinations.'
-      },
-        {
-          id: 'minimum-path-sum',
-          slug: 'minimum-path-sum',
-          title: 'Minimum Path Sum',
-          difficulty: 'medium',
-          topics: ['Array', 'Dynamic Programming', 'Matrix'],
-          prompt: 'Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of all numbers along its path. You can only move either down or right at any point in time.',
-          constraints: [
-            'm == grid.length',
-            'n == grid[0].length',
-            '1 <= m, n <= 200'
-          ],
-          examples: [
-            { input: 'grid = [[1,3,1],[1,5,1],[4,2,1]]', output: '7' }
-          ],
-          hints: [
-            'Use dynamic programming to build up the minimum path sum.'
-          ],
-          starterCode: [
-            { language: 'javascript', functionName: 'minPathSum', code: 'function minPathSum(grid) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = minPathSum;' },
-            { language: 'typescript', functionName: 'minPathSum', code: 'function minPathSum(grid: number[][]): number {\n  // Write your code here\n  return 0;\n}\n\nexport default minPathSum;' },
-            { language: 'python', functionName: 'minPathSum', code: 'def minPathSum(grid):\n    # Write your code here\n    return 0' }
-          ],
-          tests: [
-            { id: 's1', type: 'sample', input: { grid: [[1,3,1],[1,5,1],[4,2,1]] }, output: 7 }
-          ],
-          solution: 'Use a DP table where dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1]).'
-        },
-        {
-          id: 'unique-paths-ii',
-          slug: 'unique-paths-ii',
-          title: 'Unique Paths II',
-          difficulty: 'medium',
-          topics: ['Array', 'Dynamic Programming', 'Matrix'],
-          prompt: 'A robot is located at the top-left corner of a m x n grid. The robot can only move either down or right at any point in time. The robot is trying to reach the bottom-right corner of the grid. Now consider if some obstacles are added to the grids. How many unique paths would there be?',
-          constraints: [
-            'm == obstacleGrid.length',
-            'n == obstacleGrid[0].length',
-            '1 <= m, n <= 100'
-          ],
-          examples: [
-            { input: 'obstacleGrid = [[0,0,0],[0,1,0],[0,0,0]]', output: '2' }
-          ],
-          hints: [
-            'Use dynamic programming, set dp[i][j] = 0 if obstacle.'
-          ],
-          starterCode: [
-            { language: 'javascript', functionName: 'uniquePathsWithObstacles', code: 'function uniquePathsWithObstacles(obstacleGrid) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = uniquePathsWithObstacles;' },
-            { language: 'typescript', functionName: 'uniquePathsWithObstacles', code: 'function uniquePathsWithObstacles(obstacleGrid: number[][]): number {\n  // Write your code here\n  return 0;\n}\n\nexport default uniquePathsWithObstacles;' },
-            { language: 'python', functionName: 'uniquePathsWithObstacles', code: 'def uniquePathsWithObstacles(obstacleGrid):\n    # Write your code here\n    return 0' }
-          ],
-          tests: [
-            { id: 's1', type: 'sample', input: { obstacleGrid: [[0,0,0],[0,1,0],[0,0,0]] }, output: 2 }
-          ],
-          solution: 'Use a DP table, set dp[i][j] = 0 if obstacleGrid[i][j] == 1, else dp[i][j] = dp[i-1][j] + dp[i][j-1].'
-        },
-        {
-          id: 'climbing-stairs',
-          slug: 'climbing-stairs',
-          title: 'Climbing Stairs',
-          difficulty: 'easy',
-          topics: ['Dynamic Programming'],
-          prompt: 'You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?',
-          constraints: [
-            '1 <= n <= 45'
-          ],
-          examples: [
-            { input: 'n = 2', output: '2' },
-            { input: 'n = 3', output: '3' }
-          ],
-          hints: [
-            'Use dynamic programming or Fibonacci sequence.'
-          ],
-          starterCode: [
-            { language: 'javascript', functionName: 'climbStairs', code: 'function climbStairs(n) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = climbStairs;' },
-            { language: 'typescript', functionName: 'climbStairs', code: 'function climbStairs(n: number): number {\n  // Write your code here\n  return 0;\n}\n\nexport default climbStairs;' },
-            { language: 'python', functionName: 'climbStairs', code: 'def climbStairs(n):\n    # Write your code here\n    return 0' }
-          ],
-          tests: [
-            { id: 's1', type: 'sample', input: { n: 2 }, output: 2 },
-            { id: 's2', type: 'sample', input: { n: 3 }, output: 3 }
-          ],
-          solution: 'The answer is the nth Fibonacci number.'
-        },
-          {
-            id: 'edit-distance',
-            slug: 'edit-distance',
-            title: 'Edit Distance',
-            difficulty: 'hard',
-            topics: ['String', 'Dynamic Programming'],
-            prompt: 'Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2. You may perform insert, delete, or replace operations.',
-            constraints: [
-              '0 <= word1.length, word2.length <= 500'
-            ],
-            examples: [
-              { input: 'word1 = "horse", word2 = "ros"', output: '3' }
-            ],
-            hints: [
-              'Use dynamic programming to build a table of subproblem solutions.'
-            ],
-            starterCode: [
-              { language: 'javascript', functionName: 'minDistance', code: 'function minDistance(word1, word2) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = minDistance;' },
-              { language: 'typescript', functionName: 'minDistance', code: 'function minDistance(word1: string, word2: string): number {\n  // Write your code here\n  return 0;\n}\n\nexport default minDistance;' },
-              { language: 'python', functionName: 'minDistance', code: 'def minDistance(word1, word2):\n    # Write your code here\n    return 0' }
-            ],
-            tests: [
-              { id: 's1', type: 'sample', input: { word1: 'horse', word2: 'ros' }, output: 3 }
-            ],
-            solution: 'Use a DP table where dp[i][j] = min(dp[i-1][j] + 1, dp[i][j-1] + 1, dp[i-1][j-1] + (word1[i-1] != word2[j-1])).'
-          },
-          {
-            id: 'maximum-product-subarray',
-            slug: 'maximum-product-subarray',
-            title: 'Maximum Product Subarray',
-            difficulty: 'medium',
-            topics: ['Array', 'Dynamic Programming'],
-            prompt: 'Given an integer array nums, find the contiguous subarray within an array (containing at least one number) which has the largest product.',
-            constraints: [
-              '1 <= nums.length <= 2 * 10^4',
-              '-10 <= nums[i] <= 10'
-            ],
-            examples: [
-              { input: 'nums = [2,3,-2,4]', output: '6' }
-            ],
-            hints: [
-              'Track both max and min products at each position.'
-            ],
-            starterCode: [
-              { language: 'javascript', functionName: 'maxProduct', code: 'function maxProduct(nums) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = maxProduct;' },
-              { language: 'typescript', functionName: 'maxProduct', code: 'function maxProduct(nums: number[]): number {\n  // Write your code here\n  return 0;\n}\n\nexport default maxProduct;' },
-              { language: 'python', functionName: 'maxProduct', code: 'def maxProduct(nums):\n    # Write your code here\n    return 0' }
-            ],
-            tests: [
-              { id: 's1', type: 'sample', input: { nums: [2,3,-2,4] }, output: 6 }
-            ],
-            solution: 'Track both max and min products at each position, swap when encountering a negative.'
-          },
-          // ...more problems to be appended in further batches...
-  // ...existing code...
-  // (All unique problems from your list are now present. Adding more placeholders to reach 150 total.)
-  // --- Additional Top Interview Coding Questions (Placeholder) ---
-  // The following are generic placeholders. Please update with real questions as needed.
-  // Explicitly add placeholder objects to reach 150 total
-  // Please update these with real questions as needed.
-  // --- Begin Placeholders ---
-    { id: 'top-interview-q101', slug: 'top-interview-q101', title: 'Top Interview Question 101', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD', solved: false },
-    { id: 'top-interview-q102', slug: 'top-interview-q102', title: 'Top Interview Question 102', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD', solved: false },
-    { id: 'top-interview-q103', slug: 'top-interview-q103', title: 'Top Interview Question 103', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD', solved: false },
-    { id: 'top-interview-q104', slug: 'top-interview-q104', title: 'Top Interview Question 104', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD', solved: false },
-    { id: 'top-interview-q105', slug: 'top-interview-q105', title: 'Top Interview Question 105', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD', solved: false },
-    { id: 'top-interview-q106', slug: 'top-interview-q106', title: 'Top Interview Question 106', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD', solved: false },
-    { id: 'top-interview-q107', slug: 'top-interview-q107', title: 'Top Interview Question 107', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD', solved: false },
-    { id: 'top-interview-q108', slug: 'top-interview-q108', title: 'Top Interview Question 108', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD', solved: false },
-    { id: 'top-interview-q109', slug: 'top-interview-q109', title: 'Top Interview Question 109', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD', solved: false },
-    { id: 'top-interview-q110', slug: 'top-interview-q110', title: 'Top Interview Question 110', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD', solved: false },
-    { id: 'top-interview-q111', slug: 'top-interview-q111', title: 'Top Interview Question 111', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q112', slug: 'top-interview-q112', title: 'Top Interview Question 112', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q113', slug: 'top-interview-q113', title: 'Top Interview Question 113', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q114', slug: 'top-interview-q114', title: 'Top Interview Question 114', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q115', slug: 'top-interview-q115', title: 'Top Interview Question 115', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q116', slug: 'top-interview-q116', title: 'Top Interview Question 116', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q117', slug: 'top-interview-q117', title: 'Top Interview Question 117', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q118', slug: 'top-interview-q118', title: 'Top Interview Question 118', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q119', slug: 'top-interview-q119', title: 'Top Interview Question 119', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q120', slug: 'top-interview-q120', title: 'Top Interview Question 120', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q121', slug: 'top-interview-q121', title: 'Top Interview Question 121', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q122', slug: 'top-interview-q122', title: 'Top Interview Question 122', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q123', slug: 'top-interview-q123', title: 'Top Interview Question 123', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q124', slug: 'top-interview-q124', title: 'Top Interview Question 124', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q125', slug: 'top-interview-q125', title: 'Top Interview Question 125', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q126', slug: 'top-interview-q126', title: 'Top Interview Question 126', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q127', slug: 'top-interview-q127', title: 'Top Interview Question 127', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q128', slug: 'top-interview-q128', title: 'Top Interview Question 128', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q129', slug: 'top-interview-q129', title: 'Top Interview Question 129', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q130', slug: 'top-interview-q130', title: 'Top Interview Question 130', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q131', slug: 'top-interview-q131', title: 'Top Interview Question 131', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q132', slug: 'top-interview-q132', title: 'Top Interview Question 132', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q133', slug: 'top-interview-q133', title: 'Top Interview Question 133', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q134', slug: 'top-interview-q134', title: 'Top Interview Question 134', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q135', slug: 'top-interview-q135', title: 'Top Interview Question 135', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q136', slug: 'top-interview-q136', title: 'Top Interview Question 136', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q137', slug: 'top-interview-q137', title: 'Top Interview Question 137', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q138', slug: 'top-interview-q138', title: 'Top Interview Question 138', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q139', slug: 'top-interview-q139', title: 'Top Interview Question 139', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q140', slug: 'top-interview-q140', title: 'Top Interview Question 140', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q141', slug: 'top-interview-q141', title: 'Top Interview Question 141', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q142', slug: 'top-interview-q142', title: 'Top Interview Question 142', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q143', slug: 'top-interview-q143', title: 'Top Interview Question 143', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q144', slug: 'top-interview-q144', title: 'Top Interview Question 144', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q145', slug: 'top-interview-q145', title: 'Top Interview Question 145', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q146', slug: 'top-interview-q146', title: 'Top Interview Question 146', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q147', slug: 'top-interview-q147', title: 'Top Interview Question 147', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q148', slug: 'top-interview-q148', title: 'Top Interview Question 148', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q149', slug: 'top-interview-q149', title: 'Top Interview Question 149', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-    { id: 'top-interview-q150', slug: 'top-interview-q150', title: 'Top Interview Question 150', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q151', slug: 'top-interview-q151', title: 'Top Interview Question 151', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q152', slug: 'top-interview-q152', title: 'Top Interview Question 152', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q153', slug: 'top-interview-q153', title: 'Top Interview Question 153', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q154', slug: 'top-interview-q154', title: 'Top Interview Question 154', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q155', slug: 'top-interview-q155', title: 'Top Interview Question 155', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q156', slug: 'top-interview-q156', title: 'Top Interview Question 156', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q157', slug: 'top-interview-q157', title: 'Top Interview Question 157', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q158', slug: 'top-interview-q158', title: 'Top Interview Question 158', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q159', slug: 'top-interview-q159', title: 'Top Interview Question 159', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q160', slug: 'top-interview-q160', title: 'Top Interview Question 160', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q161', slug: 'top-interview-q161', title: 'Top Interview Question 161', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q162', slug: 'top-interview-q162', title: 'Top Interview Question 162', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q163', slug: 'top-interview-q163', title: 'Top Interview Question 163', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q164', slug: 'top-interview-q164', title: 'Top Interview Question 164', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q165', slug: 'top-interview-q165', title: 'Top Interview Question 165', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q166', slug: 'top-interview-q166', title: 'Top Interview Question 166', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-      { id: 'top-interview-q167', slug: 'top-interview-q167', title: 'Top Interview Question 167', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-        { id: 'top-interview-q168', slug: 'top-interview-q168', title: 'Top Interview Question 168', difficulty: 'medium', topics: ['Array', 'String'], prompt: 'TBD', constraints: [], examples: [], hints: [], starterCode: [], tests: [], solution: 'TBD' },
-  // ...repeat for each missing problem up to 150...
-  // --- End Placeholders ---
+  {
+    id: 'rotate-image',
+    slug: 'rotate-image',
+    title: 'Rotate Image',
+    difficulty: 'medium',
+    topics: ['Array', 'Matrix'],
+    prompt: 'You are given an n x n 2D matrix representing an image, rotate the image by 90 degrees (clockwise) in-place.',
+    constraints: [
+      'matrix.length == n',
+      'matrix[i].length == n',
+      '1 <= n <= 20'
+    ],
+    examples: [
+      { input: 'matrix = [[1,2,3],[4,5,6],[7,8,9]]', output: '[[7,4,1],[8,5,2],[9,6,3]]' }
+    ],
+    hints: [
+      'Transpose the matrix, then reverse each row.'
+    ],
+    starterCode: [
+      { language: 'javascript', functionName: 'rotate', code: 'function rotate(matrix) {\n  // Write your code here\n}\n\nmodule.exports = rotate;' },
+      { language: 'typescript', functionName: 'rotate', code: 'function rotate(matrix: number[][]): void {\n  // Write your code here\n}\n\nexport default rotate;' },
+      { language: 'python', functionName: 'rotate', code: 'def rotate(matrix):\n    # Write your code here\n    pass' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { matrix: [[1, 2, 3], [4, 5, 6], [7, 8, 9]] }, output: [[7, 4, 1], [8, 5, 2], [9, 6, 3]] }
+    ],
+    solution: 'First transpose the matrix, then reverse each row.'
+  },
+  {
+    id: 'spiral-matrix',
+    slug: 'spiral-matrix',
+    title: 'Spiral Matrix',
+    difficulty: 'medium',
+    topics: ['Array', 'Matrix'],
+    prompt: 'Given an m x n matrix, return all elements of the matrix in spiral order.',
+    constraints: [
+      '1 <= m, n <= 10'
+    ],
+    examples: [
+      { input: 'matrix = [[1,2,3],[4,5,6],[7,8,9]]', output: '[1,2,3,6,9,8,7,4,5]' }
+    ],
+    hints: [
+      'Simulate the process by keeping track of boundaries.'
+    ],
+    starterCode: [
+      { language: 'javascript', functionName: 'spiralOrder', code: 'function spiralOrder(matrix) {\n  // Write your code here\n  return [];\n}\n\nmodule.exports = spiralOrder;' },
+      { language: 'typescript', functionName: 'spiralOrder', code: 'function spiralOrder(matrix: number[][]): number[] {\n  // Write your code here\n  return [];\n}\n\nexport default spiralOrder;' },
+      { language: 'python', functionName: 'spiralOrder', code: 'def spiralOrder(matrix):\n    # Write your code here\n    return []' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { matrix: [[1, 2, 3], [4, 5, 6], [7, 8, 9]] }, output: [1, 2, 3, 6, 9, 8, 7, 4, 5] }
+    ],
+    solution: 'Use four pointers to track the boundaries and iterate inwards.'
+  },
+  {
+    id: 'set-matrix-zeroes',
+    slug: 'set-matrix-zeroes',
+    title: 'Set Matrix Zeroes',
+    difficulty: 'medium',
+    topics: ['Array', 'Matrix'],
+    prompt: 'Given an m x n integer matrix, if an element is 0, set its entire row and column to 0. Do it in-place.',
+    constraints: [
+      'm == matrix.length',
+      'n == matrix[0].length',
+      '1 <= m, n <= 200'
+    ],
+    examples: [
+      { input: 'matrix = [[1,1,1],[1,0,1],[1,1,1]]', output: '[[1,0,1],[0,0,0],[1,0,1]]' }
+    ],
+    hints: [
+      'Use first row and column as markers.'
+    ],
+    starterCode: [
+      { language: 'javascript', functionName: 'setZeroes', code: 'function setZeroes(matrix) {\n  // Write your code here\n}\n\nmodule.exports = setZeroes;' },
+      { language: 'typescript', functionName: 'setZeroes', code: 'function setZeroes(matrix: number[][]): void {\n  // Write your code here\n}\n\nexport default setZeroes;' },
+      { language: 'python', functionName: 'setZeroes', code: 'def setZeroes(matrix):\n    # Write your code here\n    pass' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { matrix: [[1, 1, 1], [1, 0, 1], [1, 1, 1]] }, output: [[1, 0, 1], [0, 0, 0], [1, 0, 1]] }
+    ],
+    solution: 'Use first row and column as markers to record which rows/columns should be zero.'
+  },
+  {
+    id: 'search-a-2d-matrix',
+    slug: 'search-a-2d-matrix',
+    title: 'Search a 2D Matrix',
+    difficulty: 'medium',
+    topics: ['Array', 'Binary Search', 'Matrix'],
+    prompt: 'Write an efficient algorithm that searches for a value in an m x n matrix. This matrix has the following properties: Integers in each row are sorted from left to right. The first integer of each row is greater than the last integer of the previous row.',
+    constraints: [
+      'm == matrix.length',
+      'n == matrix[0].length',
+      '1 <= m, n <= 100'
+    ],
+    examples: [
+      { input: 'matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3', output: 'true' }
+    ],
+    hints: [
+      'Treat the matrix as a 1D array and use binary search.'
+    ],
+    starterCode: [
+      { language: 'javascript', functionName: 'searchMatrix', code: 'function searchMatrix(matrix, target) {\n  // Write your code here\n  return false;\n}\n\nmodule.exports = searchMatrix;' },
+      { language: 'typescript', functionName: 'searchMatrix', code: 'function searchMatrix(matrix: number[][], target: number): boolean {\n  // Write your code here\n  return false;\n}\n\nexport default searchMatrix;' },
+      { language: 'python', functionName: 'searchMatrix', code: 'def searchMatrix(matrix, target):\n    # Write your code here\n    return False' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { matrix: [[1, 3, 5, 7], [10, 11, 16, 20], [23, 30, 34, 60]], target: 3 }, output: true }
+    ],
+    solution: 'Use binary search on the virtual 1D array representation of the matrix.'
+  },
+  {
+    id: 'word-search',
+    slug: 'word-search',
+    title: 'Word Search',
+    difficulty: 'medium',
+    topics: ['Array', 'Backtracking', 'Matrix'],
+    prompt: 'Given an m x n grid of characters board and a string word, return true if word exists in the grid.',
+    constraints: [
+      'm == board.length',
+      'n == board[i].length',
+      '1 <= m, n <= 6',
+      '1 <= word.length <= 15'
+    ],
+    examples: [
+      { input: 'board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"', output: 'true' }
+    ],
+    hints: [
+      'Use backtracking to search for the word.'
+    ],
+    starterCode: [
+      { language: 'javascript', functionName: 'exist', code: 'function exist(board, word) {\n  // Write your code here\n  return false;\n}\n\nmodule.exports = exist;' },
+      { language: 'typescript', functionName: 'exist', code: 'function exist(board: string[][], word: string): boolean {\n  // Write your code here\n  return false;\n}\n\nexport default exist;' },
+      { language: 'python', functionName: 'exist', code: 'def exist(board, word):\n    # Write your code here\n    return False' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { board: [["A", "B", "C", "E"], ["S", "F", "C", "S"], ["A", "D", "E", "E"]], word: "ABCCED" }, output: true }
+    ],
+    solution: 'Use DFS with backtracking to search for the word in the grid.'
+  },
+  {
+    id: 'combination-sum-ii',
+    slug: 'combination-sum-ii',
+    title: 'Combination Sum II',
+    difficulty: 'medium',
+    topics: ['Array', 'Backtracking'],
+    prompt: 'Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target. Each number in candidates may only be used once in the combination.',
+    constraints: [
+      '1 <= candidates.length <= 100',
+      '1 <= candidates[i] <= 50',
+      '1 <= target <= 30'
+    ],
+    examples: [
+      { input: 'candidates = [10,1,2,7,6,1,5], target = 8', output: '[[1,1,6],[1,2,5],[1,7],[2,6]]' }
+    ],
+    hints: [
+      'Sort the array and use backtracking, skipping duplicates.'
+    ],
+    starterCode: [
+      { language: 'javascript', functionName: 'combinationSum2', code: 'function combinationSum2(candidates, target) {\n  // Write your code here\n  return [];\n}\n\nmodule.exports = combinationSum2;' },
+      { language: 'typescript', functionName: 'combinationSum2', code: 'function combinationSum2(candidates: number[], target: number): number[][] {\n  // Write your code here\n  return [];\n}\n\nexport default combinationSum2;' },
+      { language: 'python', functionName: 'combinationSum2', code: 'def combinationSum2(candidates, target):\n    # Write your code here\n    return []' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { candidates: [10, 1, 2, 7, 6, 1, 5], target: 8 }, output: [[1, 1, 6], [1, 2, 5], [1, 7], [2, 6]] }
+    ],
+    solution: 'Sort candidates, use backtracking, and skip duplicates to find all unique combinations.'
+  },
+  {
+    id: 'minimum-path-sum',
+    slug: 'minimum-path-sum',
+    title: 'Minimum Path Sum',
+    difficulty: 'medium',
+    topics: ['Array', 'Dynamic Programming', 'Matrix'],
+    prompt: 'Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of all numbers along its path. You can only move either down or right at any point in time.',
+    constraints: [
+      'm == grid.length',
+      'n == grid[0].length',
+      '1 <= m, n <= 200'
+    ],
+    examples: [
+      { input: 'grid = [[1,3,1],[1,5,1],[4,2,1]]', output: '7' }
+    ],
+    hints: [
+      'Use dynamic programming to build up the minimum path sum.'
+    ],
+    starterCode: [
+      { language: 'javascript', functionName: 'minPathSum', code: 'function minPathSum(grid) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = minPathSum;' },
+      { language: 'typescript', functionName: 'minPathSum', code: 'function minPathSum(grid: number[][]): number {\n  // Write your code here\n  return 0;\n}\n\nexport default minPathSum;' },
+      { language: 'python', functionName: 'minPathSum', code: 'def minPathSum(grid):\n    # Write your code here\n    return 0' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { grid: [[1, 3, 1], [1, 5, 1], [4, 2, 1]] }, output: 7 }
+    ],
+    solution: 'Use a DP table where dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1]).'
+  },
+  {
+    id: 'unique-paths-ii',
+    slug: 'unique-paths-ii',
+    title: 'Unique Paths II',
+    difficulty: 'medium',
+    topics: ['Array', 'Dynamic Programming', 'Matrix'],
+    prompt: 'A robot is located at the top-left corner of a m x n grid. The robot can only move either down or right at any point in time. The robot is trying to reach the bottom-right corner of the grid. Now consider if some obstacles are added to the grids. How many unique paths would there be?',
+    constraints: [
+      'm == obstacleGrid.length',
+      'n == obstacleGrid[0].length',
+      '1 <= m, n <= 100'
+    ],
+    examples: [
+      { input: 'obstacleGrid = [[0,0,0],[0,1,0],[0,0,0]]', output: '2' }
+    ],
+    hints: [
+      'Use dynamic programming, set dp[i][j] = 0 if obstacle.'
+    ],
+    starterCode: [
+      { language: 'javascript', functionName: 'uniquePathsWithObstacles', code: 'function uniquePathsWithObstacles(obstacleGrid) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = uniquePathsWithObstacles;' },
+      { language: 'typescript', functionName: 'uniquePathsWithObstacles', code: 'function uniquePathsWithObstacles(obstacleGrid: number[][]): number {\n  // Write your code here\n  return 0;\n}\n\nexport default uniquePathsWithObstacles;' },
+      { language: 'python', functionName: 'uniquePathsWithObstacles', code: 'def uniquePathsWithObstacles(obstacleGrid):\n    # Write your code here\n    return 0' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { obstacleGrid: [[0, 0, 0], [0, 1, 0], [0, 0, 0]] }, output: 2 }
+    ],
+    solution: 'Use a DP table, set dp[i][j] = 0 if obstacleGrid[i][j] == 1, else dp[i][j] = dp[i-1][j] + dp[i][j-1].'
+  },
+  {
+    id: 'climbing-stairs',
+    slug: 'climbing-stairs',
+    title: 'Climbing Stairs',
+    difficulty: 'easy',
+    topics: ['Dynamic Programming'],
+    prompt: 'You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?',
+    constraints: [
+      '1 <= n <= 45'
+    ],
+    examples: [
+      { input: 'n = 2', output: '2' },
+      { input: 'n = 3', output: '3' }
+    ],
+    hints: [
+      'Use dynamic programming or Fibonacci sequence.'
+    ],
+    starterCode: [
+      { language: 'javascript', functionName: 'climbStairs', code: 'function climbStairs(n) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = climbStairs;' },
+      { language: 'typescript', functionName: 'climbStairs', code: 'function climbStairs(n: number): number {\n  // Write your code here\n  return 0;\n}\n\nexport default climbStairs;' },
+      { language: 'python', functionName: 'climbStairs', code: 'def climbStairs(n):\n    # Write your code here\n    return 0' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { n: 2 }, output: 2 },
+      { id: 's2', type: 'sample', input: { n: 3 }, output: 3 }
+    ],
+    solution: 'The answer is the nth Fibonacci number.'
+  },
+  {
+    id: 'edit-distance',
+    slug: 'edit-distance',
+    title: 'Edit Distance',
+    difficulty: 'hard',
+    topics: ['String', 'Dynamic Programming'],
+    prompt: 'Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2. You may perform insert, delete, or replace operations.',
+    constraints: [
+      '0 <= word1.length, word2.length <= 500'
+    ],
+    examples: [
+      { input: 'word1 = "horse", word2 = "ros"', output: '3' }
+    ],
+    hints: [
+      'Use dynamic programming to build a table of subproblem solutions.'
+    ],
+    starterCode: [
+      { language: 'javascript', functionName: 'minDistance', code: 'function minDistance(word1, word2) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = minDistance;' },
+      { language: 'typescript', functionName: 'minDistance', code: 'function minDistance(word1: string, word2: string): number {\n  // Write your code here\n  return 0;\n}\n\nexport default minDistance;' },
+      { language: 'python', functionName: 'minDistance', code: 'def minDistance(word1, word2):\n    # Write your code here\n    return 0' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { word1: 'horse', word2: 'ros' }, output: 3 }
+    ],
+    solution: 'Use a DP table where dp[i][j] = min(dp[i-1][j] + 1, dp[i][j-1] + 1, dp[i-1][j-1] + (word1[i-1] != word2[j-1])).'
+  },
+  {
+    id: 'maximum-product-subarray',
+    slug: 'maximum-product-subarray',
+    title: 'Maximum Product Subarray',
+    difficulty: 'medium',
+    topics: ['Array', 'Dynamic Programming'],
+    prompt: 'Given an integer array nums, find the contiguous subarray within an array (containing at least one number) which has the largest product.',
+    constraints: [
+      '1 <= nums.length <= 2 * 10^4',
+      '-10 <= nums[i] <= 10'
+    ],
+    examples: [
+      { input: 'nums = [2,3,-2,4]', output: '6' }
+    ],
+    hints: [
+      'Track both max and min products at each position.'
+    ],
+    starterCode: [
+      { language: 'javascript', functionName: 'maxProduct', code: 'function maxProduct(nums) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = maxProduct;' },
+      { language: 'typescript', functionName: 'maxProduct', code: 'function maxProduct(nums: number[]): number {\n  // Write your code here\n  return 0;\n}\n\nexport default maxProduct;' },
+      { language: 'python', functionName: 'maxProduct', code: 'def maxProduct(nums):\n    # Write your code here\n    return 0' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { nums: [2, 3, -2, 4] }, output: 6 }
+    ],
+    solution: 'Track both max and min products at each position, swap when encountering a negative.'
+  },
+  // NEW PROBLEMS - Adding 68 more to reach 150 total
+  {
+    id: 'decode-ways',
+    slug: 'decode-ways',
+    title: 'Decode Ways',
+    difficulty: 'medium',
+    topics: ['String', 'Dynamic Programming'],
+    prompt: 'A message containing letters from A-Z can be encoded into numbers using the following mapping: "A" -> "1", "B" -> "2", ..., "Z" -> "26". Given a string s containing only digits, return the number of ways to decode it.',
+    constraints: ['1 <= s.length <= 100', 's contains only digits'],
+    examples: [
+      { input: 's = "12"', output: '2' },
+      { input: 's = "226"', output: '3' }
+    ],
+    hints: ['Use DP: dp[i] = ways to decode s[0:i]', 'Check if s[i-1] forms valid 1-digit and if s[i-2:i] forms valid 2-digit'],
+    starterCode: [
+      { language: 'javascript', functionName: 'numDecodings', code: 'function numDecodings(s) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = numDecodings;' },
+      { language: 'typescript', functionName: 'numDecodings', code: 'function numDecodings(s: string): number {\n  // Write your code here\n  return 0;\n}\n\nexport default numDecodings;' },
+      { language: 'python', functionName: 'numDecodings', code: 'def numDecodings(s):\n    # Write your code here\n    return 0' },
+      { language: 'java', functionName: 'numDecodings', code: 'class Solution {\n    public int numDecodings(String s) {\n        // Write your code here\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'numDecodings', code: '#include <string>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numDecodings(string s) {\n        // Write your code here\n        return 0;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { s: '12' }, output: 2 },
+      { id: 's2', type: 'sample', input: { s: '226' }, output: 3 }
+    ],
+    solution: 'DP: dp[i] = dp[i-1] (if s[i-1] is 1-9) + dp[i-2] (if s[i-2:i] is 10-26). Handle leading zeros.'
+  },
+  {
+    id: 'unique-paths',
+    slug: 'unique-paths',
+    title: 'Unique Paths',
+    difficulty: 'medium',
+    topics: ['Math', 'Dynamic Programming'],
+    prompt: 'A robot is located at the top-left corner of a m x n grid. The robot can only move either down or right at any point in time. The robot is trying to reach the bottom-right corner of the grid. How many possible unique paths are there?',
+    constraints: ['1 <= m, n <= 100'],
+    examples: [
+      { input: 'm = 3, n = 7', output: '28' }
+    ],
+    hints: ['Use DP: dp[i][j] = dp[i-1][j] + dp[i][j-1]', 'Or use combinatorics: C(m+n-2, m-1)'],
+    starterCode: [
+      { language: 'javascript', functionName: 'uniquePaths', code: 'function uniquePaths(m, n) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = uniquePaths;' },
+      { language: 'typescript', functionName: 'uniquePaths', code: 'function uniquePaths(m: number, n: number): number {\n  // Write your code here\n  return 0;\n}\n\nexport default uniquePaths;' },
+      { language: 'python', functionName: 'uniquePaths', code: 'def uniquePaths(m, n):\n    # Write your code here\n    return 0' },
+      { language: 'java', functionName: 'uniquePaths', code: 'class Solution {\n    public int uniquePaths(int m, int n) {\n        // Write your code here\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'uniquePaths', code: 'class Solution {\npublic:\n    int uniquePaths(int m, int n) {\n        // Write your code here\n        return 0;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { m: 3, n: 7 }, output: 28 },
+      { id: 's2', type: 'sample', input: { m: 3, n: 2 }, output: 3 }
+    ],
+    solution: 'DP table where dp[i][j] = dp[i-1][j] + dp[i][j-1]. Or use math: C(m+n-2, m-1).'
+  },
+  {
+    id: 'jump-game-iii',
+    slug: 'jump-game-iii',
+    title: 'Jump Game III',
+    difficulty: 'medium',
+    topics: ['Array', 'BFS', 'DFS'],
+    prompt: 'Given an array of non-negative integers arr, you are initially positioned at start index of the array. When you are at index i, you can jump to i + arr[i] or i - arr[i], check if you can reach to any index with value 0.',
+    constraints: ['1 <= arr.length <= 5 * 10^4', '0 <= arr[i] < arr.length'],
+    examples: [
+      { input: 'arr = [4,2,3,0,3,1,2], start = 5', output: 'true' }
+    ],
+    hints: ['Use BFS or DFS', 'Mark visited indices to avoid cycles'],
+    starterCode: [
+      { language: 'javascript', functionName: 'canReach', code: 'function canReach(arr, start) {\n  // Write your code here\n  return false;\n}\n\nmodule.exports = canReach;' },
+      { language: 'typescript', functionName: 'canReach', code: 'function canReach(arr: number[], start: number): boolean {\n  // Write your code here\n  return false;\n}\n\nexport default canReach;' },
+      { language: 'python', functionName: 'canReach', code: 'def canReach(arr, start):\n    # Write your code here\n    return False' },
+      { language: 'java', functionName: 'canReach', code: 'class Solution {\n    public boolean canReach(int[] arr, int start) {\n        // Write your code here\n        return false;\n    }\n}' },
+      { language: 'cpp', functionName: 'canReach', code: '#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool canReach(vector<int>& arr, int start) {\n        // Write your code here\n        return false;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { arr: [4, 2, 3, 0, 3, 1, 2], start: 5 }, output: true }
+    ],
+    solution: 'BFS/DFS from start. For each index i, try i+arr[i] and i-arr[i]. Mark visited. Return true if arr[i]==0.'
+  },
+  {
+    id: 'partition-equal-subset-sum',
+    slug: 'partition-equal-subset-sum',
+    title: 'Partition Equal Subset Sum',
+    difficulty: 'medium',
+    topics: ['Array', 'Dynamic Programming'],
+    prompt: 'Given a non-empty array nums containing only positive integers, find if the array can be partitioned into two subsets such that the sum of elements in both subsets is equal.',
+    constraints: ['1 <= nums.length <= 200', '1 <= nums[i] <= 100'],
+    examples: [
+      { input: 'nums = [1,5,11,5]', output: 'true' }
+    ],
+    hints: ['If sum is odd, return false', 'Use subset sum DP with target = sum/2'],
+    starterCode: [
+      { language: 'javascript', functionName: 'canPartition', code: 'function canPartition(nums) {\n  // Write your code here\n  return false;\n}\n\nmodule.exports = canPartition;' },
+      { language: 'typescript', functionName: 'canPartition', code: 'function canPartition(nums: number[]): boolean {\n  // Write your code here\n  return false;\n}\n\nexport default canPartition;' },
+      { language: 'python', functionName: 'canPartition', code: 'def canPartition(nums):\n    # Write your code here\n    return False' },
+      { language: 'java', functionName: 'canPartition', code: 'class Solution {\n    public boolean canPartition(int[] nums) {\n        // Write your code here\n        return false;\n    }\n}' },
+      { language: 'cpp', functionName: 'canPartition', code: '#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool canPartition(vector<int>& nums) {\n        // Write your code here\n        return false;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { nums: [1, 5, 11, 5] }, output: true }
+    ],
+    solution: 'Subset sum problem. DP: dp[i][j] = can we make sum j using first i elements. Target = total_sum/2.'
+  },
+  {
+    id: 'palindrome-partitioning',
+    slug: 'palindrome-partitioning',
+    title: 'Palindrome Partitioning',
+    difficulty: 'medium',
+    topics: ['String', 'Backtracking'],
+    prompt: 'Given a string s, partition s such that every substring of the partition is a palindrome. Return all possible palindrome partitioning of s.',
+    constraints: ['1 <= s.length <= 16'],
+    examples: [
+      { input: 's = "aab"', output: '[["a","a","b"],["aa","b"]]' }
+    ],
+    hints: ['Backtrack: try all possible partitions', 'Check if substring is palindrome before adding'],
+    starterCode: [
+      { language: 'javascript', functionName: 'partition', code: 'function partition(s) {\n  // Write your code here\n  return [];\n}\n\nmodule.exports = partition;' },
+      { language: 'typescript', functionName: 'partition', code: 'function partition(s: string): string[][] {\n  // Write your code here\n  return [];\n}\n\nexport default partition;' },
+      { language: 'python', functionName: 'partition', code: 'def partition(s):\n    # Write your code here\n    return []' },
+      { language: 'java', functionName: 'partition', code: 'import java.util.*;\n\nclass Solution {\n    public List<List<String>> partition(String s) {\n        // Write your code here\n        return new ArrayList<>();\n    }\n}' },
+      { language: 'cpp', functionName: 'partition', code: '#include <vector>\n#include <string>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<vector<string>> partition(string s) {\n        // Write your code here\n        return {};\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { s: 'aab' }, output: [['a', 'a', 'b'], ['aa', 'b']] }
+    ],
+    solution: 'Backtrack: for each position, try all possible palindrome prefixes, recurse on remaining string.'
+  },
+  {
+    id: 'gas-station',
+    slug: 'gas-station',
+    title: 'Gas Station',
+    difficulty: 'medium',
+    topics: ['Array', 'Greedy'],
+    prompt: 'There are n gas stations along a circular route. You have a car with an unlimited gas tank. Given two arrays gas and cost, return the starting gas station index if you can travel around the circuit once, otherwise return -1.',
+    constraints: ['gas.length == n', 'cost.length == n', '1 <= n <= 10^5'],
+    examples: [
+      { input: 'gas = [1,2,3,4,5], cost = [3,4,5,1,2]', output: '3' }
+    ],
+    hints: ['If total gas < total cost, impossible', 'Greedy: if tank becomes negative, start from next station'],
+    starterCode: [
+      { language: 'javascript', functionName: 'canCompleteCircuit', code: 'function canCompleteCircuit(gas, cost) {\n  // Write your code here\n  return -1;\n}\n\nmodule.exports = canCompleteCircuit;' },
+      { language: 'typescript', functionName: 'canCompleteCircuit', code: 'function canCompleteCircuit(gas: number[], cost: number[]): number {\n  // Write your code here\n  return -1;\n}\n\nexport default canCompleteCircuit;' },
+      { language: 'python', functionName: 'canCompleteCircuit', code: 'def canCompleteCircuit(gas, cost):\n    # Write your code here\n    return -1' },
+      { language: 'java', functionName: 'canCompleteCircuit', code: 'class Solution {\n    public int canCompleteCircuit(int[] gas, int[] cost) {\n        // Write your code here\n        return -1;\n    }\n}' },
+      { language: 'cpp', functionName: 'canCompleteCircuit', code: '#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {\n        // Write your code here\n        return -1;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { gas: [1, 2, 3, 4, 5], cost: [3, 4, 5, 1, 2] }, output: 3 }
+    ],
+    solution: 'Greedy: track total and current tank. If current < 0, reset start to next station.'
+  },
+  {
+    id: 'candy',
+    slug: 'candy',
+    title: 'Candy',
+    difficulty: 'hard',
+    topics: ['Array', 'Greedy'],
+    prompt: 'There are n children standing in a line. Each child is assigned a rating value. You are giving candies to these children subjected to the following requirements: Each child must have at least one candy. Children with a higher rating get more candies than their neighbors. Return the minimum number of candies you need to have.',
+    constraints: ['n == ratings.length', '1 <= n <= 2 * 10^4'],
+    examples: [
+      { input: 'ratings = [1,0,2]', output: '5' }
+    ],
+    hints: ['Two passes: left-to-right and right-to-left', 'Ensure higher rating has more candies than both neighbors'],
+    starterCode: [
+      { language: 'javascript', functionName: 'candy', code: 'function candy(ratings) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = candy;' },
+      { language: 'typescript', functionName: 'candy', code: 'function candy(ratings: number[]): number {\n  // Write your code here\n  return 0;\n}\n\nexport default candy;' },
+      { language: 'python', functionName: 'candy', code: 'def candy(ratings):\n    # Write your code here\n    return 0' },
+      { language: 'java', functionName: 'candy', code: 'class Solution {\n    public int candy(int[] ratings) {\n        // Write your code here\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'candy', code: '#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    int candy(vector<int>& ratings) {\n        // Write your code here\n        return 0;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { ratings: [1, 0, 2] }, output: 5 }
+    ],
+    solution: 'Two passes: L-R (if ratings[i]>ratings[i-1], candies[i]=candies[i-1]+1), R-L (similar). Sum candies.'
+  },
+  {
+    id: 'trapping-rain-water',
+    slug: 'trapping-rain-water',
+    title: 'Trapping Rain Water',
+    difficulty: 'hard',
+    topics: ['Array', 'Two Pointers', 'Stack'],
+    prompt: 'Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.',
+    constraints: ['n == height.length', '1 <= n <= 2 * 10^4'],
+    examples: [
+      { input: 'height = [0,1,0,2,1,0,1,3,2,1,2,1]', output: '6' }
+    ],
+    hints: ['Two pointers: track left_max and right_max', 'Water at i = min(left_max, right_max) - height[i]'],
+    starterCode: [
+      { language: 'javascript', functionName: 'trap', code: 'function trap(height) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = trap;' },
+      { language: 'typescript', functionName: 'trap', code: 'function trap(height: number[]): number {\n  // Write your code here\n  return 0;\n}\n\nexport default trap;' },
+      { language: 'python', functionName: 'trap', code: 'def trap(height):\n    # Write your code here\n    return 0' },
+      { language: 'java', functionName: 'trap', code: 'class Solution {\n    public int trap(int[] height) {\n        // Write your code here\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'trap', code: '#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    int trap(vector<int>& height) {\n        // Write your code here\n        return 0;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { height: [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1] }, output: 6 }
+    ],
+    solution: 'Two pointers: move pointer with smaller max. Water += max - height[i].'
+  },
+  {
+    id: 'remove-nth-node-from-end',
+    slug: 'remove-nth-node-from-end',
+    title: 'Remove Nth Node From End of List',
+    difficulty: 'medium',
+    topics: ['Linked List', 'Two Pointers'],
+    prompt: 'Given the head of a linked list, remove the nth node from the end of the list and return its head.',
+    constraints: ['The number of nodes in the list is sz', '1 <= sz <= 30', '1 <= n <= sz'],
+    examples: [
+      { input: 'head = [1,2,3,4,5], n = 2', output: '[1,2,3,5]' }
+    ],
+    hints: ['Use two pointers with n gap', 'Move both until fast reaches end'],
+    starterCode: [
+      { language: 'javascript', functionName: 'removeNthFromEnd', code: 'function removeNthFromEnd(head, n) {\n  // Write your code here\n  return head;\n}\n\nmodule.exports = removeNthFromEnd;' },
+      { language: 'typescript', functionName: 'removeNthFromEnd', code: 'class ListNode {\n  val: number;\n  next: ListNode | null;\n}\n\nfunction removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {\n  // Write your code here\n  return head;\n}\n\nexport default removeNthFromEnd;' },
+      { language: 'python', functionName: 'removeNthFromEnd', code: 'def removeNthFromEnd(head, n):\n    # Write your code here\n    return head' },
+      { language: 'java', functionName: 'removeNthFromEnd', code: 'class Solution {\n    public ListNode removeNthFromEnd(ListNode head, int n) {\n        // Write your code here\n        return head;\n    }\n}' },
+      { language: 'cpp', functionName: 'removeNthFromEnd', code: 'struct ListNode {\n    int val;\n    ListNode *next;\n};\n\nclass Solution {\npublic:\n    ListNode* removeNthFromEnd(ListNode* head, int n) {\n        // Write your code here\n        return head;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { head: [1, 2, 3, 4, 5], n: 2 }, output: [1, 2, 3, 5] }
+    ],
+    solution: 'Two pointers: fast moves n steps ahead, then both move until fast.next is null. Remove slow.next.'
+  },
+  {
+    id: 'swap-nodes-in-pairs',
+    slug: 'swap-nodes-in-pairs',
+    title: 'Swap Nodes in Pairs',
+    difficulty: 'medium',
+    topics: ['Linked List', 'Recursion'],
+    prompt: 'Given a linked list, swap every two adjacent nodes and return its head. You must solve the problem without modifying the values in the list nodes.',
+    constraints: ['The number of nodes in the list is in the range [0, 100]'],
+    examples: [
+      { input: 'head = [1,2,3,4]', output: '[2,1,4,3]' }
+    ],
+    hints: ['Use dummy node', 'Swap pairs iteratively or recursively'],
+    starterCode: [
+      { language: 'javascript', functionName: 'swapPairs', code: 'function swapPairs(head) {\n  // Write your code here\n  return head;\n}\n\nmodule.exports = swapPairs;' },
+      { language: 'typescript', functionName: 'swapPairs', code: 'class ListNode {\n  val: number;\n  next: ListNode | null;\n}\n\nfunction swapPairs(head: ListNode | null): ListNode | null {\n  // Write your code here\n  return head;\n}\n\nexport default swapPairs;' },
+      { language: 'python', functionName: 'swapPairs', code: 'def swapPairs(head):\n    # Write your code here\n    return head' },
+      { language: 'java', functionName: 'swapPairs', code: 'class Solution {\n    public ListNode swapPairs(ListNode head) {\n        // Write your code here\n        return head;\n    }\n}' },
+      { language: 'cpp', functionName: 'swapPairs', code: 'struct ListNode {\n    int val;\n    ListNode *next;\n};\n\nclass Solution {\npublic:\n    ListNode* swapPairs(ListNode* head) {\n        // Write your code here\n        return head;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { head: [1, 2, 3, 4] }, output: [2, 1, 4, 3] }
+    ],
+    solution: 'Iterative: dummy->1->2->3. Swap 1 and 2: dummy->2->1->3. Move to next pair.'
+  },
+  {
+    id: 'reverse-linked-list-ii',
+    slug: 'reverse-linked-list-ii',
+    title: 'Reverse Linked List II',
+    difficulty: 'medium',
+    topics: ['Linked List'],
+    prompt: 'Given the head of a singly linked list and two integers left and right where left <= right, reverse the nodes of the list from position left to position right, and return the reversed list.',
+    constraints: ['The number of nodes in the list is n', '1 <= n <= 500', '1 <= left <= right <= n'],
+    examples: [
+      { input: 'head = [1,2,3,4,5], left = 2, right = 4', output: '[1,4,3,2,5]' }
+    ],
+    hints: ['Find the node before left position', 'Reverse the sublist from left to right', 'Reconnect the reversed part'],
+    starterCode: [
+      { language: 'javascript', functionName: 'reverseBetween', code: 'function reverseBetween(head, left, right) {\n  // Write your code here\n  return head;\n}\n\nmodule.exports = reverseBetween;' },
+      { language: 'typescript', functionName: 'reverseBetween', code: 'class ListNode {\n  val: number;\n  next: ListNode | null;\n}\n\nfunction reverseBetween(head: ListNode | null, left: number, right: number): ListNode | null {\n  // Write your code here\n  return head;\n}\n\nexport default reverseBetween;' },
+      { language: 'python', functionName: 'reverseBetween', code: 'def reverseBetween(head, left, right):\n    # Write your code here\n    return head' },
+      { language: 'java', functionName: 'reverseBetween', code: 'class Solution {\n    public ListNode reverseBetween(ListNode head, int left, int right) {\n        // Write your code here\n        return head;\n    }\n}' },
+      { language: 'cpp', functionName: 'reverseBetween', code: 'struct ListNode {\n    int val;\n    ListNode *next;\n};\n\nclass Solution {\npublic:\n    ListNode* reverseBetween(ListNode* head, int left, int right) {\n        // Write your code here\n        return head;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { head: [1, 2, 3, 4, 5], left: 2, right: 4 }, output: [1, 4, 3, 2, 5] }
+    ],
+    solution: 'Use dummy node. Find node before left. Reverse sublist. Reconnect.'
+  },
+  {
+    id: 'rotate-list',
+    slug: 'rotate-list',
+    title: 'Rotate List',
+    difficulty: 'medium',
+    topics: ['Linked List', 'Two Pointers'],
+    prompt: 'Given the head of a linked list, rotate the list to the right by k places.',
+    constraints: ['The number of nodes in the list is in the range [0, 500]', '0 <= k <= 2 * 10^9'],
+    examples: [
+      { input: 'head = [1,2,3,4,5], k = 2', output: '[4,5,1,2,3]' }
+    ],
+    hints: ['Connect tail to head to make circular', 'Find new tail at (n - k % n - 1)', 'Break the circle'],
+    starterCode: [
+      { language: 'javascript', functionName: 'rotateRight', code: 'function rotateRight(head, k) {\n  // Write your code here\n  return head;\n}\n\nmodule.exports = rotateRight;' },
+      { language: 'typescript', functionName: 'rotateRight', code: 'class ListNode {\n  val: number;\n  next: ListNode | null;\n}\n\nfunction rotateRight(head: ListNode | null, k: number): ListNode | null {\n  // Write your code here\n  return head;\n}\n\nexport default rotateRight;' },
+      { language: 'python', functionName: 'rotateRight', code: 'def rotateRight(head, k):\n    # Write your code here\n    return head' },
+      { language: 'java', functionName: 'rotateRight', code: 'class Solution {\n    public ListNode rotateRight(ListNode head, int k) {\n        // Write your code here\n        return head;\n    }\n}' },
+      { language: 'cpp', functionName: 'rotateRight', code: 'struct ListNode {\n    int val;\n    ListNode *next;\n};\n\nclass Solution {\npublic:\n    ListNode* rotateRight(ListNode* head, int k) {\n        // Write your code here\n        return head;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { head: [1, 2, 3, 4, 5], k: 2 }, output: [4, 5, 1, 2, 3] }
+    ],
+    solution: 'Make circular, find new tail at (n - k%n - 1), break circle.'
+  },
+  {
+    id: 'partition-list',
+    slug: 'partition-list',
+    title: 'Partition List',
+    difficulty: 'medium',
+    topics: ['Linked List', 'Two Pointers'],
+    prompt: 'Given the head of a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x. Preserve the original relative order of the nodes in each partition.',
+    constraints: ['The number of nodes in the list is in the range [0, 200]'],
+    examples: [
+      { input: 'head = [1,4,3,2,5,2], x = 3', output: '[1,2,2,4,3,5]' }
+    ],
+    hints: ['Use two dummy nodes for two partitions', 'Connect them at the end'],
+    starterCode: [
+      { language: 'javascript', functionName: 'partition', code: 'function partition(head, x) {\n  // Write your code here\n  return head;\n}\n\nmodule.exports = partition;' },
+      { language: 'typescript', functionName: 'partition', code: 'class ListNode {\n  val: number;\n  next: ListNode | null;\n}\n\nfunction partition(head: ListNode | null, x: number): ListNode | null {\n  // Write your code here\n  return head;\n}\n\nexport default partition;' },
+      { language: 'python', functionName: 'partition', code: 'def partition(head, x):\n    # Write your code here\n    return head' },
+      { language: 'java', functionName: 'partition', code: 'class Solution {\n    public ListNode partition(ListNode head, int x) {\n        // Write your code here\n        return head;\n    }\n}' },
+      { language: 'cpp', functionName: 'partition', code: 'struct ListNode {\n    int val;\n    ListNode *next;\n};\n\nclass Solution {\npublic:\n    ListNode* partition(ListNode* head, int x) {\n        // Write your code here\n        return head;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { head: [1, 4, 3, 2, 5, 2], x: 3 }, output: [1, 2, 2, 4, 3, 5] }
+    ],
+    solution: 'Two dummy nodes: before and after. Iterate and append to respective lists. Connect them.'
+  },
+  {
+    id: 'sort-list',
+    slug: 'sort-list',
+    title: 'Sort List',
+    difficulty: 'medium',
+    topics: ['Linked List', 'Divide and Conquer', 'Sorting', 'Merge Sort'],
+    prompt: 'Given the head of a linked list, return the list after sorting it in ascending order.',
+    constraints: ['The number of nodes in the list is in the range [0, 5 * 10^4]'],
+    examples: [
+      { input: 'head = [4,2,1,3]', output: '[1,2,3,4]' }
+    ],
+    hints: ['Use merge sort', 'Find middle using slow/fast pointers', 'Merge two sorted lists'],
+    starterCode: [
+      { language: 'javascript', functionName: 'sortList', code: 'function sortList(head) {\n  // Write your code here\n  return head;\n}\n\nmodule.exports = sortList;' },
+      { language: 'typescript', functionName: 'sortList', code: 'class ListNode {\n  val: number;\n  next: ListNode | null;\n}\n\nfunction sortList(head: ListNode | null): ListNode | null {\n  // Write your code here\n  return head;\n}\n\nexport default sortList;' },
+      { language: 'python', functionName: 'sortList', code: 'def sortList(head):\n    # Write your code here\n    return head' },
+      { language: 'java', functionName: 'sortList', code: 'class Solution {\n    public ListNode sortList(ListNode head) {\n        // Write your code here\n        return head;\n    }\n}' },
+      { language: 'cpp', functionName: 'sortList', code: 'struct ListNode {\n    int val;\n    ListNode *next;\n};\n\nclass Solution {\npublic:\n    ListNode* sortList(ListNode* head) {\n        // Write your code here\n        return head;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { head: [4, 2, 1, 3] }, output: [1, 2, 3, 4] }
+    ],
+    solution: 'Merge sort: find middle, recursively sort halves, merge sorted halves.'
+  },
+  {
+    id: 'reorder-list',
+    slug: 'reorder-list',
+    title: 'Reorder List',
+    difficulty: 'medium',
+    topics: ['Linked List', 'Two Pointers', 'Stack'],
+    prompt: 'You are given the head of a singly linked-list. Reorder the list to be: L0 → Ln → L1 → Ln-1 → L2 → Ln-2 → ...',
+    constraints: ['The number of nodes in the list is in the range [1, 5 * 10^4]'],
+    examples: [
+      { input: 'head = [1,2,3,4]', output: '[1,4,2,3]' }
+    ],
+    hints: ['Find middle', 'Reverse second half', 'Merge two halves alternately'],
+    starterCode: [
+      { language: 'javascript', functionName: 'reorderList', code: 'function reorderList(head) {\n  // Write your code here\n}\n\nmodule.exports = reorderList;' },
+      { language: 'typescript', functionName: 'reorderList', code: 'class ListNode {\n  val: number;\n  next: ListNode | null;\n}\n\nfunction reorderList(head: ListNode | null): void {\n  // Write your code here\n}\n\nexport default reorderList;' },
+      { language: 'python', functionName: 'reorderList', code: 'def reorderList(head):\n    # Write your code here\n    pass' },
+      { language: 'java', functionName: 'reorderList', code: 'class Solution {\n    public void reorderList(ListNode head) {\n        // Write your code here\n    }\n}' },
+      { language: 'cpp', functionName: 'reorderList', code: 'struct ListNode {\n    int val;\n    ListNode *next;\n};\n\nclass Solution {\npublic:\n    void reorderList(ListNode* head) {\n        // Write your code here\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { head: [1, 2, 3, 4] }, output: [1, 4, 2, 3] }
+    ],
+    solution: 'Find middle, reverse second half, merge alternately.'
+  },
+  {
+    id: 'linked-list-cycle-ii',
+    slug: 'linked-list-cycle-ii',
+    title: 'Linked List Cycle II',
+    difficulty: 'medium',
+    topics: ['Linked List', 'Two Pointers'],
+    prompt: 'Given the head of a linked list, return the node where the cycle begins. If there is no cycle, return null.',
+    constraints: ['The number of the nodes in the list is in the range [0, 10^4]'],
+    examples: [
+      { input: 'head = [3,2,0,-4], pos = 1', output: 'tail connects to node index 1' }
+    ],
+    hints: ['Use Floyd\'s cycle detection', 'After detecting cycle, reset one pointer to head', 'Move both one step until they meet'],
+    starterCode: [
+      { language: 'javascript', functionName: 'detectCycle', code: 'function detectCycle(head) {\n  // Write your code here\n  return null;\n}\n\nmodule.exports = detectCycle;' },
+      { language: 'typescript', functionName: 'detectCycle', code: 'class ListNode {\n  val: number;\n  next: ListNode | null;\n}\n\nfunction detectCycle(head: ListNode | null): ListNode | null {\n  // Write your code here\n  return null;\n}\n\nexport default detectCycle;' },
+      { language: 'python', functionName: 'detectCycle', code: 'def detectCycle(head):\n    # Write your code here\n    return None' },
+      { language: 'java', functionName: 'detectCycle', code: 'class Solution {\n    public ListNode detectCycle(ListNode head) {\n        // Write your code here\n        return null;\n    }\n}' },
+      { language: 'cpp', functionName: 'detectCycle', code: 'struct ListNode {\n    int val;\n    ListNode *next;\n};\n\nclass Solution {\npublic:\n    ListNode *detectCycle(ListNode *head) {\n        // Write your code here\n        return nullptr;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { head: [3, 2, 0, -4], pos: 1 }, output: 1 }
+    ],
+    solution: 'Floyd\'s algorithm: detect cycle, reset slow to head, move both one step until meet.'
+  },
+  {
+    id: 'intersection-of-two-linked-lists',
+    slug: 'intersection-of-two-linked-lists',
+    title: 'Intersection of Two Linked Lists',
+    difficulty: 'easy',
+    topics: ['Linked List', 'Two Pointers'],
+    prompt: 'Given the heads of two singly linked-lists headA and headB, return the node at which the two lists intersect. If the two linked lists have no intersection at all, return null.',
+    constraints: ['The number of nodes in listA is m', 'The number of nodes in listB is n'],
+    examples: [
+      { input: 'intersectVal = 8, listA = [4,1,8,4,5], listB = [5,6,1,8,4,5]', output: 'Intersected at 8' }
+    ],
+    hints: ['Two pointers: when one reaches end, redirect to other head', 'They will meet at intersection or null'],
+    starterCode: [
+      { language: 'javascript', functionName: 'getIntersectionNode', code: 'function getIntersectionNode(headA, headB) {\n  // Write your code here\n  return null;\n}\n\nmodule.exports = getIntersectionNode;' },
+      { language: 'typescript', functionName: 'getIntersectionNode', code: 'class ListNode {\n  val: number;\n  next: ListNode | null;\n}\n\nfunction getIntersectionNode(headA: ListNode | null, headB: ListNode | null): ListNode | null {\n  // Write your code here\n  return null;\n}\n\nexport default getIntersectionNode;' },
+      { language: 'python', functionName: 'getIntersectionNode', code: 'def getIntersectionNode(headA, headB):\n    # Write your code here\n    return None' },
+      { language: 'java', functionName: 'getIntersectionNode', code: 'class Solution {\n    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {\n        // Write your code here\n        return null;\n    }\n}' },
+      { language: 'cpp', functionName: 'getIntersectionNode', code: 'struct ListNode {\n    int val;\n    ListNode *next;\n};\n\nclass Solution {\npublic:\n    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {\n        // Write your code here\n        return nullptr;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { headA: [4, 1, 8, 4, 5], headB: [5, 6, 1, 8, 4, 5], skipA: 2, skipB: 3 }, output: 8 }
+    ],
+    solution: 'Two pointers: redirect to other head when reaching end. Meet at intersection.'
+  },
+  {
+    id: 'flatten-binary-tree-to-linked-list',
+    slug: 'flatten-binary-tree-to-linked-list',
+    title: 'Flatten Binary Tree to Linked List',
+    difficulty: 'medium',
+    topics: ['Tree', 'DFS'],
+    prompt: 'Given the root of a binary tree, flatten the tree into a "linked list" using the right pointers. The "linked list" should use the same TreeNode class where the right child pointer points to the next node and the left child pointer is always null.',
+    constraints: ['The number of nodes in the tree is in the range [0, 2000]'],
+    examples: [
+      { input: 'root = [1,2,5,3,4,null,6]', output: '[1,null,2,null,3,null,4,null,5,null,6]' }
+    ],
+    hints: ['Use preorder traversal', 'Or recursively flatten right, then left, then connect'],
+    starterCode: [
+      { language: 'javascript', functionName: 'flatten', code: 'function flatten(root) {\n  // Write your code here\n}\n\nmodule.exports = flatten;' },
+      { language: 'typescript', functionName: 'flatten', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction flatten(root: TreeNode | null): void {\n  // Write your code here\n}\n\nexport default flatten;' },
+      { language: 'python', functionName: 'flatten', code: 'def flatten(root):\n    # Write your code here\n    pass' },
+      { language: 'java', functionName: 'flatten', code: 'class Solution {\n    public void flatten(TreeNode root) {\n        // Write your code here\n    }\n}' },
+      { language: 'cpp', functionName: 'flatten', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    void flatten(TreeNode* root) {\n        // Write your code here\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [1, 2, 5, 3, 4, null, 6] }, output: [1, null, 2, null, 3, null, 4, null, 5, null, 6] }
+    ],
+    solution: 'Recursively flatten right and left. Connect root->right to left, find tail, connect to old right.'
+  },
+  {
+    id: 'construct-binary-tree-from-preorder-and-inorder',
+    slug: 'construct-binary-tree-from-preorder-and-inorder',
+    title: 'Construct Binary Tree from Preorder and Inorder Traversal',
+    difficulty: 'medium',
+    topics: ['Tree', 'Array', 'Divide and Conquer'],
+    prompt: 'Given two integer arrays preorder and inorder where preorder is the preorder traversal of a binary tree and inorder is the inorder traversal of the same tree, construct and return the binary tree.',
+    constraints: ['1 <= preorder.length <= 3000', 'inorder.length == preorder.length'],
+    examples: [
+      { input: 'preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]', output: '[3,9,20,null,null,15,7]' }
+    ],
+    hints: ['First element of preorder is root', 'Find root in inorder to split left/right subtrees', 'Recursively build left and right'],
+    starterCode: [
+      { language: 'javascript', functionName: 'buildTree', code: 'function buildTree(preorder, inorder) {\n  // Write your code here\n  return null;\n}\n\nmodule.exports = buildTree;' },
+      { language: 'typescript', functionName: 'buildTree', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction buildTree(preorder: number[], inorder: number[]): TreeNode | null {\n  // Write your code here\n  return null;\n}\n\nexport default buildTree;' },
+      { language: 'python', functionName: 'buildTree', code: 'def buildTree(preorder, inorder):\n    # Write your code here\n    return None' },
+      { language: 'java', functionName: 'buildTree', code: 'class Solution {\n    public TreeNode buildTree(int[] preorder, int[] inorder) {\n        // Write your code here\n        return null;\n    }\n}' },
+      { language: 'cpp', functionName: 'buildTree', code: '#include <vector>\nusing namespace std;\n\nstruct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {\n        // Write your code here\n        return nullptr;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { preorder: [3, 9, 20, 15, 7], inorder: [9, 3, 15, 20, 7] }, output: [3, 9, 20, null, null, 15, 7] }
+    ],
+    solution: 'Use preorder[0] as root. Find in inorder to split. Recursively build left and right subtrees.'
+  },
+  {
+    id: 'populating-next-right-pointers',
+    slug: 'populating-next-right-pointers',
+    title: 'Populating Next Right Pointers in Each Node',
+    difficulty: 'medium',
+    topics: ['Tree', 'BFS', 'DFS'],
+    prompt: 'You are given a perfect binary tree where all leaves are on the same level, and every parent has two children. Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL.',
+    constraints: ['The number of nodes in the tree is in the range [0, 2^12 - 1]'],
+    examples: [
+      { input: 'root = [1,2,3,4,5,6,7]', output: '[1,#,2,3,#,4,5,6,7,#]' }
+    ],
+    hints: ['Use level order traversal', 'Or use existing next pointers to traverse'],
+    starterCode: [
+      { language: 'javascript', functionName: 'connect', code: 'function connect(root) {\n  // Write your code here\n  return root;\n}\n\nmodule.exports = connect;' },
+      { language: 'typescript', functionName: 'connect', code: 'class Node {\n  val: number;\n  left: Node | null;\n  right: Node | null;\n  next: Node | null;\n}\n\nfunction connect(root: Node | null): Node | null {\n  // Write your code here\n  return root;\n}\n\nexport default connect;' },
+      { language: 'python', functionName: 'connect', code: 'def connect(root):\n    # Write your code here\n    return root' },
+      { language: 'java', functionName: 'connect', code: 'class Solution {\n    public Node connect(Node root) {\n        // Write your code here\n        return root;\n    }\n}' },
+      { language: 'cpp', functionName: 'connect', code: 'class Node {\npublic:\n    int val;\n    Node* left;\n    Node* right;\n    Node* next;\n};\n\nclass Solution {\npublic:\n    Node* connect(Node* root) {\n        // Write your code here\n        return root;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [1, 2, 3, 4, 5, 6, 7] }, output: [1, null, 2, 3, null, 4, 5, 6, 7, null] }
+    ],
+    solution: 'Level order: connect nodes in same level. Or use existing next pointers to traverse.'
+  },
+  {
+    id: 'binary-tree-level-order-traversal',
+    slug: 'binary-tree-level-order-traversal',
+    title: 'Binary Tree Level Order Traversal',
+    difficulty: 'medium',
+    topics: ['Tree', 'BFS'],
+    prompt: 'Given the root of a binary tree, return the level order traversal of its nodes values. (i.e., from left to right, level by level).',
+    constraints: ['The number of nodes in the tree is in the range [0, 2000]'],
+    examples: [
+      { input: 'root = [3,9,20,null,null,15,7]', output: '[[3],[9,20],[15,7]]' }
+    ],
+    hints: ['Use BFS with queue', 'Track level size to separate levels'],
+    starterCode: [
+      { language: 'javascript', functionName: 'levelOrder', code: 'function levelOrder(root) {\n  // Write your code here\n  return [];\n}\n\nmodule.exports = levelOrder;' },
+      { language: 'typescript', functionName: 'levelOrder', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction levelOrder(root: TreeNode | null): number[][] {\n  // Write your code here\n  return [];\n}\n\nexport default levelOrder;' },
+      { language: 'python', functionName: 'levelOrder', code: 'def levelOrder(root):\n    # Write your code here\n    return []' },
+      { language: 'java', functionName: 'levelOrder', code: 'import java.util.*;\n\nclass Solution {\n    public List<List<Integer>> levelOrder(TreeNode root) {\n        // Write your code here\n        return new ArrayList<>();\n    }\n}' },
+      { language: 'cpp', functionName: 'levelOrder', code: '#include <vector>\n#include <queue>\nusing namespace std;\n\nstruct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    vector<vector<int>> levelOrder(TreeNode* root) {\n        // Write your code here\n        return {};\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [3, 9, 20, null, null, 15, 7] }, output: [[3], [9, 20], [15, 7]] }
+    ],
+    solution: 'BFS: use queue, process level by level. Track level size before processing.'
+  },
+  {
+    id: 'binary-tree-zigzag-level-order',
+    slug: 'binary-tree-zigzag-level-order',
+    title: 'Binary Tree Zigzag Level Order Traversal',
+    difficulty: 'medium',
+    topics: ['Tree', 'BFS'],
+    prompt: 'Given the root of a binary tree, return the zigzag level order traversal of its nodes values. (i.e., from left to right, then right to left for the next level and alternate between).',
+    constraints: ['The number of nodes in the tree is in the range [0, 2000]'],
+    examples: [
+      { input: 'root = [3,9,20,null,null,15,7]', output: '[[3],[20,9],[15,7]]' }
+    ],
+    hints: ['Use BFS', 'Reverse alternate levels'],
+    starterCode: [
+      { language: 'javascript', functionName: 'zigzagLevelOrder', code: 'function zigzagLevelOrder(root) {\n  // Write your code here\n  return [];\n}\n\nmodule.exports = zigzagLevelOrder;' },
+      { language: 'typescript', functionName: 'zigzagLevelOrder', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction zigzagLevelOrder(root: TreeNode | null): number[][] {\n  // Write your code here\n  return [];\n}\n\nexport default zigzagLevelOrder;' },
+      { language: 'python', functionName: 'zigzagLevelOrder', code: 'def zigzagLevelOrder(root):\n    # Write your code here\n    return []' },
+      { language: 'java', functionName: 'zigzagLevelOrder', code: 'import java.util.*;\n\nclass Solution {\n    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {\n        // Write your code here\n        return new ArrayList<>();\n    }\n}' },
+      { language: 'cpp', functionName: 'zigzagLevelOrder', code: '#include <vector>\nusing namespace std;\n\nstruct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {\n        // Write your code here\n        return {};\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [3, 9, 20, null, null, 15, 7] }, output: [[3], [20, 9], [15, 7]] }
+    ],
+    solution: 'BFS with level tracking. Reverse alternate levels or use deque.'
+  },
+  {
+    id: 'binary-tree-right-side-view',
+    slug: 'binary-tree-right-side-view',
+    title: 'Binary Tree Right Side View',
+    difficulty: 'medium',
+    topics: ['Tree', 'BFS', 'DFS'],
+    prompt: 'Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.',
+    constraints: ['The number of nodes in the tree is in the range [0, 100]'],
+    examples: [
+      { input: 'root = [1,2,3,null,5,null,4]', output: '[1,3,4]' }
+    ],
+    hints: ['BFS: take last node of each level', 'Or DFS: visit right first, track depth'],
+    starterCode: [
+      { language: 'javascript', functionName: 'rightSideView', code: 'function rightSideView(root) {\n  // Write your code here\n  return [];\n}\n\nmodule.exports = rightSideView;' },
+      { language: 'typescript', functionName: 'rightSideView', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction rightSideView(root: TreeNode | null): number[] {\n  // Write your code here\n  return [];\n}\n\nexport default rightSideView;' },
+      { language: 'python', functionName: 'rightSideView', code: 'def rightSideView(root):\n    # Write your code here\n    return []' },
+      { language: 'java', functionName: 'rightSideView', code: 'import java.util.*;\n\nclass Solution {\n    public List<Integer> rightSideView(TreeNode root) {\n        // Write your code here\n        return new ArrayList<>();\n    }\n}' },
+      { language: 'cpp', functionName: 'rightSideView', code: '#include <vector>\nusing namespace std;\n\nstruct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    vector<int> rightSideView(TreeNode* root) {\n        // Write your code here\n        return {};\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [1, 2, 3, null, 5, null, 4] }, output: [1, 3, 4] }
+    ],
+    solution: 'BFS: add last node of each level. Or DFS right-first with depth tracking.'
+  },
+  {
+    id: 'count-complete-tree-nodes',
+    slug: 'count-complete-tree-nodes',
+    title: 'Count Complete Tree Nodes',
+    difficulty: 'medium',
+    topics: ['Tree', 'Binary Search'],
+    prompt: 'Given the root of a complete binary tree, return the number of the nodes in the tree. Design an algorithm that runs in less than O(n) time complexity.',
+    constraints: ['The number of nodes in the tree is in the range [0, 5 * 10^4]'],
+    examples: [
+      { input: 'root = [1,2,3,4,5,6]', output: '6' }
+    ],
+    hints: ['Check if tree is perfect by comparing left and right heights', 'If perfect, use formula 2^h - 1', 'Otherwise recurse on subtrees'],
+    starterCode: [
+      { language: 'javascript', functionName: 'countNodes', code: 'function countNodes(root) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = countNodes;' },
+      { language: 'typescript', functionName: 'countNodes', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction countNodes(root: TreeNode | null): number {\n  // Write your code here\n  return 0;\n}\n\nexport default countNodes;' },
+      { language: 'python', functionName: 'countNodes', code: 'def countNodes(root):\n    # Write your code here\n    return 0' },
+      { language: 'java', functionName: 'countNodes', code: 'class Solution {\n    public int countNodes(TreeNode root) {\n        // Write your code here\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'countNodes', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    int countNodes(TreeNode* root) {\n        // Write your code here\n        return 0;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [1, 2, 3, 4, 5, 6] }, output: 6 }
+    ],
+    solution: 'Compare left and right heights. If equal, tree is perfect: return 2^h-1. Else recurse.'
+  },
+  {
+    id: 'lowest-common-ancestor-of-binary-tree',
+    slug: 'lowest-common-ancestor-of-binary-tree',
+    title: 'Lowest Common Ancestor of a Binary Tree',
+    difficulty: 'medium',
+    topics: ['Tree', 'DFS'],
+    prompt: 'Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.',
+    constraints: ['The number of nodes in the tree is in the range [2, 10^5]'],
+    examples: [
+      { input: 'root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1', output: '3' }
+    ],
+    hints: ['Recursively search for p and q', 'If both found in different subtrees, current node is LCA'],
+    starterCode: [
+      { language: 'javascript', functionName: 'lowestCommonAncestor', code: 'function lowestCommonAncestor(root, p, q) {\n  // Write your code here\n  return null;\n}\n\nmodule.exports = lowestCommonAncestor;' },
+      { language: 'typescript', functionName: 'lowestCommonAncestor', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction lowestCommonAncestor(root: TreeNode | null, p: TreeNode | null, q: TreeNode | null): TreeNode | null {\n  // Write your code here\n  return null;\n}\n\nexport default lowestCommonAncestor;' },
+      { language: 'python', functionName: 'lowestCommonAncestor', code: 'def lowestCommonAncestor(root, p, q):\n    # Write your code here\n    return None' },
+      { language: 'java', functionName: 'lowestCommonAncestor', code: 'class Solution {\n    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {\n        // Write your code here\n        return null;\n    }\n}' },
+      { language: 'cpp', functionName: 'lowestCommonAncestor', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {\n        // Write your code here\n        return nullptr;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [3, 5, 1, 6, 2, 0, 8, null, null, 7, 4], p: 5, q: 1 }, output: 3 }
+    ],
+    solution: 'Recursive: if root is p or q, return root. If both subtrees return non-null, root is LCA.'
+  },
+  {
+    id: 'path-sum-ii',
+    slug: 'path-sum-ii',
+    title: 'Path Sum II',
+    difficulty: 'medium',
+    topics: ['Tree', 'Backtracking', 'DFS'],
+    prompt: 'Given the root of a binary tree and an integer targetSum, return all root-to-leaf paths where the sum of the node values in the path equals targetSum.',
+    constraints: ['The number of nodes in the tree is in the range [0, 5000]'],
+    examples: [
+      { input: 'root = [5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22', output: '[[5,4,11,2],[5,8,4,5]]' }
+    ],
+    hints: ['DFS with path tracking', 'Backtrack when returning from leaf'],
+    starterCode: [
+      { language: 'javascript', functionName: 'pathSum', code: 'function pathSum(root, targetSum) {\n  // Write your code here\n  return [];\n}\n\nmodule.exports = pathSum;' },
+      { language: 'typescript', functionName: 'pathSum', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction pathSum(root: TreeNode | null, targetSum: number): number[][] {\n  // Write your code here\n  return [];\n}\n\nexport default pathSum;' },
+      { language: 'python', functionName: 'pathSum', code: 'def pathSum(root, targetSum):\n    # Write your code here\n    return []' },
+      { language: 'java', functionName: 'pathSum', code: 'import java.util.*;\n\nclass Solution {\n    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {\n        // Write your code here\n        return new ArrayList<>();\n    }\n}' },
+      { language: 'cpp', functionName: 'pathSum', code: '#include <vector>\nusing namespace std;\n\nstruct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {\n        // Write your code here\n        return {};\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [5, 4, 8, 11, null, 13, 4, 7, 2, null, null, 5, 1], targetSum: 22 }, output: [[5, 4, 11, 2], [5, 8, 4, 5]] }
+    ],
+    solution: 'DFS with path array. Add to result if leaf and sum equals target. Backtrack.'
+  },
+  {
+    id: 'sum-root-to-leaf-numbers',
+    slug: 'sum-root-to-leaf-numbers',
+    title: 'Sum Root to Leaf Numbers',
+    difficulty: 'medium',
+    topics: ['Tree', 'DFS'],
+    prompt: 'You are given the root of a binary tree containing digits from 0 to 9 only. Each root-to-leaf path in the tree represents a number. Return the total sum of all root-to-leaf numbers.',
+    constraints: ['The number of nodes in the tree is in the range [1, 1000]'],
+    examples: [
+      { input: 'root = [1,2,3]', output: '25' }
+    ],
+    hints: ['DFS: pass current number down', 'At leaf, add to total sum'],
+    starterCode: [
+      { language: 'javascript', functionName: 'sumNumbers', code: 'function sumNumbers(root) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = sumNumbers;' },
+      { language: 'typescript', functionName: 'sumNumbers', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction sumNumbers(root: TreeNode | null): number {\n  // Write your code here\n  return 0;\n}\n\nexport default sumNumbers;' },
+      { language: 'python', functionName: 'sumNumbers', code: 'def sumNumbers(root):\n    # Write your code here\n    return 0' },
+      { language: 'java', functionName: 'sumNumbers', code: 'class Solution {\n    public int sumNumbers(TreeNode root) {\n        // Write your code here\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'sumNumbers', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    int sumNumbers(TreeNode* root) {\n        // Write your code here\n        return 0;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [1, 2, 3] }, output: 25 }
+    ],
+    solution: 'DFS: pass currentNum = currentNum * 10 + node.val. At leaf, add to sum.'
+  },
+  {
+    id: 'binary-tree-maximum-path-sum',
+    slug: 'binary-tree-maximum-path-sum',
+    title: 'Binary Tree Maximum Path Sum',
+    difficulty: 'hard',
+    topics: ['Tree', 'DFS'],
+    prompt: 'A path in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has an edge connecting them. A node can only appear in the sequence at most once. The path sum of a path is the sum of the node values in the path. Given the root of a binary tree, return the maximum path sum of any non-empty path.',
+    constraints: ['The number of nodes in the tree is in the range [1, 3 * 10^4]'],
+    examples: [
+      { input: 'root = [1,2,3]', output: '6' }
+    ],
+    hints: ['For each node, calculate max path through it', 'Track global max', 'Return max single path to parent'],
+    starterCode: [
+      { language: 'javascript', functionName: 'maxPathSum', code: 'function maxPathSum(root) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = maxPathSum;' },
+      { language: 'typescript', functionName: 'maxPathSum', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction maxPathSum(root: TreeNode | null): number {\n  // Write your code here\n  return 0;\n}\n\nexport default maxPathSum;' },
+      { language: 'python', functionName: 'maxPathSum', code: 'def maxPathSum(root):\n    # Write your code here\n    return 0' },
+      { language: 'java', functionName: 'maxPathSum', code: 'class Solution {\n    public int maxPathSum(TreeNode root) {\n        // Write your code here\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'maxPathSum', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    int maxPathSum(TreeNode* root) {\n        // Write your code here\n        return 0;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [1, 2, 3] }, output: 6 }
+    ],
+    solution: 'DFS: for each node, maxPath = node.val + max(0, left) + max(0, right). Return node.val + max(0, max(left, right)).'
+  },
+  {
+    id: 'serialize-and-deserialize-binary-tree',
+    slug: 'serialize-and-deserialize-binary-tree',
+    title: 'Serialize and Deserialize Binary Tree',
+    difficulty: 'hard',
+    topics: ['Tree', 'DFS', 'BFS', 'Design'],
+    prompt: 'Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer. Design an algorithm to serialize and deserialize a binary tree.',
+    constraints: ['The number of nodes in the tree is in the range [0, 10^4]'],
+    examples: [
+      { input: 'root = [1,2,3,null,null,4,5]', output: '[1,2,3,null,null,4,5]' }
+    ],
+    hints: ['Use preorder traversal for serialize', 'Use queue/recursion for deserialize'],
+    starterCode: [
+      { language: 'javascript', functionName: 'Codec', code: 'class Codec {\n  serialize(root) {\n    // Write your code here\n    return "";\n  }\n  deserialize(data) {\n    // Write your code here\n    return null;\n  }\n}\n\nmodule.exports = Codec;' },
+      { language: 'typescript', functionName: 'Codec', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nclass Codec {\n  serialize(root: TreeNode | null): string {\n    // Write your code here\n    return "";\n  }\n  deserialize(data: string): TreeNode | null {\n    // Write your code here\n    return null;\n  }\n}\n\nexport default Codec;' },
+      { language: 'python', functionName: 'Codec', code: 'class Codec:\n    def serialize(self, root):\n        # Write your code here\n        return ""\n    def deserialize(self, data):\n        # Write your code here\n        return None' },
+      { language: 'java', functionName: 'Codec', code: 'class Codec {\n    public String serialize(TreeNode root) {\n        // Write your code here\n        return "";\n    }\n    public TreeNode deserialize(String data) {\n        // Write your code here\n        return null;\n    }\n}' },
+      { language: 'cpp', functionName: 'Codec', code: '#include <string>\nusing namespace std;\n\nstruct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Codec {\npublic:\n    string serialize(TreeNode* root) {\n        // Write your code here\n        return "";\n    }\n    TreeNode* deserialize(string data) {\n        // Write your code here\n        return nullptr;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [1, 2, 3, null, null, 4, 5] }, output: [1, 2, 3, null, null, 4, 5] }
+    ],
+    solution: 'Serialize: preorder with null markers. Deserialize: build tree from queue of values.'
+  },
+  {
+    id: 'kth-smallest-element-in-bst',
+    slug: 'kth-smallest-element-in-bst',
+    title: 'Kth Smallest Element in a BST',
+    difficulty: 'medium',
+    topics: ['Tree', 'BST', 'DFS'],
+    prompt: 'Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.',
+    constraints: ['The number of nodes in the tree is n', '1 <= k <= n <= 10^4'],
+    examples: [
+      { input: 'root = [3,1,4,null,2], k = 1', output: '1' }
+    ],
+    hints: ['Inorder traversal of BST gives sorted order', 'Return kth element during traversal'],
+    starterCode: [
+      { language: 'javascript', functionName: 'kthSmallest', code: 'function kthSmallest(root, k) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = kthSmallest;' },
+      { language: 'typescript', functionName: 'kthSmallest', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction kthSmallest(root: TreeNode | null, k: number): number {\n  // Write your code here\n  return 0;\n}\n\nexport default kthSmallest;' },
+      { language: 'python', functionName: 'kthSmallest', code: 'def kthSmallest(root, k):\n    # Write your code here\n    return 0' },
+      { language: 'java', functionName: 'kthSmallest', code: 'class Solution {\n    public int kthSmallest(TreeNode root, int k) {\n        // Write your code here\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'kthSmallest', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    int kthSmallest(TreeNode* root, int k) {\n        // Write your code here\n        return 0;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [3, 1, 4, null, 2], k: 1 }, output: 1 }
+    ],
+    solution: 'Inorder traversal (left, root, right). Decrement k, return when k==0.'
+  },
+  {
+    id: 'validate-binary-search-tree',
+    slug: 'validate-binary-search-tree',
+    title: 'Validate Binary Search Tree',
+    difficulty: 'medium',
+    topics: ['Tree', 'BST', 'DFS'],
+    prompt: 'Given the root of a binary tree, determine if it is a valid binary search tree (BST).',
+    constraints: ['The number of nodes in the tree is in the range [1, 10^4]'],
+    examples: [
+      { input: 'root = [2,1,3]', output: 'true' },
+      { input: 'root = [5,1,4,null,null,3,6]', output: 'false' }
+    ],
+    hints: ['Pass min and max bounds down recursively', 'Or use inorder traversal and check if sorted'],
+    starterCode: [
+      { language: 'javascript', functionName: 'isValidBST', code: 'function isValidBST(root) {\n  // Write your code here\n  return false;\n}\n\nmodule.exports = isValidBST;' },
+      { language: 'typescript', functionName: 'isValidBST', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction isValidBST(root: TreeNode | null): boolean {\n  // Write your code here\n  return false;\n}\n\nexport default isValidBST;' },
+      { language: 'python', functionName: 'isValidBST', code: 'def isValidBST(root):\n    # Write your code here\n    return False' },
+      { language: 'java', functionName: 'isValidBST', code: 'class Solution {\n    public boolean isValidBST(TreeNode root) {\n        // Write your code here\n        return false;\n    }\n}' },
+      { language: 'cpp', functionName: 'isValidBST', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    bool isValidBST(TreeNode* root) {\n        // Write your code here\n        return false;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [2, 1, 3] }, output: true },
+      { id: 's2', type: 'sample', input: { root: [5, 1, 4, null, null, 3, 6] }, output: false }
+    ],
+    solution: 'Recursive with min/max bounds: left must be in (min, root.val), right in (root.val, max).'
+  },
+  {
+    id: 'recover-binary-search-tree',
+    slug: 'recover-binary-search-tree',
+    title: 'Recover Binary Search Tree',
+    difficulty: 'medium',
+    topics: ['Tree', 'BST', 'DFS'],
+    prompt: 'You are given the root of a binary search tree (BST), where the values of exactly two nodes of the tree were swapped by mistake. Recover the tree without changing its structure.',
+    constraints: ['The number of nodes in the tree is in the range [2, 1000]'],
+    examples: [
+      { input: 'root = [1,3,null,null,2]', output: '[3,1,null,null,2]' }
+    ],
+    hints: ['Inorder traversal should be sorted', 'Find two nodes that break the sorted order', 'Swap their values'],
+    starterCode: [
+      { language: 'javascript', functionName: 'recoverTree', code: 'function recoverTree(root) {\n  // Write your code here\n}\n\nmodule.exports = recoverTree;' },
+      { language: 'typescript', functionName: 'recoverTree', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction recoverTree(root: TreeNode | null): void {\n  // Write your code here\n}\n\nexport default recoverTree;' },
+      { language: 'python', functionName: 'recoverTree', code: 'def recoverTree(root):\n    # Write your code here\n    pass' },
+      { language: 'java', functionName: 'recoverTree', code: 'class Solution {\n    public void recoverTree(TreeNode root) {\n        // Write your code here\n    }\n}' },
+      { language: 'cpp', functionName: 'recoverTree', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    void recoverTree(TreeNode* root) {\n        // Write your code here\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [1, 3, null, null, 2] }, output: [3, 1, null, null, 2] }
+    ],
+    solution: 'Inorder traversal: track prev node. Find two violations where prev.val > curr.val. Swap them.'
+  },
+  {
+    id: 'same-tree',
+    slug: 'same-tree',
+    title: 'Same Tree',
+    difficulty: 'easy',
+    topics: ['Tree', 'DFS'],
+    prompt: 'Given the roots of two binary trees p and q, write a function to check if they are the same or not. Two binary trees are considered the same if they are structurally identical, and the nodes have the same value.',
+    constraints: ['The number of nodes in both trees is in the range [0, 100]'],
+    examples: [
+      { input: 'p = [1,2,3], q = [1,2,3]', output: 'true' }
+    ],
+    hints: ['Recursively check if both nodes are equal', 'Check left and right subtrees'],
+    starterCode: [
+      { language: 'javascript', functionName: 'isSameTree', code: 'function isSameTree(p, q) {\n  // Write your code here\n  return false;\n}\n\nmodule.exports = isSameTree;' },
+      { language: 'typescript', functionName: 'isSameTree', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {\n  // Write your code here\n  return false;\n}\n\nexport default isSameTree;' },
+      { language: 'python', functionName: 'isSameTree', code: 'def isSameTree(p, q):\n    # Write your code here\n    return False' },
+      { language: 'java', functionName: 'isSameTree', code: 'class Solution {\n    public boolean isSameTree(TreeNode p, TreeNode q) {\n        // Write your code here\n        return false;\n    }\n}' },
+      { language: 'cpp', functionName: 'isSameTree', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    bool isSameTree(TreeNode* p, TreeNode* q) {\n        // Write your code here\n        return false;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { p: [1, 2, 3], q: [1, 2, 3] }, output: true }
+    ],
+    solution: 'If both null, true. If one null, false. If values differ, false. Recurse on left and right.'
+  },
+  {
+    id: 'symmetric-tree',
+    slug: 'symmetric-tree',
+    title: 'Symmetric Tree',
+    difficulty: 'easy',
+    topics: ['Tree', 'DFS', 'BFS'],
+    prompt: 'Given the root of a binary tree, check whether it is a mirror of itself (i.e., symmetric around its center).',
+    constraints: ['The number of nodes in the tree is in the range [1, 1000]'],
+    examples: [
+      { input: 'root = [1,2,2,3,4,4,3]', output: 'true' }
+    ],
+    hints: ['Check if left subtree is mirror of right subtree', 'Recursively compare left.left with right.right and left.right with right.left'],
+    starterCode: [
+      { language: 'javascript', functionName: 'isSymmetric', code: 'function isSymmetric(root) {\n  // Write your code here\n  return false;\n}\n\nmodule.exports = isSymmetric;' },
+      { language: 'typescript', functionName: 'isSymmetric', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction isSymmetric(root: TreeNode | null): boolean {\n  // Write your code here\n  return false;\n}\n\nexport default isSymmetric;' },
+      { language: 'python', functionName: 'isSymmetric', code: 'def isSymmetric(root):\n    # Write your code here\n    return False' },
+      { language: 'java', functionName: 'isSymmetric', code: 'class Solution {\n    public boolean isSymmetric(TreeNode root) {\n        // Write your code here\n        return false;\n    }\n}' },
+      { language: 'cpp', functionName: 'isSymmetric', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    bool isSymmetric(TreeNode* root) {\n        // Write your code here\n        return false;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [1, 2, 2, 3, 4, 4, 3] }, output: true }
+    ],
+    solution: 'Helper function isMirror(left, right): check if left.val == right.val && isMirror(left.left, right.right) && isMirror(left.right, right.left).'
+  },
+  {
+    id: 'invert-binary-tree',
+    slug: 'invert-binary-tree',
+    title: 'Invert Binary Tree',
+    difficulty: 'easy',
+    topics: ['Tree', 'DFS'],
+    prompt: 'Given the root of a binary tree, invert the tree, and return its root.',
+    constraints: ['The number of nodes in the tree is in the range [0, 100]'],
+    examples: [
+      { input: 'root = [4,2,7,1,3,6,9]', output: '[4,7,2,9,6,3,1]' }
+    ],
+    hints: ['Swap left and right children', 'Recursively invert subtrees'],
+    starterCode: [
+      { language: 'javascript', functionName: 'invertTree', code: 'function invertTree(root) {\n  // Write your code here\n  return root;\n}\n\nmodule.exports = invertTree;' },
+      { language: 'typescript', functionName: 'invertTree', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction invertTree(root: TreeNode | null): TreeNode | null {\n  // Write your code here\n  return root;\n}\n\nexport default invertTree;' },
+      { language: 'python', functionName: 'invertTree', code: 'def invertTree(root):\n    # Write your code here\n    return root' },
+      { language: 'java', functionName: 'invertTree', code: 'class Solution {\n    public TreeNode invertTree(TreeNode root) {\n        // Write your code here\n        return root;\n    }\n}' },
+      { language: 'cpp', functionName: 'invertTree', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    TreeNode* invertTree(TreeNode* root) {\n        // Write your code here\n        return root;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [4, 2, 7, 1, 3, 6, 9] }, output: [4, 7, 2, 9, 6, 3, 1] }
+    ],
+    solution: 'Swap root.left and root.right. Recursively invert left and right subtrees.'
+  },
+  {
+    id: 'diameter-of-binary-tree',
+    slug: 'diameter-of-binary-tree',
+    title: 'Diameter of Binary Tree',
+    difficulty: 'easy',
+    topics: ['Tree', 'DFS'],
+    prompt: 'Given the root of a binary tree, return the length of the diameter of the tree. The diameter of a binary tree is the length of the longest path between any two nodes in a tree. This path may or may not pass through the root.',
+    constraints: ['The number of nodes in the tree is in the range [1, 10^4]'],
+    examples: [
+      { input: 'root = [1,2,3,4,5]', output: '3' }
+    ],
+    hints: ['For each node, diameter through it = leftHeight + rightHeight', 'Track global max'],
+    starterCode: [
+      { language: 'javascript', functionName: 'diameterOfBinaryTree', code: 'function diameterOfBinaryTree(root) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = diameterOfBinaryTree;' },
+      { language: 'typescript', functionName: 'diameterOfBinaryTree', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction diameterOfBinaryTree(root: TreeNode | null): number {\n  // Write your code here\n  return 0;\n}\n\nexport default diameterOfBinaryTree;' },
+      { language: 'python', functionName: 'diameterOfBinaryTree', code: 'def diameterOfBinaryTree(root):\n    # Write your code here\n    return 0' },
+      { language: 'java', functionName: 'diameterOfBinaryTree', code: 'class Solution {\n    public int diameterOfBinaryTree(TreeNode root) {\n        // Write your code here\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'diameterOfBinaryTree', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    int diameterOfBinaryTree(TreeNode* root) {\n        // Write your code here\n        return 0;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [1, 2, 3, 4, 5] }, output: 3 }
+    ],
+    solution: 'DFS: for each node, update max = max(max, leftHeight + rightHeight). Return 1 + max(leftHeight, rightHeight).'
+  },
+  {
+    id: 'balanced-binary-tree',
+    slug: 'balanced-binary-tree',
+    title: 'Balanced Binary Tree',
+    difficulty: 'easy',
+    topics: ['Tree', 'DFS'],
+    prompt: 'Given a binary tree, determine if it is height-balanced. A height-balanced binary tree is a binary tree in which the depth of the two subtrees of every node never differs by more than one.',
+    constraints: ['The number of nodes in the tree is in the range [0, 5000]'],
+    examples: [
+      { input: 'root = [3,9,20,null,null,15,7]', output: 'true' }
+    ],
+    hints: ['Calculate height of each subtree', 'Check if abs(leftHeight - rightHeight) <= 1'],
+    starterCode: [
+      { language: 'javascript', functionName: 'isBalanced', code: 'function isBalanced(root) {\n  // Write your code here\n  return false;\n}\n\nmodule.exports = isBalanced;' },
+      { language: 'typescript', functionName: 'isBalanced', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction isBalanced(root: TreeNode | null): boolean {\n  // Write your code here\n  return false;\n}\n\nexport default isBalanced;' },
+      { language: 'python', functionName: 'isBalanced', code: 'def isBalanced(root):\n    # Write your code here\n    return False' },
+      { language: 'java', functionName: 'isBalanced', code: 'class Solution {\n    public boolean isBalanced(TreeNode root) {\n        // Write your code here\n        return false;\n    }\n}' },
+      { language: 'cpp', functionName: 'isBalanced', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    bool isBalanced(TreeNode* root) {\n        // Write your code here\n        return false;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [3, 9, 20, null, null, 15, 7] }, output: true }
+    ],
+    solution: 'DFS: return -1 if unbalanced. Otherwise return 1 + max(leftHeight, rightHeight).'
+  },
+  {
+    id: 'minimum-depth-of-binary-tree',
+    slug: 'minimum-depth-of-binary-tree',
+    title: 'Minimum Depth of Binary Tree',
+    difficulty: 'easy',
+    topics: ['Tree', 'BFS', 'DFS'],
+    prompt: 'Given a binary tree, find its minimum depth. The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.',
+    constraints: ['The number of nodes in the tree is in the range [0, 10^5]'],
+    examples: [
+      { input: 'root = [3,9,20,null,null,15,7]', output: '2' }
+    ],
+    hints: ['BFS: return depth when first leaf is found', 'Or DFS: min depth = 1 + min(left, right), handle one-child case'],
+    starterCode: [
+      { language: 'javascript', functionName: 'minDepth', code: 'function minDepth(root) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = minDepth;' },
+      { language: 'typescript', functionName: 'minDepth', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction minDepth(root: TreeNode | null): number {\n  // Write your code here\n  return 0;\n}\n\nexport default minDepth;' },
+      { language: 'python', functionName: 'minDepth', code: 'def minDepth(root):\n    # Write your code here\n    return 0' },
+      { language: 'java', functionName: 'minDepth', code: 'class Solution {\n    public int minDepth(TreeNode root) {\n        // Write your code here\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'minDepth', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    int minDepth(TreeNode* root) {\n        // Write your code here\n        return 0;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [3, 9, 20, null, null, 15, 7] }, output: 2 }
+    ],
+    solution: 'BFS: return level when first leaf found. Or DFS: if only one child, recurse on that child.'
+  },
+  {
+    id: 'maximum-depth-of-binary-tree',
+    slug: 'maximum-depth-of-binary-tree',
+    title: 'Maximum Depth of Binary Tree',
+    difficulty: 'easy',
+    topics: ['Tree', 'DFS'],
+    prompt: 'Given the root of a binary tree, return its maximum depth. A binary tree maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.',
+    constraints: ['The number of nodes in the tree is in the range [0, 10^4]'],
+    examples: [
+      { input: 'root = [3,9,20,null,null,15,7]', output: '3' }
+    ],
+    hints: ['Recursively calculate max depth of left and right subtrees', 'Return 1 + max(left, right)'],
+    starterCode: [
+      { language: 'javascript', functionName: 'maxDepth', code: 'function maxDepth(root) {\n  // Write your code here\n  return 0;\n}\n\nmodule.exports = maxDepth;' },
+      { language: 'typescript', functionName: 'maxDepth', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction maxDepth(root: TreeNode | null): number {\n  // Write your code here\n  return 0;\n}\n\nexport default maxDepth;' },
+      { language: 'python', functionName: 'maxDepth', code: 'def maxDepth(root):\n    # Write your code here\n    return 0' },
+      { language: 'java', functionName: 'maxDepth', code: 'class Solution {\n    public int maxDepth(TreeNode root) {\n        // Write your code here\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'maxDepth', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    int maxDepth(TreeNode* root) {\n        // Write your code here\n        return 0;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root: [3, 9, 20, null, null, 15, 7] }, output: 3 }
+    ],
+    solution: 'If null, return 0. Return 1 + max(maxDepth(left), maxDepth(right)).'
+  },
+  {
+    id: 'merge-two-binary-trees',
+    slug: 'merge-two-binary-trees',
+    title: 'Merge Two Binary Trees',
+    difficulty: 'easy',
+    topics: ['Tree', 'DFS'],
+    prompt: 'You are given two binary trees root1 and root2. Imagine that when you put one of them to cover the other, some nodes of the two trees are overlapped while the others are not. You need to merge the two trees into a new binary tree. The merge rule is that if two nodes overlap, then sum node values up as the new value of the merged node. Otherwise, the NOT null node will be used as the node of the new tree.',
+    constraints: ['The number of nodes in both trees is in the range [0, 2000]'],
+    examples: [
+      { input: 'root1 = [1,3,2,5], root2 = [2,1,3,null,4,null,7]', output: '[3,4,5,5,4,null,7]' }
+    ],
+    hints: ['If both nodes exist, create new node with sum', 'If only one exists, use that node', 'Recursively merge left and right'],
+    starterCode: [
+      { language: 'javascript', functionName: 'mergeTrees', code: 'function mergeTrees(root1, root2) {\n  // Write your code here\n  return null;\n}\n\nmodule.exports = mergeTrees;' },
+      { language: 'typescript', functionName: 'mergeTrees', code: 'class TreeNode {\n  val: number;\n  left: TreeNode | null;\n  right: TreeNode | null;\n}\n\nfunction mergeTrees(root1: TreeNode | null, root2: TreeNode | null): TreeNode | null {\n  // Write your code here\n  return null;\n}\n\nexport default mergeTrees;' },
+      { language: 'python', functionName: 'mergeTrees', code: 'def mergeTrees(root1, root2):\n    # Write your code here\n    return None' },
+      { language: 'java', functionName: 'mergeTrees', code: 'class Solution {\n    public TreeNode mergeTrees(TreeNode root1, TreeNode root2) {\n        // Write your code here\n        return null;\n    }\n}' },
+      { language: 'cpp', functionName: 'mergeTrees', code: 'struct TreeNode {\n    int val;\n    TreeNode *left;\n    TreeNode *right;\n};\n\nclass Solution {\npublic:\n    TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {\n        // Write your code here\n        return nullptr;\n    }\n};' }
+    ],
+    tests: [
+      { id: 's1', type: 'sample', input: { root1: [1, 3, 2, 5], root2: [2, 1, 3, null, 4, null, 7] }, output: [3, 4, 5, 5, 4, null, 7] }
+    ],
+    solution: 'If both null, return null. If one null, return other. Create new node with sum, recursively merge children.'
+  },
+  { id: 'number-of-islands', slug: 'number-of-islands', title: 'Number of Islands', difficulty: 'medium', topics: ['Graph', 'DFS', 'BFS'], prompt: 'Given an m x n 2D binary grid which represents a map of 1s (land) and 0s (water), return the number of islands.', constraints: ['m == grid.length', 'n == grid[i].length'], examples: [{ input: 'grid = [["1","1","0"],["1","1","0"],["0","0","1"]]', output: '2' }], hints: ['DFS/BFS from each unvisited land cell', 'Mark visited cells'], starterCode: [{ language: 'javascript', functionName: 'numIslands', code: 'function numIslands(grid) {\n  return 0;\n}\n\nmodule.exports = numIslands;' }, { language: 'typescript', functionName: 'numIslands', code: 'function numIslands(grid: string[][]): number {\n  return 0;\n}\n\nexport default numIslands;' }, { language: 'python', functionName: 'numIslands', code: 'def numIslands(grid):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { grid: [['1', '1', '0'], ['1', '1', '0'], ['0', '0', '1']] }, output: 2 }], solution: 'DFS/BFS from each 1, mark as visited, count islands.' },
+  { id: 'clone-graph', slug: 'clone-graph', title: 'Clone Graph', difficulty: 'medium', topics: ['Graph', 'DFS', 'BFS'], prompt: 'Given a reference of a node in a connected undirected graph, return a deep copy (clone) of the graph.', constraints: ['The number of nodes in the graph is in the range [0, 100]'], examples: [{ input: 'adjList = [[2,4],[1,3],[2,4],[1,3]]', output: '[[2,4],[1,3],[2,4],[1,3]]' }], hints: ['Use HashMap to track cloned nodes', 'DFS/BFS to traverse'], starterCode: [{ language: 'javascript', functionName: 'cloneGraph', code: 'function cloneGraph(node) {\n  return null;\n}\n\nmodule.exports = cloneGraph;' }, { language: 'typescript', functionName: 'cloneGraph', code: 'function cloneGraph(node: Node | null): Node | null {\n  return null;\n}\n\nexport default cloneGraph;' }, { language: 'python', functionName: 'cloneGraph', code: 'def cloneGraph(node):\n    return None' }], tests: [{ id: 's1', type: 'sample', input: { adjList: [[2, 4], [1, 3], [2, 4], [1, 3]] }, output: [[2, 4], [1, 3], [2, 4], [1, 3]] }], solution: 'HashMap + DFS: clone nodes, connect neighbors.' },
+  { id: 'course-schedule', slug: 'course-schedule', title: 'Course Schedule', difficulty: 'medium', topics: ['Graph', 'Topological Sort'], prompt: 'There are numCourses courses labeled from 0 to numCourses - 1. Given prerequisites array, return true if you can finish all courses.', constraints: ['1 <= numCourses <= 2000'], examples: [{ input: 'numCourses = 2, prerequisites = [[1,0]]', output: 'true' }], hints: ['Detect cycle in directed graph', 'Use DFS with 3 states or Kahn algorithm'], starterCode: [{ language: 'javascript', functionName: 'canFinish', code: 'function canFinish(numCourses, prerequisites) {\n  return false;\n}\n\nmodule.exports = canFinish;' }, { language: 'typescript', functionName: 'canFinish', code: 'function canFinish(numCourses: number, prerequisites: number[][]): boolean {\n  return false;\n}\n\nexport default canFinish;' }, { language: 'python', functionName: 'canFinish', code: 'def canFinish(numCourses, prerequisites):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { numCourses: 2, prerequisites: [[1, 0]] }, output: true }], solution: 'Topological sort: if cycle exists, return false.' },
+  { id: 'longest-increasing-subsequence', slug: 'longest-increasing-subsequence', title: 'Longest Increasing Subsequence', difficulty: 'medium', topics: ['Array', 'DP', 'Binary Search'], prompt: 'Given an integer array nums, return the length of the longest strictly increasing subsequence.', constraints: ['1 <= nums.length <= 2500'], examples: [{ input: 'nums = [10,9,2,5,3,7,101,18]', output: '4' }], hints: ['DP: dp[i] = max LIS ending at i', 'Or binary search with patience sorting'], starterCode: [{ language: 'javascript', functionName: 'lengthOfLIS', code: 'function lengthOfLIS(nums) {\n  return 0;\n}\n\nmodule.exports = lengthOfLIS;' }, { language: 'typescript', functionName: 'lengthOfLIS', code: 'function lengthOfLIS(nums: number[]): number {\n  return 0;\n}\n\nexport default lengthOfLIS;' }, { language: 'python', functionName: 'lengthOfLIS', code: 'def lengthOfLIS(nums):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { nums: [10, 9, 2, 5, 3, 7, 101, 18] }, output: 4 }], solution: 'DP O(n²) or Binary Search O(n log n).' },
+  { id: 'edit-distance', slug: 'edit-distance', title: 'Edit Distance', difficulty: 'hard', topics: ['String', 'DP'], prompt: 'Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2. Operations: insert, delete, replace.', constraints: ['0 <= word1.length, word2.length <= 500'], examples: [{ input: 'word1 = "horse", word2 = "ros"', output: '3' }], hints: ['DP: dp[i][j] = min ops to convert word1[0:i] to word2[0:j]'], starterCode: [{ language: 'javascript', functionName: 'minDistance', code: 'function minDistance(word1, word2) {\n  return 0;\n}\n\nmodule.exports = minDistance;' }, { language: 'typescript', functionName: 'minDistance', code: 'function minDistance(word1: string, word2: string): number {\n  return 0;\n}\n\nexport default minDistance;' }, { language: 'python', functionName: 'minDistance', code: 'def minDistance(word1, word2):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { word1: 'horse', word2: 'ros' }, output: 3 }], solution: 'DP: if chars match, dp[i][j]=dp[i-1][j-1], else 1+min(insert,delete,replace).' },
+  { id: 'word-ladder', slug: 'word-ladder', title: 'Word Ladder', difficulty: 'hard', topics: ['String', 'BFS', 'Graph'], prompt: 'Given two words beginWord and endWord, and a dictionary wordList, return the length of shortest transformation sequence from beginWord to endWord.', constraints: ['1 <= beginWord.length <= 10'], examples: [{ input: 'beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]', output: '5' }], hints: ['BFS from beginWord', 'Try all 1-char transformations'], starterCode: [{ language: 'javascript', functionName: 'ladderLength', code: 'function ladderLength(beginWord, endWord, wordList) {\n  return 0;\n}\n\nmodule.exports = ladderLength;' }, { language: 'typescript', functionName: 'ladderLength', code: 'function ladderLength(beginWord: string, endWord: string, wordList: string[]): number {\n  return 0;\n}\n\nexport default ladderLength;' }, { language: 'python', functionName: 'ladderLength', code: 'def ladderLength(beginWord, endWord, wordList):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { beginWord: 'hit', endWord: 'cog', wordList: ['hot', 'dot', 'dog', 'lot', 'log', 'cog'] }, output: 5 }], solution: 'BFS: try all 1-char changes, track visited.' },
+  { id: 'word-search', slug: 'word-search', title: 'Word Search', difficulty: 'medium', topics: ['Array', 'Backtracking'], prompt: 'Given an m x n grid of characters board and a string word, return true if word exists in the grid.', constraints: ['m == board.length', 'n = board[i].length'], examples: [{ input: 'board = [["A","B","C"],["S","F","C"],["A","D","E"]], word = "ABCCED"', output: 'true' }], hints: ['Backtrack from each cell', 'Mark visited, unmark on backtrack'], starterCode: [{ language: 'javascript', functionName: 'exist', code: 'function exist(board, word) {\n  return false;\n}\n\nmodule.exports = exist;' }, { language: 'typescript', functionName: 'exist', code: 'function exist(board: string[][], word: string): boolean {\n  return false;\n}\n\nexport default exist;' }, { language: 'python', functionName: 'exist', code: 'def exist(board, word):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { board: [['A', 'B', 'C'], ['S', 'F', 'C'], ['A', 'D', 'E']], word: 'ABCCED' }, output: true }], solution: 'DFS backtracking from each cell.' },
+  { id: 'find-minimum-in-rotated-sorted-array', slug: 'find-minimum-in-rotated-sorted-array', title: 'Find Minimum in Rotated Sorted Array', difficulty: 'medium', topics: ['Array', 'Binary Search'], prompt: 'Suppose an array of length n sorted in ascending order is rotated. Find the minimum element.', constraints: ['n == nums.length', '1 <= n <= 5000'], examples: [{ input: 'nums = [3,4,5,1,2]', output: '1' }], hints: ['Binary search', 'Compare mid with right'], starterCode: [{ language: 'javascript', functionName: 'findMin', code: 'function findMin(nums) {\n  return 0;\n}\n\nmodule.exports = findMin;' }, { language: 'typescript', functionName: 'findMin', code: 'function findMin(nums: number[]): number {\n  return 0;\n}\n\nexport default findMin;' }, { language: 'python', functionName: 'findMin', code: 'def findMin(nums):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { nums: [3, 4, 5, 1, 2] }, output: 1 }], solution: 'Binary search: if nums[mid] > nums[right], min in right half.' },
+  { id: 'median-of-two-sorted-arrays', slug: 'median-of-two-sorted-arrays', title: 'Median of Two Sorted Arrays', difficulty: 'hard', topics: ['Array', 'Binary Search'], prompt: 'Given two sorted arrays nums1 and nums2, return the median of the two sorted arrays.', constraints: ['nums1.length == m', 'nums2.length == n'], examples: [{ input: 'nums1 = [1,3], nums2 = [2]', output: '2.0' }], hints: ['Binary search on smaller array', 'Partition both arrays'], starterCode: [{ language: 'javascript', functionName: 'findMedianSortedArrays', code: 'function findMedianSortedArrays(nums1, nums2) {\n  return 0.0;\n}\n\nmodule.exports = findMedianSortedArrays;' }, { language: 'typescript', functionName: 'findMedianSortedArrays', code: 'function findMedianSortedArrays(nums1: number[], nums2: number[]): number {\n  return 0.0;\n}\n\nexport default findMedianSortedArrays;' }, { language: 'python', functionName: 'findMedianSortedArrays', code: 'def findMedianSortedArrays(nums1, nums2):\n    return 0.0' }], tests: [{ id: 's1', type: 'sample', input: { nums1: [1, 3], nums2: [2] }, output: 2.0 }], solution: 'Binary search to partition arrays equally.' },
+  { id: 'longest-substring-without-repeating', slug: 'longest-substring-without-repeating', title: 'Longest Substring Without Repeating Characters', difficulty: 'medium', topics: ['String', 'Sliding Window'], prompt: 'Given a string s, find the length of the longest substring without repeating characters.', constraints: ['0 <= s.length <= 5 * 10^4'], examples: [{ input: 's = "abcabcbb"', output: '3' }], hints: ['Sliding window with HashSet', 'Track char positions'], starterCode: [{ language: 'javascript', functionName: 'lengthOfLongestSubstring', code: 'function lengthOfLongestSubstring(s) {\n  return 0;\n}\n\nmodule.exports = lengthOfLongestSubstring;' }, { language: 'typescript', functionName: 'lengthOfLongestSubstring', code: 'function lengthOfLongestSubstring(s: string): number {\n  return 0;\n}\n\nexport default lengthOfLongestSubstring;' }, { language: 'python', functionName: 'lengthOfLongestSubstring', code: 'def lengthOfLongestSubstring(s):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { s: 'abcabcbb' }, output: 3 }], solution: 'Sliding window: move left when duplicate found.' },
+  { id: 'minimum-window-substring', slug: 'minimum-window-substring', title: 'Minimum Window Substring', difficulty: 'hard', topics: ['String', 'Sliding Window'], prompt: 'Given two strings s and t, return the minimum window substring of s such that every character in t is included in the window.', constraints: ['m == s.length', 'n == t.length'], examples: [{ input: 's = "ADOBECODEBANC", t = "ABC"', output: '"BANC"' }], hints: ['Sliding window with two pointers', 'Track char frequencies'], starterCode: [{ language: 'javascript', functionName: 'minWindow', code: 'function minWindow(s, t) {\n  return "";\n}\n\nmodule.exports = minWindow;' }, { language: 'typescript', functionName: 'minWindow', code: 'function minWindow(s: string, t: string): string {\n  return "";\n}\n\nexport default minWindow;' }, { language: 'python', functionName: 'minWindow', code: 'def minWindow(s, t):\n    return ""' }], tests: [{ id: 's1', type: 'sample', input: { s: 'ADOBECODEBANC', t: 'ABC' }, output: 'BANC' }], solution: 'Sliding window: expand right, contract left when valid.' },
+  { id: 'sliding-window-maximum', slug: 'sliding-window-maximum', title: 'Sliding Window Maximum', difficulty: 'hard', topics: ['Array', 'Sliding Window', 'Heap'], prompt: 'Given an array nums and sliding window of size k, return the max sliding window.', constraints: ['1 <= nums.length <= 10^5'], examples: [{ input: 'nums = [1,3,-1,-3,5,3,6,7], k = 3', output: '[3,3,5,5,6,7]' }], hints: ['Use deque to track indices', 'Keep deque decreasing'], starterCode: [{ language: 'javascript', functionName: 'maxSlidingWindow', code: 'function maxSlidingWindow(nums, k) {\n  return [];\n}\n\nmodule.exports = maxSlidingWindow;' }, { language: 'typescript', functionName: 'maxSlidingWindow', code: 'function maxSlidingWindow(nums: number[], k: number): number[] {\n  return [];\n}\n\nexport default maxSlidingWindow;' }, { language: 'python', functionName: 'maxSlidingWindow', code: 'def maxSlidingWindow(nums, k):\n    return []' }], tests: [{ id: 's1', type: 'sample', input: { nums: [1, 3, -1, -3, 5, 3, 6, 7], k: 3 }, output: [3, 3, 5, 5, 6, 7] }], solution: 'Deque: maintain decreasing order, front is max.' },
+  { id: 'longest-palindromic-substring', slug: 'longest-palindromic-substring', title: 'Longest Palindromic Substring', difficulty: 'medium', topics: ['String', 'DP'], prompt: 'Given a string s, return the longest palindromic substring in s.', constraints: ['1 <= s.length <= 1000'], examples: [{ input: 's = "babad"', output: '"bab"' }], hints: ['Expand around center', 'Or DP: dp[i][j] = is s[i:j+1] palindrome'], starterCode: [{ language: 'javascript', functionName: 'longestPalindrome', code: 'function longestPalindrome(s) {\n  return "";\n}\n\nmodule.exports = longestPalindrome;' }, { language: 'typescript', functionName: 'longestPalindrome', code: 'function longestPalindrome(s: string): string {\n  return "";\n}\n\nexport default longestPalindrome;' }, { language: 'python', functionName: 'longestPalindrome', code: 'def longestPalindrome(s):\n    return ""' }], tests: [{ id: 's1', type: 'sample', input: { s: 'babad' }, output: 'bab' }], solution: 'Expand around each center (odd/even length).' },
+  { id: 'group-anagrams', slug: 'group-anagrams', title: 'Group Anagrams', difficulty: 'medium', topics: ['String', 'Hash Table'], prompt: 'Given an array of strings strs, group the anagrams together.', constraints: ['1 <= strs.length <= 10^4'], examples: [{ input: 'strs = ["eat","tea","tan","ate","nat","bat"]', output: '[["bat"],["nat","tan"],["ate","eat","tea"]]' }], hints: ['Use sorted string as key', 'Or char count as key'], starterCode: [{ language: 'javascript', functionName: 'groupAnagrams', code: 'function groupAnagrams(strs) {\n  return [];\n}\n\nmodule.exports = groupAnagrams;' }, { language: 'typescript', functionName: 'groupAnagrams', code: 'function groupAnagrams(strs: string[]): string[][] {\n  return [];\n}\n\nexport default groupAnagrams;' }, { language: 'python', functionName: 'groupAnagrams', code: 'def groupAnagrams(strs):\n    return []' }], tests: [{ id: 's1', type: 'sample', input: { strs: ['eat', 'tea', 'tan', 'ate', 'nat', 'bat'] }, output: [['bat'], ['nat', 'tan'], ['ate', 'eat', 'tea']] }], solution: 'HashMap with sorted string as key.' },
+  { id: 'valid-parentheses', slug: 'valid-parentheses', title: 'Valid Parentheses', difficulty: 'easy', topics: ['String', 'Stack'], prompt: 'Given a string s containing just the characters (),{},[], determine if the input string is valid.', constraints: ['1 <= s.length <= 10^4'], examples: [{ input: 's = "()"', output: 'true' }], hints: ['Use stack', 'Push opening, pop on closing'], starterCode: [{ language: 'javascript', functionName: 'isValid', code: 'function isValid(s) {\n  return false;\n}\n\nmodule.exports = isValid;' }, { language: 'typescript', functionName: 'isValid', code: 'function isValid(s: string): boolean {\n  return false;\n}\n\nexport default isValid;' }, { language: 'python', functionName: 'isValid', code: 'def isValid(s):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { s: '()' }, output: true }], solution: 'Stack: push opening brackets, pop and match closing.' },
+  { id: 'regular-expression-matching', slug: 'regular-expression-matching', title: 'Regular Expression Matching', difficulty: 'hard', topics: ['String', 'DP'], prompt: 'Given an input string s and a pattern p, implement regular expression matching with support for . and *.', constraints: ['1 <= s.length <= 20'], examples: [{ input: 's = "aa", p = "a*"', output: 'true' }], hints: ['DP: dp[i][j] = does s[0:i] match p[0:j]'], starterCode: [{ language: 'javascript', functionName: 'isMatch', code: 'function isMatch(s, p) {\n  return false;\n}\n\nmodule.exports = isMatch;' }, { language: 'typescript', functionName: 'isMatch', code: 'function isMatch(s: string, p: string): boolean {\n  return false;\n}\n\nexport default isMatch;' }, { language: 'python', functionName: 'isMatch', code: 'def isMatch(s, p):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { s: 'aa', p: 'a*' }, output: true }], solution: 'DP: handle . and * cases.' },
+  { id: 'wildcard-matching', slug: 'wildcard-matching', title: 'Wildcard Matching', difficulty: 'hard', topics: ['String', 'DP'], prompt: 'Given an input string s and a pattern p, implement wildcard pattern matching with support for ? and *.', constraints: ['0 <= s.length, p.length <= 2000'], examples: [{ input: 's = "aa", p = "*"', output: 'true' }], hints: ['DP or greedy with backtracking'], starterCode: [{ language: 'javascript', functionName: 'isMatch', code: 'function isMatch(s, p) {\n  return false;\n}\n\nmodule.exports = isMatch;' }, { language: 'typescript', functionName: 'isMatch', code: 'function isMatch(s: string, p: string): boolean {\n  return false;\n}\n\nexport default isMatch;' }, { language: 'python', functionName: 'isMatch', code: 'def isMatch(s, p):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { s: 'aa', p: '*' }, output: true }], solution: 'DP or greedy matching with * backtracking.' },
+  { id: 'longest-common-subsequence', slug: 'longest-common-subsequence', title: 'Longest Common Subsequence', difficulty: 'medium', topics: ['String', 'DP'], prompt: 'Given two strings text1 and text2, return the length of their longest common subsequence.', constraints: ['1 <= text1.length, text2.length <= 1000'], examples: [{ input: 'text1 = "abcde", text2 = "ace"', output: '3' }], hints: ['DP: dp[i][j] = LCS of text1[0:i] and text2[0:j]'], starterCode: [{ language: 'javascript', functionName: 'longestCommonSubsequence', code: 'function longestCommonSubsequence(text1, text2) {\n  return 0;\n}\n\nmodule.exports = longestCommonSubsequence;' }, { language: 'typescript', functionName: 'longestCommonSubsequence', code: 'function longestCommonSubsequence(text1: string, text2: string): number {\n  return 0;\n}\n\nexport default longestCommonSubsequence;' }, { language: 'python', functionName: 'longestCommonSubsequence', code: 'def longestCommonSubsequence(text1, text2):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { text1: 'abcde', text2: 'ace' }, output: 3 }], solution: 'DP: if chars match, dp[i][j]=1+dp[i-1][j-1], else max(dp[i-1][j], dp[i][j-1]).' },
+  { id: 'distinct-subsequences', slug: 'distinct-subsequences', title: 'Distinct Subsequences', difficulty: 'hard', topics: ['String', 'DP'], prompt: 'Given two strings s and t, return the number of distinct subsequences of s which equals t.', constraints: ['1 <= s.length, t.length <= 1000'], examples: [{ input: 's = "rabbbit", t = "rabbit"', output: '3' }], hints: ['DP: dp[i][j] = count of t[0:j] in s[0:i]'], starterCode: [{ language: 'javascript', functionName: 'numDistinct', code: 'function numDistinct(s, t) {\n  return 0;\n}\n\nmodule.exports = numDistinct;' }, { language: 'typescript', functionName: 'numDistinct', code: 'function numDistinct(s: string, t: string): number {\n  return 0;\n}\n\nexport default numDistinct;' }, { language: 'python', functionName: 'numDistinct', code: 'def numDistinct(s, t):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { s: 'rabbbit', t: 'rabbit' }, output: 3 }], solution: 'DP: if s[i]==t[j], dp[i][j]=dp[i-1][j-1]+dp[i-1][j], else dp[i-1][j].' },
+  { id: 'interleaving-string', slug: 'interleaving-string', title: 'Interleaving String', difficulty: 'medium', topics: ['String', 'DP'], prompt: 'Given strings s1, s2, and s3, find whether s3 is formed by an interleaving of s1 and s2.', constraints: ['0 <= s1.length, s2.length <= 100'], examples: [{ input: 's1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac"', output: 'true' }], hints: ['DP: dp[i][j] = can s3[0:i+j] be formed from s1[0:i] and s2[0:j]'], starterCode: [{ language: 'javascript', functionName: 'isInterleave', code: 'function isInterleave(s1, s2, s3) {\n  return false;\n}\n\nmodule.exports = isInterleave;' }, { language: 'typescript', functionName: 'isInterleave', code: 'function isInterleave(s1: string, s2: string, s3: string): boolean {\n  return false;\n}\n\nexport default isInterleave;' }, { language: 'python', functionName: 'isInterleave', code: 'def isInterleave(s1, s2, s3):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { s1: 'aabcc', s2: 'dbbca', s3: 'aadbbcbcac' }, output: true }], solution: 'DP: check if s3[i+j-1] matches s1[i-1] or s2[j-1].' },
+  { id: 'scramble-string', slug: 'scramble-string', title: 'Scramble String', difficulty: 'hard', topics: ['String', 'DP'], prompt: 'Given two strings s1 and s2 of the same length, return true if s2 is a scrambled string of s1.', constraints: ['s1.length == s2.length'], examples: [{ input: 's1 = "great", s2 = "rgeat"', output: 'true' }], hints: ['Recursion with memoization', 'Try all split points'], starterCode: [{ language: 'javascript', functionName: 'isScramble', code: 'function isScramble(s1, s2) {\n  return false;\n}\n\nmodule.exports = isScramble;' }, { language: 'typescript', functionName: 'isScramble', code: 'function isScramble(s1: string, s2: string): boolean {\n  return false;\n}\n\nexport default isScramble;' }, { language: 'python', functionName: 'isScramble', code: 'def isScramble(s1, s2):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { s1: 'great', s2: 'rgeat' }, output: true }], solution: 'Recursion: try all split points, check if scrambled.' },
+  { id: 'course-schedule-ii', slug: 'course-schedule-ii', title: 'Course Schedule II', difficulty: 'medium', topics: ['Graph', 'Topological Sort'], prompt: 'Return the ordering of courses you should take to finish all courses.', constraints: ['1 <= numCourses <= 2000'], examples: [{ input: 'numCourses = 2, prerequisites = [[1,0]]', output: '[0,1]' }], hints: ['Topological sort with DFS or Kahn'], starterCode: [{ language: 'javascript', functionName: 'findOrder', code: 'function findOrder(numCourses, prerequisites) {\n  return [];\n}\n\nmodule.exports = findOrder;' }, { language: 'typescript', functionName: 'findOrder', code: 'function findOrder(numCourses: number, prerequisites: number[][]): number[] {\n  return [];\n}\n\nexport default findOrder;' }, { language: 'python', functionName: 'findOrder', code: 'def findOrder(numCourses, prerequisites):\n    return []' }], tests: [{ id: 's1', type: 'sample', input: { numCourses: 2, prerequisites: [[1, 0]] }, output: [0, 1] }], solution: 'Topological sort: return order if no cycle.' },
+  { id: 'word-search-ii', slug: 'word-search-ii', title: 'Word Search II', difficulty: 'hard', topics: ['Array', 'Backtracking', 'Trie'], prompt: 'Given an m x n board and a list of words, return all words on the board.', constraints: ['m == board.length'], examples: [{ input: 'board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]', output: '["eat","oath"]' }], hints: ['Build Trie from words', 'DFS with Trie'], starterCode: [{ language: 'javascript', functionName: 'findWords', code: 'function findWords(board, words) {\n  return [];\n}\n\nmodule.exports = findWords;' }, { language: 'typescript', functionName: 'findWords', code: 'function findWords(board: string[][], words: string[]): string[] {\n  return [];\n}\n\nexport default findWords;' }, { language: 'python', functionName: 'findWords', code: 'def findWords(board, words):\n    return []' }], tests: [{ id: 's1', type: 'sample', input: { board: [['o', 'a', 'a', 'n'], ['e', 't', 'a', 'e'], ['i', 'h', 'k', 'r'], ['i', 'f', 'l', 'v']], words: ['oath', 'pea', 'eat', 'rain'] }, output: ['eat', 'oath'] }], solution: 'Trie + DFS backtracking.' },
+  { id: 'surrounded-regions', slug: 'surrounded-regions', title: 'Surrounded Regions', difficulty: 'medium', topics: ['Array', 'DFS', 'BFS'], prompt: 'Given an m x n matrix board containing X and O, capture all regions that are 4-directionally surrounded by X.', constraints: ['m == board.length'], examples: [{ input: 'board = [["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]', output: '[["X","X","X","X"],["X","X","X","X"],["X","X","X","X"],["X","O","X","X"]]' }], hints: ['DFS from border Os', 'Mark them as safe'], starterCode: [{ language: 'javascript', functionName: 'solve', code: 'function solve(board) {\n  // Modify board in-place\n}\n\nmodule.exports = solve;' }, { language: 'typescript', functionName: 'solve', code: 'function solve(board: string[][]): void {\n  // Modify board in-place\n}\n\nexport default solve;' }, { language: 'python', functionName: 'solve', code: 'def solve(board):\n    pass' }], tests: [{ id: 's1', type: 'sample', input: { board: [['X', 'X', 'X', 'X'], ['X', 'O', 'O', 'X'], ['X', 'X', 'O', 'X'], ['X', 'O', 'X', 'X']] }, output: [['X', 'X', 'X', 'X'], ['X', 'X', 'X', 'X'], ['X', 'X', 'X', 'X'], ['X', 'O', 'X', 'X']] }], solution: 'DFS from border Os, mark as safe, flip others.' },
+  { id: 'pacific-atlantic-water-flow', slug: 'pacific-atlantic-water-flow', title: 'Pacific Atlantic Water Flow', difficulty: 'medium', topics: ['Array', 'DFS', 'BFS'], prompt: 'Given an m x n matrix of heights, return coordinates that can flow to both Pacific and Atlantic oceans.', constraints: ['m == heights.length'], examples: [{ input: 'heights = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]', output: '[[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]' }], hints: ['DFS from Pacific border', 'DFS from Atlantic border', 'Find intersection'], starterCode: [{ language: 'javascript', functionName: 'pacificAtlantic', code: 'function pacificAtlantic(heights) {\n  return [];\n}\n\nmodule.exports = pacificAtlantic;' }, { language: 'typescript', functionName: 'pacificAtlantic', code: 'function pacificAtlantic(heights: number[][]): number[][] {\n  return [];\n}\n\nexport default pacificAtlantic;' }, { language: 'python', functionName: 'pacificAtlantic', code: 'def pacificAtlantic(heights):\n    return []' }], tests: [{ id: 's1', type: 'sample', input: { heights: [[1, 2, 2, 3, 5], [3, 2, 3, 4, 4], [2, 4, 5, 3, 1], [6, 7, 1, 4, 5], [5, 1, 1, 2, 4]] }, output: [[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] }], solution: 'DFS from both oceans, find cells reachable from both.' },
+  { id: 'graph-valid-tree', slug: 'graph-valid-tree', title: 'Graph Valid Tree', difficulty: 'medium', topics: ['Graph', 'DFS', 'BFS'], prompt: 'Given n nodes labeled from 0 to n-1 and a list of undirected edges, check if these edges make up a valid tree.', constraints: ['1 <= n <= 2000'], examples: [{ input: 'n = 5, edges = [[0,1],[0,2],[0,3],[1,4]]', output: 'true' }], hints: ['Tree has n-1 edges', 'No cycles', 'All nodes connected'], starterCode: [{ language: 'javascript', functionName: 'validTree', code: 'function validTree(n, edges) {\n  return false;\n}\n\nmodule.exports = validTree;' }, { language: 'typescript', functionName: 'validTree', code: 'function validTree(n: number, edges: number[][]): boolean {\n  return false;\n}\n\nexport default validTree;' }, { language: 'python', functionName: 'validTree', code: 'def validTree(n, edges):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { n: 5, edges: [[0, 1], [0, 2], [0, 3], [1, 4]] }, output: true }], solution: 'Check: edges.length == n-1, no cycles (DFS), all connected.' },
+  { id: 'find-peak-element', slug: 'find-peak-element', title: 'Find Peak Element', difficulty: 'medium', topics: ['Array', 'Binary Search'], prompt: 'A peak element is an element that is strictly greater than its neighbors. Find a peak element and return its index.', constraints: ['1 <= nums.length <= 1000'], examples: [{ input: 'nums = [1,2,3,1]', output: '2' }], hints: ['Binary search', 'Move towards higher neighbor'], starterCode: [{ language: 'javascript', functionName: 'findPeakElement', code: 'function findPeakElement(nums) {\n  return 0;\n}\n\nmodule.exports = findPeakElement;' }, { language: 'typescript', functionName: 'findPeakElement', code: 'function findPeakElement(nums: number[]): number {\n  return 0;\n}\n\nexport default findPeakElement;' }, { language: 'python', functionName: 'findPeakElement', code: 'def findPeakElement(nums):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { nums: [1, 2, 3, 1] }, output: 2 }], solution: 'Binary search: if nums[mid] < nums[mid+1], search right, else left.' },
+  { id: 'search-in-rotated-sorted-array-ii', slug: 'search-in-rotated-sorted-array-ii', title: 'Search in Rotated Sorted Array II', difficulty: 'medium', topics: ['Array', 'Binary Search'], prompt: 'Given the array nums after rotation and an integer target, return true if target is in nums, or false otherwise. Array may contain duplicates.', constraints: ['1 <= nums.length <= 5000'], examples: [{ input: 'nums = [2,5,6,0,0,1,2], target = 0', output: 'true' }], hints: ['Binary search with duplicate handling', 'Skip duplicates at boundaries'], starterCode: [{ language: 'javascript', functionName: 'search', code: 'function search(nums, target) {\n  return false;\n}\n\nmodule.exports = search;' }, { language: 'typescript', functionName: 'search', code: 'function search(nums: number[], target: number): boolean {\n  return false;\n}\n\nexport default search;' }, { language: 'python', functionName: 'search', code: 'def search(nums, target):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { nums: [2, 5, 6, 0, 0, 1, 2], target: 0 }, output: true }], solution: 'Binary search: handle duplicates by incrementing left when nums[left]==nums[mid].' }
 ];

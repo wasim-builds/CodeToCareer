@@ -1,7 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-
-const API_URL = 'http://localhost:5001/api/chat';
 
 const MODES = {
   dsa: {
@@ -45,21 +42,39 @@ export default function ChatBot() {
     setLoading(true);
 
     try {
-      // TODO: enable when Azure works
-      // const res = await axios.post(API_URL, {
-      //   message: trimmed,
-      //   context: MODES[mode].context,
-      // });
-      // const reply = res.data.reply;
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: trimmed,
+          context: MODES[mode].context,
+        }),
+      });
 
-      const reply = getMockReply(trimmed, mode);
+      if (!res.ok) {
+        throw new Error('Failed to get response');
+      }
 
-      setMessages([...newMessages, { from: 'bot', text: reply }]);
+      const data = await res.json();
+      const reply = data.reply;
+      const followUp = data.followUp;
+
+      // Add main reply
+      const updatedMessages = [...newMessages, { from: 'bot', text: reply }];
+
+      // Add follow-up if exists
+      if (followUp) {
+        updatedMessages.push({ from: 'bot', text: followUp });
+      }
+
+      setMessages(updatedMessages);
     } catch (err) {
       console.error(err);
       setMessages([
         ...newMessages,
-        { from: 'bot', text: 'Error contacting server. Try again later.' },
+        { from: 'bot', text: 'Error contacting server. Please try again later.' },
       ]);
     } finally {
       setLoading(false);
@@ -115,17 +130,4 @@ export default function ChatBot() {
       </div>
     </div>
   );
-}
-
-function getMockReply(message, mode) {
-  if (mode === 'dsa') {
-    return 'DSA Q: Given an array of integers, find the length of the longest subarray with sum equal to K.';
-  }
-  if (mode === 'hr') {
-    return 'HR Q: Tell me about a time you faced a conflict in a team and how you resolved it.';
-  }
-  if (mode === 'system') {
-    return 'System Design Q: Design a URL shortener service like bit.ly. What components and database schema would you use?';
-  }
-  return 'Mock reply.';
 }
