@@ -5,13 +5,14 @@ import { promisify } from 'node:util';
 import { writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { executePistonCode, isExecutionSuccessful, getExecutionError } from '@/lib/piston';
 
 const execAsync = promisify(exec);
 
 export const runtime = 'nodejs';
 
 interface RunPayload {
-  language: 'javascript' | 'typescript' | 'python' | 'java' | 'cpp' | 'c' | 'csharp';
+  language: 'javascript' | 'typescript' | 'python' | 'java' | 'cpp' | 'c' | 'csharp' | 'rust' | 'go';
   code: string;
   functionName: string;
   tests: {
@@ -63,11 +64,11 @@ function deepEqual(a: unknown, b: unknown): boolean {
 async function runPythonCode(code: string, functionName: string, test: RunPayload['tests'][number]) {
   const tempDir = join(tmpdir(), `py-${Date.now()}-${Math.random().toString(36).slice(2)}`);
   await mkdir(tempDir, { recursive: true });
-  
+
   try {
     const args = getArgs(test.input);
     const sourceFile = join(tempDir, 'solution.py');
-    
+
     const pythonCode = `
 import json
 import sys
@@ -83,21 +84,21 @@ if __name__ == '__main__':
         print(json.dumps({"error": str(e)}), file=sys.stderr)
         sys.exit(1)
 `;
-    
+
     await writeFile(sourceFile, pythonCode);
-    const { stdout, stderr } = await execAsync(`python3 "${sourceFile}"`, { 
+    const { stdout, stderr } = await execAsync(`python3 "${sourceFile}"`, {
       timeout: EXECUTION_TIMEOUT_MS,
-      cwd: tempDir 
+      cwd: tempDir
     });
-    
+
     if (stderr && stderr.includes('"error"')) {
       const errorData = JSON.parse(stderr);
       throw new Error(errorData.error);
     }
-    
+
     const actual = JSON.parse(stdout.trim());
     const pass = deepEqual(actual, test.output);
-    
+
     return { id: test.id, pass, expected: test.output, actual, type: test.type };
   } catch (error: any) {
     return {
@@ -109,27 +110,179 @@ if __name__ == '__main__':
       error: error.message || 'Execution error',
     };
   } finally {
-    await execAsync(`rm -rf "${tempDir}"`).catch(() => {});
+    await execAsync(`rm -rf "${tempDir}"`).catch(() => { });
+  }
+}
+
+async function runRustCode(code: string, functionName: string, test: RunPayload['tests'][number]) {
+  try {
+    const inputObj = test.input as Record<string, any>;
+
+    // Attempt to extract argument types from function signature match
+    const sigRegex = new RegExp(`fn\\s+${functionName}\\s*\\((.*?)\\)`);
+    const match = code.match(sigRegex);
+    const argTypes: Record<string, string> = {};
+    if (match && match[1]) {
+      match[1].split(',').forEach(arg => {
+        const parts = arg.trim().split(':');
+        if (parts.length === 2) {
+          argTypes[parts[0].trim()] = parts[1].trim();
+        }
+      });
+    }
+
+    // Helper parsers within Rust to avoid serde_json dependency (which is missing in Piston default env)
+    const helperParsers = `
+fn parse_i32(s: &str) -> i32 { s.trim().parse().expect("Invalid i32") }
+fn parse_vec_i32(s: &str) -> Vec<i32> {
+    s.trim().trim_matches(|c| c == '[' || c == ']').split(',')
+     .filter(|x| !x.trim().is_empty())
+     .map(|x| x.trim().parse().expect("Invalid int in vec"))
+     .collect()
+}
+fn parse_string(s: &str) -> String {
+    s.trim_matches('"').to_string()
+}
+`;
+
+    const decls = Object.entries(inputObj).map(([key, val]) => {
+      const type = argTypes[key] || '';
+      let parser = 'parse_string'; // default fallback
+
+      if (type.includes('Vec<i32>')) parser = 'parse_vec_i32';
+      else if (type.includes('i32')) parser = 'parse_i32';
+      // Add more type mappings as needed
+
+      // Pass JSON string representation
+      return `let ${key} = ${parser}(r#"${JSON.stringify(val)}"#);`;
+    }).join('\n');
+
+    const argsList = Object.keys(inputObj).join(', ');
+
+    const fullCode = `
+${code}
+
+${helperParsers}
+
+fn main() {
+    ${decls}
+    let result = ${functionName}(${argsList});
+    // Use Debug formatter which usually produces valid JSON for basic types (Vec, numbers, strings)
+    println!("{:?}", result);
+}
+`;
+
+    const response = await executePistonCode('rust', fullCode);
+
+    if (isExecutionSuccessful(response)) {
+      const output = response.run.stdout.trim();
+      let actual;
+      // Loose JSON parsing since Debug fmt might not be strict JSON (e.g. no quotes on keys? Rust debug is mostly JSON-compliant for arrays/nums)
+      try {
+        // Replace simple quirks if any? Rust Debug for Vec<i32> is [1, 2], which is valid JSON.
+        actual = JSON.parse(output);
+      } catch {
+        actual = output;
+      }
+      return { id: test.id, pass: deepEqual(actual, test.output), expected: test.output, actual, type: test.type };
+    } else {
+      return { id: test.id, pass: false, expected: test.output, actual: null, type: test.type, error: getExecutionError(response) };
+    }
+  } catch (error: any) {
+    return { id: test.id, pass: false, expected: test.output, actual: null, type: test.type, error: error.message };
+  }
+}
+
+async function runGoCode(code: string, functionName: string, test: RunPayload['tests'][number]) {
+  try {
+    const inputObj = test.input as Record<string, any>;
+
+    // Attempt to extract argument types from Go function signature regex
+    const sigRegex = new RegExp(`func\\s+${functionName}\\s*\\((.*?)\\)`);
+    const match = code.match(sigRegex);
+    const argTypes: Record<string, string> = {};
+
+    if (match && match[1]) {
+      // Go args: "nums []int, target int"
+      const argsStr = match[1];
+      argsStr.split(',').forEach(arg => {
+        const parts = arg.trim().split(/\s+/);
+        if (parts.length >= 2) {
+          const name = parts[0];
+          const type = parts.slice(1).join(' ');
+          argTypes[name] = type;
+        }
+      });
+    }
+
+    const getType = (v: any): string => {
+      if (Array.isArray(v)) {
+        if (v.length > 0 && typeof v[0] === 'number') return '[]int';
+        return '[]interface{}';
+      }
+      if (typeof v === 'number') return 'int';
+      if (typeof v === 'string') return 'string';
+      return 'interface{}';
+    };
+
+    const declarations = Object.entries(inputObj).map(([key, val], idx) => {
+      const type = argTypes[key] || getType(val);
+      const varName = `arg${idx}`;
+      return `
+        var ${varName} ${type}
+        if err := json.Unmarshal([]byte(\`${JSON.stringify(val)}\`), &${varName}); err != nil { panic(err) }`;
+    }).join('\n');
+
+    const callArgs = Object.keys(inputObj).map((_, idx) => `arg${idx}`).join(', ');
+
+    const fullCode = `
+package main
+import (
+    "encoding/json"
+    "fmt"
+)
+
+${code}
+
+func main() {
+    ${declarations}
+    
+    result := ${functionName}(${callArgs})
+    
+    bytes, _ := json.Marshal(result)
+    fmt.Println(string(bytes))
+}
+`;
+    const response = await executePistonCode('go', fullCode);
+    if (isExecutionSuccessful(response)) {
+      const output = response.run.stdout.trim();
+      let actual;
+      try { actual = JSON.parse(output); } catch { actual = output; }
+      return { id: test.id, pass: deepEqual(actual, test.output), expected: test.output, actual, type: test.type };
+    } else {
+      return { id: test.id, pass: false, expected: test.output, actual: null, type: test.type, error: getExecutionError(response) };
+    }
+  } catch (error: any) {
+    return { id: test.id, pass: false, expected: test.output, actual: null, type: test.type, error: error.message };
   }
 }
 
 async function runJavaCode(code: string, functionName: string, test: RunPayload['tests'][number]) {
   const tempDir = join(tmpdir(), `java-${Date.now()}-${Math.random().toString(36).slice(2)}`);
   await mkdir(tempDir, { recursive: true });
-  
+
   try {
     const args = getArgs(test.input);
-    const argsJson = JSON.stringify(args);
-    
+
     // Extract class name from code
     const classMatch = code.match(/class\s+(\w+)/);
     const className = classMatch ? classMatch[1] : 'Solution';
-    
+
     const sourceFile = join(tempDir, `${className}.java`);
     const mainFile = join(tempDir, 'Main.java');
-    
+
     await writeFile(sourceFile, code);
-    
+
     const mainCode = `
 import com.google.gson.*;
 import java.util.*;
@@ -148,8 +301,7 @@ public class Main {
 }
 `;
     await writeFile(mainFile, mainCode);
-    
-    // For now, return a simplified response
+
     return {
       id: test.id,
       pass: false,
@@ -168,7 +320,7 @@ public class Main {
       error: error.message,
     };
   } finally {
-    await execAsync(`rm -rf "${tempDir}"`).catch(() => {});
+    await execAsync(`rm -rf "${tempDir}"`).catch(() => { });
   }
 }
 
@@ -244,7 +396,7 @@ export async function POST(req: NextRequest) {
 
   const { language, code, functionName, tests } = payload;
 
-  if (!['javascript', 'typescript', 'python', 'java', 'cpp', 'c', 'csharp'].includes(language)) {
+  if (!['javascript', 'typescript', 'python', 'java', 'cpp', 'c', 'csharp', 'rust', 'go'].includes(language)) {
     return NextResponse.json({ error: 'Unsupported language' }, { status: 400 });
   }
 
@@ -258,7 +410,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const results = [] as any[];
-    
+
     if (language === 'python') {
       for (const test of tests) {
         const res = await runPythonCode(code, functionName, test);
@@ -282,6 +434,16 @@ export async function POST(req: NextRequest) {
     } else if (language === 'csharp') {
       for (const test of tests) {
         const res = await runCSharpCode(code, functionName, test);
+        results.push(res);
+      }
+    } else if (language === 'rust') {
+      for (const test of tests) {
+        const res = await runRustCode(code, functionName, test);
+        results.push(res);
+      }
+    } else if (language === 'go') {
+      for (const test of tests) {
+        const res = await runGoCode(code, functionName, test);
         results.push(res);
       }
     } else {

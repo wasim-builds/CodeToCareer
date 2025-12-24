@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { topics } from '@/data/quiz/topics';
 import { getQuestionsForTopic } from '@/data/quiz/questions';
@@ -9,6 +9,8 @@ import Link from 'next/link';
 import { useQuiz } from '@/contexts/QuizContext';
 import { getTopicIcon } from '@/data/topicIcons';
 import { FiArrowLeft, FiPlay, FiClock, FiTarget, FiAward, FiTrendingUp, FiBook, FiZap } from 'react-icons/fi';
+import QuizModeSelector from '@/components/quiz/QuizModeSelector';
+import { calculateTimeLimit, TimerMode } from '@/lib/timerUtils';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,7 +18,9 @@ export default function TopicPage() {
   const params = useParams();
   const router = useRouter();
   const topicId = params.topicId as string;
-  const { results } = useQuiz();
+  const { results, setGeneratedQuestions } = useQuiz();
+  const [showModeSelector, setShowModeSelector] = useState(false);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | 'all'>('all');
 
   const topic = useMemo(() => {
     return topics.find(t => t.id === topicId);
@@ -37,8 +41,8 @@ export default function TopicPage() {
   // Get topic stats
   const topicResults = results.filter(r => r.topicId === topicId);
   const bestScore = topicResults.length > 0 ? Math.max(...topicResults.map(r => r.score)) : 0;
-  const avgScore = topicResults.length > 0 
-    ? topicResults.reduce((sum, r) => sum + r.score, 0) / topicResults.length 
+  const avgScore = topicResults.length > 0
+    ? topicResults.reduce((sum, r) => sum + r.score, 0) / topicResults.length
     : 0;
   const totalAttempts = topicResults.length;
 
@@ -60,11 +64,29 @@ export default function TopicPage() {
   const { icon: TopicIcon, color, bgColor } = getTopicIcon(topicId);
 
   const handleStartQuiz = (difficulty: Difficulty | 'all') => {
-    if (difficulty === 'all') {
-      router.push(`/quiz/${topicId}/take`);
-    } else {
-      router.push(`/quiz/${topicId}/take?difficulty=${difficulty}`);
+    setSelectedDifficulty(difficulty);
+    setShowModeSelector(true);
+  };
+
+  const handleModeSelected = (settings: { timedMode: boolean; timerMode: TimerMode }) => {
+    setShowModeSelector(false);
+
+    const questionsToUse = selectedDifficulty === 'all'
+      ? questions
+      : questions.filter(q => q.difficulty === selectedDifficulty);
+
+    const timeLimit = settings.timedMode ? calculateTimeLimit(questionsToUse, settings.timerMode) : 0;
+
+    const params = new URLSearchParams();
+    if (selectedDifficulty !== 'all') {
+      params.set('difficulty', selectedDifficulty);
     }
+    if (settings.timedMode) {
+      params.set('timed', 'true');
+      params.set('timeLimit', timeLimit.toString());
+    }
+
+    router.push(`/quiz/${topicId}/take?${params.toString()}`);
   };
 
   return (
@@ -131,7 +153,7 @@ export default function TopicPage() {
 
         {/* Difficulty Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <div 
+          <div
             onClick={() => handleStartQuiz('easy')}
             className="group cursor-pointer bg-gray-800 hover:bg-gray-750 border border-gray-700 hover:border-green-500/50 rounded-xl p-6 transition-all"
           >
@@ -151,7 +173,7 @@ export default function TopicPage() {
             </div>
           </div>
 
-          <div 
+          <div
             onClick={() => handleStartQuiz('medium')}
             className="group cursor-pointer bg-gray-800 hover:bg-gray-750 border border-gray-700 hover:border-yellow-500/50 rounded-xl p-6 transition-all"
           >
@@ -171,7 +193,7 @@ export default function TopicPage() {
             </div>
           </div>
 
-          <div 
+          <div
             onClick={() => handleStartQuiz('hard')}
             className="group cursor-pointer bg-gray-800 hover:bg-gray-750 border border-gray-700 hover:border-red-500/50 rounded-xl p-6 transition-all"
           >
@@ -220,6 +242,44 @@ export default function TopicPage() {
           </button>
         </div>
       </div>
+
+      {/* Quiz Mode Selector Modal */}
+      {showModeSelector && (
+        <QuizModeSelector
+          questions={selectedDifficulty === 'all' ? questions : questions.filter(q => q.difficulty === selectedDifficulty)}
+          onStart={handleModeSelected}
+          onStartEndless={async () => {
+            try {
+              const response = await fetch('/api/quiz/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  topic: topic?.name || topicId,
+                  difficulty: 'medium',
+                  count: 10
+                })
+              });
+
+              const data = await response.json();
+
+              if (!response.ok) {
+                throw new Error(data.error || 'Failed to generate questions');
+              }
+
+              if (data.questions && Array.isArray(data.questions)) {
+                setGeneratedQuestions(data.questions);
+                router.push(`/quiz/${topicId}/take?mode=endless&difficulty=medium`);
+              }
+            } catch (error) {
+              console.error('Failed to generate quiz:', error);
+              // You might want to show a toast here
+              alert('Failed to generate AI quiz. Please check if API Key is configured.');
+              throw error; // Re-throw to let selector know it failed
+            }
+          }}
+          onClose={() => setShowModeSelector(false)}
+        />
+      )}
     </div>
   );
 }

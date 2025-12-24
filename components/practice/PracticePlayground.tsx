@@ -26,6 +26,8 @@ const SUPPORTED_LANGUAGES = [
   { value: 'cpp', label: 'C++', icon: '⚙️' },
   { value: 'c', label: 'C', icon: '🔧' },
   { value: 'csharp', label: 'C#', icon: '💜' },
+  { value: 'rust', label: 'Rust', icon: '🦀' },
+  { value: 'go', label: 'Go', icon: '🐹' },
 ];
 
 export function PracticePlayground({ problem }: PracticePlaygroundProps) {
@@ -38,10 +40,12 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
     cpp: { label: 'C++', icon: '⚙️' },
     c: { label: 'C', icon: '🔧' },
     csharp: { label: 'C#', icon: '💜' },
+    rust: { label: 'Rust', icon: '🦀' },
+    go: { label: 'Go', icon: '🐹' },
   };
 
   // Get available languages from problem's starter code
-  const availableLanguages = useMemo(() => 
+  const availableLanguages = useMemo(() =>
     problem.starterCode.map(sc => ({
       value: sc.language,
       label: LANGUAGE_CONFIG[sc.language]?.label || sc.language,
@@ -69,12 +73,41 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
     if (starterForLang) {
       return starterForLang.code;
     }
-    
+
+    // Get function name from existing starter code (fallback to 'solution')
+    const funcName = problem.starterCode[0]?.functionName || 'solution';
+
+    // Default templates if missing from problem data
+    if (lang === 'rust') {
+      return `// Write your solution here
+fn ${funcName}() {
+    // Implementation
+}
+
+fn main() {
+    // Test your code
+}`;
+    }
+
+    if (lang === 'go') {
+      return `package main
+import "fmt"
+
+// Write your solution here
+func ${funcName}() {
+    // Implementation
+}
+
+func main() {
+    // Test your code
+}`;
+    }
+
     // Fallback to first available language if selected language not found
     if (problem.starterCode.length > 0) {
       return problem.starterCode[0].code;
     }
-    
+
     // Ultimate fallback
     return `// No starter code available for ${lang}`;
   }
@@ -158,7 +191,7 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
       const spaces = '    '; // 4 spaces
       const newValue = value.substring(0, selectionStart) + spaces + value.substring(selectionEnd);
       setCode(newValue);
-      
+
       // Set cursor position after the inserted spaces
       setTimeout(() => {
         textarea.selectionStart = textarea.selectionEnd = selectionStart + spaces.length;
@@ -168,25 +201,25 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
     // Handle Enter key with auto-indentation
     if (e.key === 'Enter') {
       e.preventDefault();
-      
+
       // Get the current line
       const lineStart = value.lastIndexOf('\n', selectionStart - 1) + 1;
       const lineEnd = value.indexOf('\n', selectionStart);
       const currentLine = value.substring(lineStart, lineEnd === -1 ? value.length : lineEnd);
-      
+
       // Calculate indentation of current line
       const indentMatch = currentLine.match(/^\s*/);
       const currentIndent = indentMatch ? indentMatch[0] : '';
-      
+
       // Check if current line ends with { or : (for languages that use these for blocks)
       const trimmedLine = currentLine.trim();
       const needsExtraIndent = trimmedLine.endsWith('{') || trimmedLine.endsWith(':');
       const extraIndent = needsExtraIndent ? '    ' : '';
-      
+
       // Insert newline with proper indentation
       const newValue = value.substring(0, selectionStart) + '\n' + currentIndent + extraIndent + value.substring(selectionEnd);
       setCode(newValue);
-      
+
       // Set cursor position
       setTimeout(() => {
         const newPosition = selectionStart + 1 + currentIndent.length + extraIndent.length;
@@ -205,21 +238,19 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
           <div className="flex border-b border-gray-800 bg-gray-900">
             <button
               onClick={() => setActiveTab('description')}
-              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'description'
-                  ? 'border-green-500 text-green-400'
-                  : 'border-transparent text-gray-400 hover:text-gray-300'
-              }`}
+              className={`px - 4 py - 3 text - sm font - medium border - b - 2 transition - colors ${activeTab === 'description'
+                ? 'border-green-500 text-green-400'
+                : 'border-transparent text-gray-400 hover:text-gray-300'
+                } `}
             >
               Description
             </button>
             <button
               onClick={() => setActiveTab('submissions')}
-              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-                activeTab === 'submissions'
-                  ? 'border-green-500 text-green-400'
-                  : 'border-transparent text-gray-400 hover:text-gray-300'
-              }`}
+              className={`px - 4 py - 3 text - sm font - medium border - b - 2 transition - colors ${activeTab === 'submissions'
+                ? 'border-green-500 text-green-400'
+                : 'border-transparent text-gray-400 hover:text-gray-300'
+                } `}
             >
               Submissions
             </button>
@@ -234,13 +265,12 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
                   <div className="flex items-center gap-2 mb-2">
                     <h2 className="text-2xl font-bold text-white">1. {problem.title}</h2>
                     <span
-                      className={`px-2 py-1 rounded text-xs font-semibold ${
-                        problem.difficulty === 'easy'
-                          ? 'bg-green-500/20 text-green-400'
-                          : problem.difficulty === 'medium'
+                      className={`px - 2 py - 1 rounded text - xs font - semibold ${problem.difficulty === 'easy'
+                        ? 'bg-green-500/20 text-green-400'
+                        : problem.difficulty === 'medium'
                           ? 'bg-yellow-500/20 text-yellow-400'
                           : 'bg-red-500/20 text-red-400'
-                      }`}
+                        } `}
                     >
                       {problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1)}
                     </span>
@@ -335,7 +365,7 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
                   <div className="space-y-2">
                     {attempts.slice(0, 10).map((attempt, idx) => (
                       <div
-                        key={`${attempt.createdAt}-${idx}`}
+                        key={`${attempt.createdAt} -${idx} `}
                         className="bg-gray-800 rounded-lg p-4 hover:bg-gray-750 transition-colors"
                       >
                         <div className="flex items-center justify-between mb-2">
@@ -346,9 +376,8 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
                               <FiX className="w-5 h-5 text-red-400" />
                             )}
                             <span
-                              className={`font-semibold ${
-                                attempt.status === 'passed' ? 'text-green-400' : 'text-red-400'
-                              }`}
+                              className={`font - semibold ${attempt.status === 'passed' ? 'text-green-400' : 'text-red-400'
+                                } `}
                             >
                               {attempt.status === 'passed' ? 'Accepted' : 'Wrong Answer'}
                             </span>
@@ -379,19 +408,18 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
             <div className="relative group">
               <button className="flex items-center gap-2 px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded text-sm transition-colors">
                 <FiCode className="w-4 h-4" />
-                <span>{availableLanguages.find((l) => l.value === selectedLanguage)?.label || 'Select Language'}</span>
+                <span>{SUPPORTED_LANGUAGES.find((l) => l.value === selectedLanguage)?.label || 'Select Language'}</span>
                 <FiChevronDown className="w-4 h-4" />
               </button>
-              
+
               {/* Dropdown */}
               <div className="absolute top-full left-0 mt-1 bg-gray-800 border border-gray-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 min-w-[180px]">
                 {SUPPORTED_LANGUAGES.map((lang) => (
                   <button
                     key={lang.value}
                     onClick={() => handleLanguageChange(lang.value)}
-                    className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-700 transition-colors first:rounded-t-lg last:rounded-b-lg flex items-center gap-2 ${
-                      selectedLanguage === lang.value ? 'bg-gray-700 text-green-400' : 'text-gray-300'
-                    }`}
+                    className={`w - full text - left px - 4 py - 2 text - sm hover: bg - gray - 700 transition - colors first: rounded - t - lg last: rounded - b - lg flex items - center gap - 2 ${selectedLanguage === lang.value ? 'bg-gray-700 text-green-400' : 'text-gray-300'
+                      } `}
                   >
                     <span>{lang.icon}</span>
                     <span>{lang.label}</span>
@@ -427,7 +455,7 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
               onKeyDown={handleKeyDown}
               className="w-full h-full bg-gray-950 text-gray-100 font-mono text-sm p-4 resize-none focus:outline-none"
               spellCheck={false}
-              style={{ 
+              style={{
                 tabSize: 4,
                 lineHeight: '1.6'
               }}
@@ -441,7 +469,7 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
               className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors"
             >
               <span>Testcase</span>
-              <FiChevronDown className={`w-4 h-4 transition-transform ${showTestCase ? 'rotate-180' : ''}`} />
+              <FiChevronDown className={`w - 4 h - 4 transition - transform ${showTestCase ? 'rotate-180' : ''} `} />
             </button>
 
             {showTestCase && (
@@ -485,18 +513,16 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
                     {results.map((result, idx) => (
                       <div
                         key={result.id}
-                        className={`rounded-lg border p-3 ${
-                          result.pass
-                            ? 'bg-green-500/10 border-green-500/30'
-                            : 'bg-red-500/10 border-red-500/30'
-                        }`}
+                        className={`rounded - lg border p - 3 ${result.pass
+                          ? 'bg-green-500/10 border-green-500/30'
+                          : 'bg-red-500/10 border-red-500/30'
+                          } `}
                       >
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-sm font-medium text-white">Test Case {idx + 1}</span>
                           <span
-                            className={`text-xs px-2 py-1 rounded ${
-                              result.pass ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-                            }`}
+                            className={`text - xs px - 2 py - 1 rounded ${result.pass ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                              } `}
                           >
                             {result.pass ? 'Passed' : 'Failed'}
                           </span>
@@ -513,9 +539,8 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
                             </div>
                             <div>
                               <span className="text-gray-400">Output:</span>
-                              <div className={`mt-1 rounded px-3 py-2 ${
-                                result.pass ? 'bg-gray-800 text-gray-300' : 'bg-red-900/20 text-red-300'
-                              }`}>
+                              <div className={`mt - 1 rounded px - 3 py - 2 ${result.pass ? 'bg-gray-800 text-gray-300' : 'bg-red-900/20 text-red-300'
+                                } `}>
                                 {JSON.stringify(result.actual)}
                               </div>
                             </div>

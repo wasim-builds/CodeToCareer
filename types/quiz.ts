@@ -26,6 +26,15 @@ export interface QuizResult {
   incorrectAnswers: number;
   timeSpent: number;
   timestamp: Date;
+  timedMode?: boolean;
+  timeLimit?: number;
+  timeBonus?: number;
+}
+
+export interface QuizSettings {
+  timedMode: boolean;
+  timerMode: 'relaxed' | 'standard' | 'challenge';
+  timeLimit?: number;
 }
 
 export interface UserProgress {

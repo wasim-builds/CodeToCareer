@@ -7,20 +7,26 @@ import { useGamification } from '@/contexts/GamificationContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getTopicIcon } from '@/data/topicIcons';
-import { FiArrowLeft, FiClock, FiCheckCircle, FiXCircle, FiAward, FiZap, FiChevronLeft, FiChevronRight, FiFlag } from 'react-icons/fi';
+import { FiArrowLeft, FiClock, FiCheckCircle, FiXCircle, FiAward, FiZap, FiChevronLeft, FiChevronRight, FiFlag, FiAlertCircle } from 'react-icons/fi';
+import QuizTimer from './QuizTimer';
+import { formatTime, calculateTimeBonus, getTimeEfficiency } from '@/lib/timerUtils';
 
 interface QuizComponentProps {
   questions: Question[];
   topicId: string;
   topicName: string;
   difficulty?: Difficulty;
+  timedMode?: boolean;
+  timeLimit?: number;
 }
 
 export default function QuizComponent({
   questions,
   topicId,
   topicName,
-  difficulty
+  difficulty,
+  timedMode = false,
+  timeLimit = 0
 }: QuizComponentProps) {
   const router = useRouter();
   const { addResult } = useQuiz();
@@ -32,6 +38,9 @@ export default function QuizComponent({
   const [startTime] = useState(Date.now());
   const [timeSpent, setTimeSpent] = useState(0);
   const [flaggedQuestions, setFlaggedQuestions] = useState<Set<number>>(new Set());
+  const [timeRemaining, setTimeRemaining] = useState(timeLimit);
+  const [showTimeUpModal, setShowTimeUpModal] = useState(false);
+  const [lastWarningPercentage, setLastWarningPercentage] = useState<number | null>(null);
 
   const filteredQuestions = difficulty
     ? questions.filter(q => q.difficulty === difficulty)
@@ -41,11 +50,32 @@ export default function QuizComponent({
   const { icon: TopicIcon, color, bgColor } = getTopicIcon(topicId);
 
   useEffect(() => {
+    if (showResult) return;
+
     const timer = setInterval(() => {
-      setTimeSpent(Math.floor((Date.now() - startTime) / 1000));
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      setTimeSpent(elapsed);
+
+      if (timedMode && timeLimit > 0) {
+        const remaining = Math.max(0, timeLimit - elapsed);
+        setTimeRemaining(remaining);
+
+        // Auto-submit when time runs out
+        if (remaining === 0 && !showTimeUpModal) {
+          setShowTimeUpModal(true);
+        }
+
+        // Show warnings at 50% and 25%
+        const percentage = (remaining / timeLimit) * 100;
+        if (percentage <= 25 && (lastWarningPercentage === null || lastWarningPercentage > 25)) {
+          setLastWarningPercentage(25);
+        } else if (percentage <= 50 && (lastWarningPercentage === null || lastWarningPercentage > 50)) {
+          setLastWarningPercentage(50);
+        }
+      }
     }, 1000);
     return () => clearInterval(timer);
-  }, [startTime]);
+  }, [startTime, timedMode, timeLimit, showTimeUpModal, lastWarningPercentage, showResult]);
 
   const handleAnswerSelect = (index: number) => {
     setSelectedAnswer(index);
@@ -105,6 +135,8 @@ export default function QuizComponent({
 
   const handleFinish = () => {
     const scoreData = calculateScore();
+    const timeBonus = timedMode && timeLimit > 0 ? calculateTimeBonus(timeSpent, timeLimit) : 0;
+
     const result: QuizResult = {
       topicId,
       difficulty: difficulty || 'medium',
@@ -113,16 +145,29 @@ export default function QuizComponent({
       correctAnswers: scoreData.correct,
       incorrectAnswers: scoreData.total - scoreData.correct,
       timeSpent,
-      timestamp: new Date()
+      timestamp: new Date(),
+      timedMode,
+      timeLimit: timedMode ? timeLimit : undefined,
+      timeBonus
     };
     addResult(result);
-    
-    // Add XP based on score
-    const xpEarned = Math.round(scoreData.score * 0.5) + 10;
+
+    // Add XP based on score + time bonus
+    const xpEarned = Math.round(scoreData.score * 0.5) + 10 + timeBonus;
     addXP(xpEarned);
     updateStreak();
-    
+
     router.push(`/quiz/${topicId}/results`);
+  };
+
+  const handleTimeUp = () => {
+    setShowTimeUpModal(false);
+    setShowResult(true);
+  };
+
+  const handleContinueUntimed = () => {
+    setShowTimeUpModal(false);
+    // Continue in untimed mode
   };
 
   const formatTime = (seconds: number) => {
@@ -135,7 +180,7 @@ export default function QuizComponent({
     const scoreData = calculateScore();
     const grade = scoreData.score >= 90 ? 'A+' : scoreData.score >= 80 ? 'A' : scoreData.score >= 70 ? 'B' : scoreData.score >= 60 ? 'C' : scoreData.score >= 50 ? 'D' : 'F';
     const gradeColor = scoreData.score >= 80 ? 'text-green-400' : scoreData.score >= 60 ? 'text-yellow-400' : 'text-red-400';
-    
+
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 py-8">
         <div className="max-w-3xl mx-auto px-4">
@@ -224,6 +269,35 @@ export default function QuizComponent({
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+      {/* Time's Up Modal */}
+      {showTimeUpModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-2xl border-2 border-red-500 max-w-md w-full p-8 text-center animate-in fade-in zoom-in duration-300">
+            <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FiAlertCircle className="w-10 h-10 text-red-500" />
+            </div>
+            <h2 className="text-3xl font-bold text-white mb-2">Time's Up!</h2>
+            <p className="text-gray-400 mb-6">
+              The quiz timer has expired. You can submit your answers now or continue without a timer.
+            </p>
+            <div className="space-y-3">
+              <button
+                onClick={handleTimeUp}
+                className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+              >
+                Submit Quiz
+              </button>
+              <button
+                onClick={handleContinueUntimed}
+                className="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+              >
+                Continue Untimed
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Top Bar */}
       <div className="sticky top-0 z-40 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800">
         <div className="max-w-5xl mx-auto px-4 py-3">
@@ -235,7 +309,7 @@ export default function QuizComponent({
               <FiArrowLeft className="w-4 h-4" />
               <span className="hidden sm:inline">Exit Quiz</span>
             </Link>
-            
+
             <div className="flex items-center gap-3">
               <div className={`w-8 h-8 ${bgColor} rounded-lg flex items-center justify-center`}>
                 <TopicIcon className={`w-4 h-4 ${color}`} />
@@ -244,10 +318,19 @@ export default function QuizComponent({
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-gray-400">
-                <FiClock className="w-4 h-4" />
-                <span className="font-mono">{formatTime(timeSpent)}</span>
-              </div>
+              {timedMode && timeLimit > 0 ? (
+                <QuizTimer
+                  timeRemaining={timeRemaining}
+                  timeLimit={timeLimit}
+                  size="small"
+                  showWarning={true}
+                />
+              ) : (
+                <div className="flex items-center gap-2 text-gray-400">
+                  <FiClock className="w-4 h-4" />
+                  <span className="font-mono">{formatTime(timeSpent)}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -268,7 +351,7 @@ export default function QuizComponent({
                 </span>
               </div>
               <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-                <div 
+                <div
                   className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all duration-500"
                   style={{ width: `${progress}%` }}
                 />
@@ -279,21 +362,19 @@ export default function QuizComponent({
             <div className="bg-gray-800 rounded-2xl border border-gray-700 overflow-hidden mb-6">
               {/* Question Header */}
               <div className="px-6 py-4 border-b border-gray-700 flex items-center justify-between">
-                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
-                  currentQuestion.difficulty === 'easy' ? 'bg-green-500/20 text-green-400' :
+                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${currentQuestion.difficulty === 'easy' ? 'bg-green-500/20 text-green-400' :
                   currentQuestion.difficulty === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                  'bg-red-500/20 text-red-400'
-                }`}>
+                    'bg-red-500/20 text-red-400'
+                  }`}>
                   {currentQuestion.difficulty === 'easy' ? '🌱' : currentQuestion.difficulty === 'medium' ? '⚡' : '🔥'}
                   {currentQuestion.difficulty.charAt(0).toUpperCase() + currentQuestion.difficulty.slice(1)}
                 </span>
                 <button
                   onClick={toggleFlag}
-                  className={`p-2 rounded-lg transition-colors ${
-                    flaggedQuestions.has(currentQuestionIndex)
-                      ? 'bg-orange-500/20 text-orange-400'
-                      : 'text-gray-500 hover:text-gray-300 hover:bg-gray-700'
-                  }`}
+                  className={`p-2 rounded-lg transition-colors ${flaggedQuestions.has(currentQuestionIndex)
+                    ? 'bg-orange-500/20 text-orange-400'
+                    : 'text-gray-500 hover:text-gray-300 hover:bg-gray-700'
+                    }`}
                   title="Flag for review"
                 >
                   <FiFlag className="w-5 h-5" />
@@ -312,18 +393,16 @@ export default function QuizComponent({
                     <button
                       key={index}
                       onClick={() => handleAnswerSelect(index)}
-                      className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 group ${
-                        selectedAnswer === index
-                          ? 'border-blue-500 bg-blue-500/10'
-                          : 'border-gray-700 hover:border-gray-500 hover:bg-gray-700/50'
-                      }`}
+                      className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 group ${selectedAnswer === index
+                        ? 'border-blue-500 bg-blue-500/10'
+                        : 'border-gray-700 hover:border-gray-500 hover:bg-gray-700/50'
+                        }`}
                     >
                       <div className="flex items-center gap-4">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-semibold text-sm transition-colors ${
-                          selectedAnswer === index
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-700 text-gray-400 group-hover:bg-gray-600'
-                        }`}>
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-semibold text-sm transition-colors ${selectedAnswer === index
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-700 text-gray-400 group-hover:bg-gray-600'
+                          }`}>
                           {String.fromCharCode(65 + index)}
                         </div>
                         <span className={`flex-1 ${selectedAnswer === index ? 'text-white' : 'text-gray-300'}`}>
@@ -348,11 +427,10 @@ export default function QuizComponent({
               </button>
               <button
                 onClick={handleNext}
-                className={`flex items-center gap-2 px-6 py-3 font-semibold rounded-xl transition-colors ${
-                  currentQuestionIndex === filteredQuestions.length - 1
-                    ? 'bg-green-600 hover:bg-green-700 text-white'
-                    : 'bg-green-600 hover:bg-green-700 text-white'
-                }`}
+                className={`flex items-center gap-2 px-6 py-3 font-semibold rounded-xl transition-colors ${currentQuestionIndex === filteredQuestions.length - 1
+                  ? 'bg-green-600 hover:bg-green-700 text-white'
+                  : 'bg-green-600 hover:bg-green-700 text-white'
+                  }`}
               >
                 {currentQuestionIndex === filteredQuestions.length - 1 ? 'Finish Quiz' : 'Next'}
                 <FiChevronRight className="w-5 h-5" />
@@ -369,17 +447,16 @@ export default function QuizComponent({
                   <button
                     key={index}
                     onClick={() => jumpToQuestion(index)}
-                    className={`w-10 h-10 rounded-lg text-sm font-medium transition-all ${
-                      index === currentQuestionIndex
-                        ? 'bg-green-500 text-white ring-2 ring-green-400 ring-offset-2 ring-offset-gray-800'
-                        : answers[index] !== undefined
+                    className={`w-10 h-10 rounded-lg text-sm font-medium transition-all ${index === currentQuestionIndex
+                      ? 'bg-green-500 text-white ring-2 ring-green-400 ring-offset-2 ring-offset-gray-800'
+                      : answers[index] !== undefined
                         ? 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/50'
                         : flaggedQuestions.has(index)
-                        ? 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30'
-                        : index < currentQuestionIndex
-                        ? 'bg-gray-600 text-gray-300 hover:bg-gray-500'
-                        : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
-                    }`}
+                          ? 'bg-orange-500/20 text-orange-400 hover:bg-orange-500/30'
+                          : index < currentQuestionIndex
+                            ? 'bg-gray-600 text-gray-300 hover:bg-gray-500'
+                            : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
+                      }`}
                   >
                     {index + 1}
                   </button>

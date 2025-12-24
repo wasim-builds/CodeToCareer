@@ -8,6 +8,8 @@ interface QuizContextType {
   progress: UserProgress;
   addResult: (result: QuizResult) => void;
   clearResults: () => void;
+  generatedQuestions: any[];
+  setGeneratedQuestions: (questions: any[]) => void;
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -42,6 +44,9 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('quiz-results');
   };
 
+  // State for AI-generated questions
+  const [generatedQuestions, setGeneratedQuestions] = useState<any[]>([]);
+
   const progress: UserProgress = {
     results,
     totalQuizzes: results.length,
@@ -51,7 +56,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <QuizContext.Provider value={{ results, progress, addResult, clearResults }}>
+    <QuizContext.Provider value={{ results, progress, addResult, clearResults, generatedQuestions, setGeneratedQuestions }}>
       {children}
     </QuizContext.Provider>
   );

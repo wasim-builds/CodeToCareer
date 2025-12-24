@@ -5,6 +5,8 @@ import { useParams } from 'next/navigation';
 import { topics } from '@/data/quiz/topics';
 import { useQuiz } from '@/contexts/QuizContext';
 import Link from 'next/link';
+import { FiClock, FiZap, FiAward } from 'react-icons/fi';
+import { formatTime, getTimeEfficiency, getTimeEfficiencyLabel } from '@/lib/timerUtils';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,7 +20,7 @@ export default function QuizResultsPage() {
   }, [topicId]);
 
   const topicResults = useMemo(() => {
-    return results.filter(r => r.topicId === topicId).sort((a, b) => 
+    return results.filter(r => r.topicId === topicId).sort((a, b) =>
       b.timestamp.getTime() - a.timestamp.getTime()
     );
   }, [results, topicId]);
@@ -104,14 +106,62 @@ export default function QuizResultsPage() {
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Time</div>
           </div>
+          {latestResult.timedMode && latestResult.timeLimit && (
+            <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-800">
+              <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-1">
+                {getTimeEfficiency(latestResult.timeSpent, latestResult.timeLimit)}%
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Time Efficiency</div>
+            </div>
+          )}
         </div>
 
+        {/* Timer Badge and Info */}
+        {latestResult.timedMode && latestResult.timeLimit && (
+          <div className="mb-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                  <FiClock className="w-5 h-5 text-blue-500" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-blue-900 dark:text-blue-100">Timed Mode</span>
+                    <span className="text-xs px-2 py-1 bg-blue-500 text-white rounded-full font-semibold">⚡ TIMED</span>
+                  </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    {getTimeEfficiencyLabel(getTimeEfficiency(latestResult.timeSpent, latestResult.timeLimit))}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <div className="text-center">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Time Limit</div>
+                  <div className="text-lg font-bold text-gray-900 dark:text-white">{formatTime(latestResult.timeLimit)}</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Time Used</div>
+                  <div className="text-lg font-bold text-gray-900 dark:text-white">{formatTime(latestResult.timeSpent)}</div>
+                </div>
+                {latestResult.timeBonus && latestResult.timeBonus > 0 && (
+                  <div className="text-center">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">Time Bonus</div>
+                    <div className="text-lg font-bold text-yellow-600 dark:text-yellow-400 flex items-center gap-1">
+                      <FiZap className="w-4 h-4" />
+                      +{latestResult.timeBonus} XP
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mb-4">
-          <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-            latestResult.difficulty === 'easy' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-            latestResult.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-            'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-          }`}>
+          <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${latestResult.difficulty === 'easy' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+              latestResult.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+            }`}>
             {latestResult.difficulty.toUpperCase()}
           </span>
           <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">

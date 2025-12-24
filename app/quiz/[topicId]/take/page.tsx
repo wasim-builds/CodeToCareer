@@ -6,6 +6,7 @@ import { topics } from '@/data/quiz/topics';
 import { getQuestionsForTopic, getQuestionsByDifficulty } from '@/data/quiz/questions';
 import { Difficulty } from '@/types/quiz';
 import QuizComponent from '@/components/quiz/QuizComponent';
+import { useQuiz } from '@/contexts/QuizContext';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,17 +15,25 @@ export default function TakeQuizPage() {
   const searchParams = useSearchParams();
   const topicId = params.topicId as string;
   const difficultyParam = searchParams.get('difficulty') as Difficulty | null;
+  const timedMode = searchParams.get('timed') === 'true';
+  const timeLimit = parseInt(searchParams.get('timeLimit') || '0', 10);
 
   const topic = useMemo(() => {
     return topics.find(t => t.id === topicId);
   }, [topicId]);
 
+  const { generatedQuestions } = useQuiz();
+  const mode = searchParams.get('mode');
+
   const questions = useMemo(() => {
+    if (mode === 'endless') {
+      return generatedQuestions;
+    }
     if (difficultyParam && ['easy', 'medium', 'hard'].includes(difficultyParam)) {
       return getQuestionsByDifficulty(topicId, difficultyParam);
     }
     return getQuestionsForTopic(topicId);
-  }, [topicId, difficultyParam]);
+  }, [topicId, difficultyParam, mode, generatedQuestions]);
 
   if (!topic) {
     return (
@@ -44,6 +53,8 @@ export default function TakeQuizPage() {
       topicId={topicId}
       topicName={topic.name}
       difficulty={difficultyParam || undefined}
+      timedMode={timedMode}
+      timeLimit={timeLimit}
     />
   );
 }
