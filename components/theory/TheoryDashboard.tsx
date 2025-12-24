@@ -2,10 +2,10 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import Link from 'next/link';
-import { 
-  FiBook, 
-  FiBookOpen, 
-  FiSearch, 
+import {
+  FiBook,
+  FiBookOpen,
+  FiSearch,
   FiFilter,
   FiClock,
   FiLayers,
@@ -21,23 +21,41 @@ export default function TheoryDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [theoryProgress, setTheoryProgress] = useState<Record<string, number>>({});
+  const [recentlyStudied, setRecentlyStudied] = useState<Array<{ topicId: string, lastStudied: Date, progress: number }>>([]);
 
   const theoryTopics = useMemo(() => {
     return getTheoryTopicsWithPlaceholders();
   }, []);
 
-  // Load theory progress from localStorage
+  // Load theory progress and recently studied from localStorage
   useEffect(() => {
     const progress: Record<string, number> = {};
+    const recent: Array<{ topicId: string, lastStudied: Date, progress: number }> = [];
+
     theoryTopics.forEach((topic) => {
       const topicId = 'topicId' in topic ? topic.topicId : '';
       const saved = localStorage.getItem(`theory_progress_${topicId}`);
+      const lastStudiedStr = localStorage.getItem(`theory_last_studied_${topicId}`);
+
       if (saved) {
         const completed = JSON.parse(saved);
         // Estimate progress as percentage based on typical 5 sections
-        progress[topicId] = Math.min(100, (completed.length / 5) * 100);
+        const progressPercent = Math.min(100, (completed.length / 5) * 100);
+        progress[topicId] = progressPercent;
+
+        if (lastStudiedStr) {
+          recent.push({
+            topicId,
+            lastStudied: new Date(lastStudiedStr),
+            progress: progressPercent
+          });
+        }
       }
     });
+
+    // Sort by most recent and take top 5
+    recent.sort((a, b) => b.lastStudied.getTime() - a.lastStudied.getTime());
+    setRecentlyStudied(recent.slice(0, 5));
     setTheoryProgress(progress);
   }, [theoryTopics]);
 
@@ -55,10 +73,10 @@ export default function TheoryDashboard() {
     return theoryTopics.filter((topic) => {
       const topicName = 'topicName' in topic ? topic.topicName : '';
       const category = 'category' in topic ? topic.category : 'Uncategorized';
-      
+
       const matchesSearch = topicName.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory === 'All' || category === selectedCategory;
-      
+
       return matchesSearch && matchesCategory;
     });
   }, [theoryTopics, searchQuery, selectedCategory]);
@@ -160,6 +178,67 @@ export default function TheoryDashboard() {
         </div>
       </div>
 
+      {/* Recently Studied Section */}
+      {recentlyStudied.length > 0 && (
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center">
+                  <FiClock className="w-5 h-5 text-green-400" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">Recently Studied</h2>
+                  <p className="text-sm text-gray-400">Continue where you left off</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {recentlyStudied.map((item) => {
+                const topic = theoryTopics.find(t => 'topicId' in t && t.topicId === item.topicId);
+                if (!topic || !('topicId' in topic)) return null;
+
+                const topicIconData = getTopicIcon(topic.topicId);
+                const TopicIcon = topicIconData.icon;
+                const timeSince = Math.floor((Date.now() - item.lastStudied.getTime()) / (1000 * 60 * 60));
+                const timeText = timeSince < 1 ? 'Just now' :
+                  timeSince < 24 ? `${timeSince}h ago` :
+                    `${Math.floor(timeSince / 24)}d ago`;
+
+                return (
+                  <Link
+                    key={item.topicId}
+                    href={`/theory/${item.topicId}`}
+                    className="group bg-gray-800/50 border border-gray-700 hover:border-green-500/50 rounded-xl p-4 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/10"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-12 h-12 rounded-xl ${topicIconData.bgColor} flex items-center justify-center flex-shrink-0`}>
+                        <TopicIcon className={`w-6 h-6 ${topicIconData.color}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-white mb-1 group-hover:text-green-400 transition-colors truncate">
+                          {topic.topicName}
+                        </h3>
+                        <p className="text-xs text-gray-500 mb-2">{timeText}</p>
+
+                        <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
+                          <div
+                            className="bg-gradient-to-r from-green-500 to-green-400 h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${item.progress}%` }}
+                          />
+                        </div>
+                        <p className="text-xs text-gray-400">{Math.round(item.progress)}% complete</p>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         {Object.keys(topicsByCategory).length === 0 ? (
@@ -179,7 +258,7 @@ export default function TheoryDashboard() {
                   {categoryTopics.length}
                 </span>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {categoryTopics.map((topic) => {
                   const topicId = 'topicId' in topic ? topic.topicId : '';
@@ -192,34 +271,33 @@ export default function TheoryDashboard() {
                   return (
                     <div
                       key={topicId}
-                      className={`group bg-gray-800 rounded-xl border transition-all duration-300 overflow-hidden ${
-                        hasTheoryContent
-                          ? 'border-gray-700 hover:border-green-500/50 hover:shadow-lg hover:shadow-green-500/10 cursor-pointer'
-                          : 'border-gray-700/50 opacity-50'
-                      }`}
+                      className={`group bg-gray-800 rounded-xl border transition-all duration-300 overflow-hidden ${hasTheoryContent
+                        ? 'border-gray-700 hover:border-green-500/50 hover:shadow-lg hover:shadow-green-500/10 cursor-pointer'
+                        : 'border-gray-700/50 opacity-50'
+                        }`}
                     >
                       {hasTheoryContent ? (
                         <Link href={`/theory/${topicId}`} className="block">
                           {/* Progress Bar */}
                           {progress > 0 && (
                             <div className="h-1 bg-gray-700">
-                              <div 
+                              <div
                                 className="h-full bg-gradient-to-r from-green-500 to-green-400 transition-all"
                                 style={{ width: `${progress}%` }}
                               />
                             </div>
                           )}
-                          
+
                           <div className="p-5">
                             <div className="flex items-start gap-4">
                               {/* Topic Icon */}
-                              <div 
+                              <div
                                 className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110"
                                 style={{ backgroundColor: iconData.bgColor }}
                               >
-                                <IconComponent 
-                                  className="w-6 h-6" 
-                                  style={{ color: iconData.color }} 
+                                <IconComponent
+                                  className="w-6 h-6"
+                                  style={{ color: iconData.color }}
                                 />
                               </div>
 

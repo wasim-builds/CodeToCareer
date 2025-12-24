@@ -3,9 +3,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TheoryTopic, TheorySection } from '@/types/theory';
 import Link from 'next/link';
-import { 
-  FiChevronDown, 
-  FiChevronRight, 
+import {
+  FiChevronDown,
+  FiChevronRight,
   FiArrowLeft,
   FiBookmark,
   FiClock,
@@ -18,6 +18,9 @@ import {
   FiAward
 } from 'react-icons/fi';
 import { getTopicIcon } from '@/data/topicIcons';
+import { CodeBlock } from './CodeBlock';
+import { Callout } from './Callout';
+import AITutor from './AITutor';
 
 interface TheoryViewerProps {
   theory: TheoryTopic;
@@ -49,16 +52,40 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
     if (saved) {
       setCompletedSections(new Set(JSON.parse(saved)));
     }
+    // Save last studied timestamp
+    localStorage.setItem(`theory_last_studied_${theory.topicId}`, new Date().toISOString());
   }, [theory.topicId]);
 
   // Save progress and update read percentage
   useEffect(() => {
     if (completedSections.size > 0) {
-      localStorage.setItem(`theory_progress_${theory.topicId}`, JSON.stringify([...completedSections]));
+      localStorage.setItem(`theory_progress_${theory.topicId}`, JSON.stringify(Array.from(completedSections)));
     }
     const progress = (completedSections.size / theory.sections.length) * 100;
     setReadProgress(progress);
   }, [completedSections, theory.sections.length, theory.topicId]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return; // Don't interfere with input fields
+      }
+
+      const currentIndex = theory.sections.findIndex(s => s.id === activeSection);
+
+      if (e.key === 'ArrowDown' && currentIndex < theory.sections.length - 1) {
+        e.preventDefault();
+        scrollToSection(theory.sections[currentIndex + 1].id);
+      } else if (e.key === 'ArrowUp' && currentIndex > 0) {
+        e.preventDefault();
+        scrollToSection(theory.sections[currentIndex - 1].id);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [activeSection, theory.sections]);
 
   const toggleSection = (sectionId: string) => {
     const newExpanded = new Set(expandedSections);
@@ -92,42 +119,86 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
     }
   };
 
+  // Parse content to support code blocks and callouts
+  const renderContent = (content: string) => {
+    const parts = [];
+    let currentIndex = 0;
+
+    // Simple parser for code blocks (```language\ncode\n```)
+    const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+    let match;
+
+    while ((match = codeBlockRegex.exec(content)) !== null) {
+      // Add text before code block
+      if (match.index > currentIndex) {
+        const textBefore = content.substring(currentIndex, match.index);
+        parts.push(
+          <p key={`text-${currentIndex}`} className="text-gray-300 leading-relaxed whitespace-pre-line">
+            {textBefore}
+          </p>
+        );
+      }
+
+      // Add code block
+      parts.push(
+        <CodeBlock
+          key={`code-${match.index}`}
+          code={match[2].trim()}
+          language={match[1] || 'javascript'}
+        />
+      );
+
+      currentIndex = match.index + match[0].length;
+    }
+
+    // Add remaining text
+    if (currentIndex < content.length) {
+      const remainingText = content.substring(currentIndex);
+      parts.push(
+        <p key={`text-${currentIndex}`} className="text-gray-300 leading-relaxed whitespace-pre-line">
+          {remainingText}
+        </p>
+      );
+    }
+
+    return parts.length > 0 ? parts : (
+      <p className="text-gray-300 leading-relaxed whitespace-pre-line">{content}</p>
+    );
+  };
+
   const renderSection = (section: TheorySection, index: number) => {
     const isExpanded = expandedSections.has(section.id);
     const hasSubsections = section.subsections && section.subsections.length > 0;
     const isCompleted = completedSections.has(section.id);
 
     return (
-      <div 
-        key={section.id} 
+      <div
+        key={section.id}
         ref={(el) => { sectionRefs.current[section.id] = el; }}
         className="mb-6"
       >
         {/* Section Header */}
         <button
           onClick={() => toggleSection(section.id)}
-          className={`w-full text-left flex items-center gap-3 p-4 rounded-xl transition-all duration-300 group ${
-            isExpanded 
-              ? 'bg-gradient-to-r from-green-600/20 to-green-500/10 border-2 border-green-500/50' 
-              : 'bg-gray-800/50 border-2 border-gray-700 hover:border-gray-600'
-          }`}
+          className={`w-full text-left flex items-center gap-3 p-4 rounded-xl transition-all duration-300 group ${isExpanded
+            ? 'bg-gradient-to-r from-green-600/20 to-green-500/10 border-2 border-green-500/50'
+            : 'bg-gray-800/50 border-2 border-gray-700 hover:border-gray-600'
+            }`}
         >
           {/* Section Number */}
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold ${
-            isCompleted 
-              ? 'bg-green-500 text-white' 
-              : isExpanded 
-                ? 'bg-green-500/20 text-green-400 border border-green-500/50' 
-                : 'bg-gray-700 text-gray-400'
-          }`}>
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold ${isCompleted
+            ? 'bg-green-500 text-white'
+            : isExpanded
+              ? 'bg-green-500/20 text-green-400 border border-green-500/50'
+              : 'bg-gray-700 text-gray-400'
+            }`}>
             {isCompleted ? <FiCheck className="w-5 h-5" /> : index + 1}
           </div>
 
           {/* Section Title */}
           <div className="flex-1">
-            <h3 className={`font-bold text-lg ${
-              isExpanded ? 'text-green-400' : 'text-white group-hover:text-green-400'
-            } transition-colors`}>
+            <h3 className={`font-bold text-lg ${isExpanded ? 'text-green-400' : 'text-white group-hover:text-green-400'
+              } transition-colors`}>
               {section.title}
             </h3>
             {hasSubsections && (
@@ -138,9 +209,8 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
           </div>
 
           {/* Expand Icon */}
-          <span className={`text-xl transition-transform duration-300 ${
-            isExpanded ? 'text-green-400 rotate-180' : 'text-gray-500'
-          }`}>
+          <span className={`text-xl transition-transform duration-300 ${isExpanded ? 'text-green-400 rotate-180' : 'text-gray-500'
+            }`}>
             <FiChevronDown />
           </span>
         </button>
@@ -151,18 +221,18 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
             {hasSubsections && section.subsections?.map((subsection, subIndex) => (
               <div
                 key={subsection.id}
-                className="bg-gray-800/80 rounded-xl p-5 border border-gray-700 hover:border-gray-600 transition-colors ml-4"
+                className="bg-gray-800/80 rounded-xl p-6 border border-gray-700 hover:border-gray-600 transition-colors ml-4"
               >
-                <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-400 mt-0.5">
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500/20 to-green-600/10 border border-green-500/30 flex items-center justify-center text-xs font-bold text-green-400 mt-0.5 flex-shrink-0">
                     {index + 1}.{subIndex + 1}
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-white text-base mb-3">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-bold text-white text-lg mb-4">
                       {subsection.title}
                     </h4>
-                    <div className="text-gray-300 leading-relaxed text-[15px] whitespace-pre-line">
-                      {subsection.content}
+                    <div className="prose prose-invert max-w-none text-[15px] leading-[1.8]">
+                      {renderContent(subsection.content)}
                     </div>
                   </div>
                 </div>
@@ -170,10 +240,10 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
             ))}
 
             {!hasSubsections && section.content && (
-              <div className="bg-gray-800/80 rounded-xl p-5 border border-gray-700 ml-4">
-                <p className="text-gray-300 leading-relaxed text-[15px] whitespace-pre-line">
-                  {section.content}
-                </p>
+              <div className="bg-gray-800/80 rounded-xl p-6 border border-gray-700 ml-4">
+                <div className="prose prose-invert max-w-none text-[15px] leading-[1.8]">
+                  {renderContent(section.content)}
+                </div>
               </div>
             )}
 
@@ -181,11 +251,10 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
             <div className="flex justify-end ml-4">
               <button
                 onClick={() => markSectionComplete(section.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  isCompleted
-                    ? 'bg-green-500/20 text-green-400 border border-green-500/50'
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                }`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${isCompleted
+                  ? 'bg-green-500/20 text-green-400 border border-green-500/50'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
               >
                 <FiCheck className="w-4 h-4" />
                 {isCompleted ? 'Completed' : 'Mark as Complete'}
@@ -201,7 +270,7 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
     <div className="min-h-screen bg-gray-900">
       {/* Progress Bar - Fixed at top */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-gray-800 z-50">
-        <div 
+        <div
           className="h-full bg-gradient-to-r from-green-500 to-green-400 transition-all duration-500"
           style={{ width: `${readProgress}%` }}
         />
@@ -216,9 +285,8 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
       </button>
 
       {/* Table of Contents - Sidebar */}
-      <div className={`fixed lg:fixed inset-y-0 left-0 w-72 bg-gray-850 border-r border-gray-700 z-40 transform transition-transform duration-300 lg:translate-x-0 ${
-        showToc ? 'translate-x-0' : '-translate-x-full'
-      }`} style={{ top: '4px' }}>
+      <div className={`fixed lg:fixed inset-y-0 left-0 w-72 bg-gray-850 border-r border-gray-700 z-40 transform transition-transform duration-300 lg:translate-x-0 ${showToc ? 'translate-x-0' : '-translate-x-full'
+        }`} style={{ top: '4px' }}>
         <div className="p-4 h-full overflow-y-auto">
           <Link
             href="/quiz"
@@ -237,17 +305,15 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
                 <button
                   key={section.id}
                   onClick={() => scrollToSection(section.id)}
-                  className={`w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all ${
-                    activeSection === section.id
-                      ? 'bg-green-500/20 text-green-400'
-                      : 'text-gray-400 hover:bg-gray-800 hover:text-white'
-                  }`}
+                  className={`w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all ${activeSection === section.id
+                    ? 'bg-green-500/20 text-green-400'
+                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                    }`}
                 >
-                  <span className={`w-5 h-5 rounded-md flex items-center justify-center text-xs ${
-                    completedSections.has(section.id)
-                      ? 'bg-green-500 text-white'
-                      : 'bg-gray-700 text-gray-500'
-                  }`}>
+                  <span className={`w-5 h-5 rounded-md flex items-center justify-center text-xs ${completedSections.has(section.id)
+                    ? 'bg-green-500 text-white'
+                    : 'bg-gray-700 text-gray-500'
+                    }`}>
                     {completedSections.has(section.id) ? <FiCheck className="w-3 h-3" /> : index + 1}
                   </span>
                   <span className="truncate">{section.title}</span>
@@ -263,7 +329,7 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
               <span className="text-sm font-bold text-green-400">{Math.round(readProgress)}%</span>
             </div>
             <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-              <div 
+              <div
                 className="h-full bg-gradient-to-r from-green-500 to-green-400 transition-all duration-500"
                 style={{ width: `${readProgress}%` }}
               />
@@ -291,7 +357,7 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
           <div className="bg-gradient-to-br from-gray-800 to-gray-800/50 rounded-2xl p-6 sm:p-8 mb-8 border border-gray-700">
             <div className="flex items-start gap-4 sm:gap-6">
               {/* Topic Icon */}
-              <div 
+              <div
                 className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center flex-shrink-0"
                 style={{ backgroundColor: topicIconData.bgColor }}
               >
