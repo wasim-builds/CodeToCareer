@@ -1,9 +1,13 @@
 "use client";
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { usePractice } from '@/contexts/PracticeContext';
 import { PracticeProblem, PracticeTestCase } from '@/types/practice';
 import { FiPlay, FiCheck, FiX, FiChevronDown, FiCode } from 'react-icons/fi';
+import { EditorToolbar } from './EditorToolbar';
+import { MonacoCodeEditor } from './MonacoCodeEditor';
+import { TestResultsPanel } from './TestResultsPanel';
+import { SuccessConfetti } from './SuccessConfetti';
 
 interface RunResult {
   id: string;
@@ -65,7 +69,31 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
   const [isRunning, setIsRunning] = useState(false);
   const [activeTab, setActiveTab] = useState<'description' | 'submissions'>('description');
   const [showTestCase, setShowTestCase] = useState(true);
+  const [fontSize, setFontSize] = useState(14);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [executionTime, setExecutionTime] = useState<number | undefined>();
   const { addAttempt, getAttemptsForProblem } = usePractice();
+
+  // Load font size from localStorage
+  useEffect(() => {
+    const savedFontSize = localStorage.getItem('editor-font-size');
+    if (savedFontSize) {
+      setFontSize(parseInt(savedFontSize, 10));
+    }
+  }, []);
+
+  // Handle ESC key to exit full-screen
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isFullScreen) {
+        setIsFullScreen(false);
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isFullScreen]);
+
 
   function getStarterCode(lang: string): string {
     // Try to find the starter code for the selected language
@@ -121,6 +149,7 @@ func main() {
     const started = performance.now();
     setIsRunning(true);
     setResults([]);
+    setShowConfetti(false); // Reset confetti
     try {
       const res = await fetch('/api/practice/run', {
         method: 'POST',
@@ -140,15 +169,22 @@ func main() {
 
       const data = await res.json();
       const runResults = data.results as RunResult[];
+      const execTime = Math.round(performance.now() - started);
       setResults(runResults);
+      setExecutionTime(execTime);
 
       const allPass = runResults.length > 0 && runResults.every((r: RunResult) => r.pass);
+
+      // Trigger confetti if all tests pass
+      if (allPass) {
+        setShowConfetti(true);
+      }
       addAttempt({
         problemId: problem.id,
         status: allPass ? 'passed' : 'failed',
         language: selectedLanguage as 'javascript' | 'typescript',
         code,
-        runtimeMs: Math.round(performance.now() - started),
+        runtimeMs: execTime,
         createdAt: new Date().toISOString(),
       });
     } catch (error) {
@@ -180,6 +216,23 @@ func main() {
     setSelectedLanguage(lang as any);
     setCode(getStarterCode(lang));
   }
+
+  function handleFontSizeChange(delta: number) {
+    const newSize = Math.max(12, Math.min(20, fontSize + delta));
+    setFontSize(newSize);
+    localStorage.setItem('editor-font-size', newSize.toString());
+  }
+
+  function handleResetCode() {
+    if (confirm('Are you sure you want to reset your code? This will discard all your changes.')) {
+      setCode(getStarterCode(selectedLanguage));
+    }
+  }
+
+  function toggleFullScreen() {
+    setIsFullScreen(!isFullScreen);
+  }
+
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     const textarea = e.currentTarget;
@@ -232,177 +285,179 @@ func main() {
     <div className="flex flex-col h-[calc(100vh-200px)] bg-gray-900">
       {/* Split Pane Layout */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Left Panel - Problem Description */}
-        <div className="w-1/2 border-r border-gray-800 flex flex-col">
-          {/* Tabs */}
-          <div className="flex border-b border-gray-800 bg-gray-900">
-            <button
-              onClick={() => setActiveTab('description')}
-              className={`px - 4 py - 3 text - sm font - medium border - b - 2 transition - colors ${activeTab === 'description'
-                ? 'border-green-500 text-green-400'
-                : 'border-transparent text-gray-400 hover:text-gray-300'
-                } `}
-            >
-              Description
-            </button>
-            <button
-              onClick={() => setActiveTab('submissions')}
-              className={`px - 4 py - 3 text - sm font - medium border - b - 2 transition - colors ${activeTab === 'submissions'
-                ? 'border-green-500 text-green-400'
-                : 'border-transparent text-gray-400 hover:text-gray-300'
-                } `}
-            >
-              Submissions
-            </button>
-          </div>
+        {/* Left Panel - Problem Description (Hidden in full-screen) */}
+        {!isFullScreen && (
+          <div className="w-1/2 border-r border-gray-800 flex flex-col">
+            {/* Tabs */}
+            <div className="flex border-b border-gray-800 bg-gray-900">
+              <button
+                onClick={() => setActiveTab('description')}
+                className={`px - 4 py - 3 text - sm font - medium border - b - 2 transition - colors ${activeTab === 'description'
+                  ? 'border-green-500 text-green-400'
+                  : 'border-transparent text-gray-400 hover:text-gray-300'
+                  } `}
+              >
+                Description
+              </button>
+              <button
+                onClick={() => setActiveTab('submissions')}
+                className={`px - 4 py - 3 text - sm font - medium border - b - 2 transition - colors ${activeTab === 'submissions'
+                  ? 'border-green-500 text-green-400'
+                  : 'border-transparent text-gray-400 hover:text-gray-300'
+                  } `}
+              >
+                Submissions
+              </button>
+            </div>
 
-          {/* Content Area */}
-          <div className="flex-1 overflow-y-auto p-4 bg-gray-900">
-            {activeTab === 'description' ? (
-              <div className="space-y-4 text-gray-300">
-                {/* Title */}
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <h2 className="text-2xl font-bold text-white">1. {problem.title}</h2>
-                    <span
-                      className={`px - 2 py - 1 rounded text - xs font - semibold ${problem.difficulty === 'easy'
-                        ? 'bg-green-500/20 text-green-400'
-                        : problem.difficulty === 'medium'
-                          ? 'bg-yellow-500/20 text-yellow-400'
-                          : 'bg-red-500/20 text-red-400'
-                        } `}
-                    >
-                      {problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1)}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
-                    <span>⭐ 8</span>
-                    <span>•</span>
-                    <span>💬 1</span>
-                  </div>
-                </div>
-
-                {/* Problem Description */}
-                <div>
-                  <p className="text-gray-300 leading-relaxed">{problem.prompt}</p>
-                </div>
-
-                {/* Examples */}
-                <div className="space-y-3">
-                  {problem.examples.map((ex, idx) => (
-                    <div key={idx} className="bg-gray-800/50 rounded-lg p-4">
-                      <p className="font-semibold text-white mb-2">Example {idx + 1}:</p>
-                      <div className="space-y-1 font-mono text-sm">
-                        <div>
-                          <span className="text-gray-400">Input:</span>{' '}
-                          <span className="text-white">{ex.input}</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-400">Output:</span>{' '}
-                          <span className="text-white">{ex.output}</span>
-                        </div>
-                        {ex.explanation && (
-                          <div>
-                            <span className="text-gray-400">Explanation:</span>{' '}
-                            <span className="text-gray-300">{ex.explanation}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Constraints */}
-                <div>
-                  <p className="font-semibold text-white mb-2">Constraints:</p>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
-                    {problem.constraints.map((constraint, idx) => (
-                      <li key={idx} className="font-mono">{constraint}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Topics */}
-                <div>
-                  <p className="text-sm text-gray-400 mb-2">Topics:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {problem.topics.map((topic) => (
-                      <span
-                        key={topic}
-                        className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-xs hover:bg-gray-700 cursor-pointer"
-                      >
-                        {topic}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Hints */}
-                {problem.hints && problem.hints.length > 0 && (
+            {/* Content Area */}
+            <div className="flex-1 overflow-y-auto p-4 bg-gray-900">
+              {activeTab === 'description' ? (
+                <div className="space-y-4 text-gray-300">
+                  {/* Title */}
                   <div>
-                    <details className="group">
-                      <summary className="cursor-pointer font-semibold text-white hover:text-green-400">
-                        💡 Hints ({problem.hints.length})
-                      </summary>
-                      <ul className="mt-2 space-y-2">
-                        {problem.hints.map((hint, idx) => (
-                          <li key={idx} className="bg-gray-800/50 rounded p-3 text-sm">
-                            <span className="font-semibold text-green-400">Hint {idx + 1}:</span>{' '}
-                            {hint}
-                          </li>
-                        ))}
-                      </ul>
-                    </details>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-white mb-4">Your Submissions</h3>
-                {attempts.length === 0 ? (
-                  <p className="text-gray-400 text-sm">No submissions yet. Run your code to see results!</p>
-                ) : (
-                  <div className="space-y-2">
-                    {attempts.slice(0, 10).map((attempt, idx) => (
-                      <div
-                        key={`${attempt.createdAt} -${idx} `}
-                        className="bg-gray-800 rounded-lg p-4 hover:bg-gray-750 transition-colors"
+                    <div className="flex items-center gap-2 mb-2">
+                      <h2 className="text-2xl font-bold text-white">1. {problem.title}</h2>
+                      <span
+                        className={`px - 2 py - 1 rounded text - xs font - semibold ${problem.difficulty === 'easy'
+                          ? 'bg-green-500/20 text-green-400'
+                          : problem.difficulty === 'medium'
+                            ? 'bg-yellow-500/20 text-yellow-400'
+                            : 'bg-red-500/20 text-red-400'
+                          } `}
                       >
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            {attempt.status === 'passed' ? (
-                              <FiCheck className="w-5 h-5 text-green-400" />
-                            ) : (
-                              <FiX className="w-5 h-5 text-red-400" />
-                            )}
-                            <span
-                              className={`font - semibold ${attempt.status === 'passed' ? 'text-green-400' : 'text-red-400'
-                                } `}
-                            >
-                              {attempt.status === 'passed' ? 'Accepted' : 'Wrong Answer'}
+                        {problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1)}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <span>⭐ 8</span>
+                      <span>•</span>
+                      <span>💬 1</span>
+                    </div>
+                  </div>
+
+                  {/* Problem Description */}
+                  <div>
+                    <p className="text-gray-300 leading-relaxed">{problem.prompt}</p>
+                  </div>
+
+                  {/* Examples */}
+                  <div className="space-y-3">
+                    {problem.examples.map((ex, idx) => (
+                      <div key={idx} className="bg-gray-800/50 rounded-lg p-4">
+                        <p className="font-semibold text-white mb-2">Example {idx + 1}:</p>
+                        <div className="space-y-1 font-mono text-sm">
+                          <div>
+                            <span className="text-gray-400">Input:</span>{' '}
+                            <span className="text-white">{ex.input}</span>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Output:</span>{' '}
+                            <span className="text-white">{ex.output}</span>
+                          </div>
+                          {ex.explanation && (
+                            <div>
+                              <span className="text-gray-400">Explanation:</span>{' '}
+                              <span className="text-gray-300">{ex.explanation}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Constraints */}
+                  <div>
+                    <p className="font-semibold text-white mb-2">Constraints:</p>
+                    <ul className="list-disc list-inside space-y-1 text-sm text-gray-300">
+                      {problem.constraints.map((constraint, idx) => (
+                        <li key={idx} className="font-mono">{constraint}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Topics */}
+                  <div>
+                    <p className="text-sm text-gray-400 mb-2">Topics:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {problem.topics.map((topic) => (
+                        <span
+                          key={topic}
+                          className="px-3 py-1 bg-gray-800 text-gray-300 rounded-full text-xs hover:bg-gray-700 cursor-pointer"
+                        >
+                          {topic}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Hints */}
+                  {problem.hints && problem.hints.length > 0 && (
+                    <div>
+                      <details className="group">
+                        <summary className="cursor-pointer font-semibold text-white hover:text-green-400">
+                          💡 Hints ({problem.hints.length})
+                        </summary>
+                        <ul className="mt-2 space-y-2">
+                          {problem.hints.map((hint, idx) => (
+                            <li key={idx} className="bg-gray-800/50 rounded p-3 text-sm">
+                              <span className="font-semibold text-green-400">Hint {idx + 1}:</span>{' '}
+                              {hint}
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold text-white mb-4">Your Submissions</h3>
+                  {attempts.length === 0 ? (
+                    <p className="text-gray-400 text-sm">No submissions yet. Run your code to see results!</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {attempts.slice(0, 10).map((attempt, idx) => (
+                        <div
+                          key={`${attempt.createdAt} -${idx} `}
+                          className="bg-gray-800 rounded-lg p-4 hover:bg-gray-750 transition-colors"
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              {attempt.status === 'passed' ? (
+                                <FiCheck className="w-5 h-5 text-green-400" />
+                              ) : (
+                                <FiX className="w-5 h-5 text-red-400" />
+                              )}
+                              <span
+                                className={`font - semibold ${attempt.status === 'passed' ? 'text-green-400' : 'text-red-400'
+                                  } `}
+                              >
+                                {attempt.status === 'passed' ? 'Accepted' : 'Wrong Answer'}
+                              </span>
+                            </div>
+                            <span className="text-xs text-gray-400">
+                              {new Date(attempt.createdAt).toLocaleString()}
                             </span>
                           </div>
-                          <span className="text-xs text-gray-400">
-                            {new Date(attempt.createdAt).toLocaleString()}
-                          </span>
+                          <div className="flex items-center gap-4 text-xs text-gray-400">
+                            <span className="px-2 py-1 bg-gray-700 rounded">
+                              {availableLanguages.find((l) => l.value === attempt.language)?.label || attempt.language}
+                            </span>
+                            {attempt.runtimeMs !== undefined && <span>Runtime: {attempt.runtimeMs}ms</span>}
+                          </div>
                         </div>
-                        <div className="flex items-center gap-4 text-xs text-gray-400">
-                          <span className="px-2 py-1 bg-gray-700 rounded">
-                            {availableLanguages.find((l) => l.value === attempt.language)?.label || attempt.language}
-                          </span>
-                          {attempt.runtimeMs !== undefined && <span>Runtime: {attempt.runtimeMs}ms</span>}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Right Panel - Code Editor */}
-        <div className="w-1/2 flex flex-col bg-gray-950">
+        <div className={`flex flex-col bg-gray-950 ${isFullScreen ? 'w-full' : 'w-1/2'}`}>
           {/* Language Selector & Actions */}
           <div className="flex items-center justify-between px-4 py-2 border-b border-gray-800 bg-gray-900">
             <div className="relative group">
@@ -444,21 +499,26 @@ func main() {
               >
                 {isRunning ? 'Submitting...' : 'Submit'}
               </button>
+
+              {/* Editor Toolbar Controls */}
+              <EditorToolbar
+                fontSize={fontSize}
+                onFontSizeChange={handleFontSizeChange}
+                onReset={handleResetCode}
+                isFullScreen={isFullScreen}
+                onToggleFullScreen={toggleFullScreen}
+              />
             </div>
           </div>
 
           {/* Code Editor */}
           <div className="flex-1 overflow-hidden">
-            <textarea
+            <MonacoCodeEditor
               value={code}
-              onChange={(e) => setCode(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="w-full h-full bg-gray-950 text-gray-100 font-mono text-sm p-4 resize-none focus:outline-none"
-              spellCheck={false}
-              style={{
-                tabSize: 4,
-                lineHeight: '1.6'
-              }}
+              onChange={setCode}
+              language={selectedLanguage}
+              onRun={runTests}
+              fontSize={fontSize}
             />
           </div>
 
@@ -555,6 +615,9 @@ func main() {
           </div>
         </div>
       </div>
+
+      {/* Success Confetti */}
+      <SuccessConfetti trigger={showConfetti} />
     </div>
   );
 }
