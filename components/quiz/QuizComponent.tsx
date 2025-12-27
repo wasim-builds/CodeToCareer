@@ -10,6 +10,9 @@ import { getTopicIcon } from '@/data/topicIcons';
 import { FiArrowLeft, FiClock, FiCheckCircle, FiXCircle, FiAward, FiZap, FiChevronLeft, FiChevronRight, FiFlag, FiAlertCircle } from 'react-icons/fi';
 import QuizTimer from './QuizTimer';
 import { formatTime, calculateTimeBonus, getTimeEfficiency } from '@/lib/timerUtils';
+import BookmarkButton from './BookmarkButton';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import KeyboardShortcutsHelp, { useKeyboardHelp } from '@/components/KeyboardShortcutsHelp';
 
 interface QuizComponentProps {
   questions: Question[];
@@ -48,6 +51,32 @@ export default function QuizComponent({
 
   const currentQuestion = filteredQuestions[currentQuestionIndex];
   const { icon: TopicIcon, color, bgColor } = getTopicIcon(topicId);
+
+  // Keyboard shortcuts help
+  const keyboardHelp = useKeyboardHelp();
+
+  // Keyboard shortcuts for quiz navigation
+  useKeyboardShortcuts({
+    '1': () => !showResult && currentQuestion && handleAnswerSelect(0),
+    '2': () => !showResult && currentQuestion && handleAnswerSelect(1),
+    '3': () => !showResult && currentQuestion && handleAnswerSelect(2),
+    '4': () => !showResult && currentQuestion && handleAnswerSelect(3),
+    'enter': () => !showResult && handleNext(),
+    'n': () => !showResult && handleNext(),
+    'p': () => !showResult && handlePrevious(),
+    'f': () => !showResult && toggleFlag(),
+    'b': () => !showResult && currentQuestion && toggleBookmark(),
+  }, { enabled: !showResult && !showTimeUpModal });
+
+  // Helper for bookmark toggle
+  const toggleBookmark = () => {
+    // This will be handled by the BookmarkButton component
+    // We'll just trigger a click on it
+    const bookmarkButton = document.querySelector('[title="My Bookmarks"]') as HTMLButtonElement;
+    if (bookmarkButton) {
+      bookmarkButton.click();
+    }
+  };
 
   useEffect(() => {
     if (showResult) return;
@@ -269,6 +298,9 @@ export default function QuizComponent({
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900">
+      {/* Keyboard Shortcuts Help */}
+      <KeyboardShortcutsHelp isOpen={keyboardHelp.isOpen} onClose={keyboardHelp.close} />
+
       {/* Time's Up Modal */}
       {showTimeUpModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -369,16 +401,23 @@ export default function QuizComponent({
                   {currentQuestion.difficulty === 'easy' ? '🌱' : currentQuestion.difficulty === 'medium' ? '⚡' : '🔥'}
                   {currentQuestion.difficulty.charAt(0).toUpperCase() + currentQuestion.difficulty.slice(1)}
                 </span>
-                <button
-                  onClick={toggleFlag}
-                  className={`p-2 rounded-lg transition-colors ${flaggedQuestions.has(currentQuestionIndex)
-                    ? 'bg-orange-500/20 text-orange-400'
-                    : 'text-gray-500 hover:text-gray-300 hover:bg-gray-700'
-                    }`}
-                  title="Flag for review"
-                >
-                  <FiFlag className="w-5 h-5" />
-                </button>
+                <div className="flex items-center gap-2">
+                  <BookmarkButton
+                    question={currentQuestion}
+                    topicId={topicId}
+                    topicName={topicName}
+                  />
+                  <button
+                    onClick={toggleFlag}
+                    className={`p-2 rounded-lg transition-colors ${flaggedQuestions.has(currentQuestionIndex)
+                      ? 'bg-orange-500/20 text-orange-400'
+                      : 'text-gray-500 hover:text-gray-300 hover:bg-gray-700'
+                      }`}
+                    title="Flag for review"
+                  >
+                    <FiFlag className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
 
               {/* Question */}

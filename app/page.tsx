@@ -6,7 +6,7 @@ import { topics } from '@/data/quiz/topics';
 import { practiceProblems } from '@/data/practice/problems';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuiz } from '@/contexts/QuizContext';
-import { FiSearch, FiPlay, FiBook, FiAward, FiTrendingUp, FiZap, FiTarget } from 'react-icons/fi';
+import { FiSearch, FiPlay, FiBook, FiAward, FiTrendingUp, FiZap, FiTarget, FiMessageCircle } from 'react-icons/fi';
 import { topicIcons } from '@/data/topicIcons';
 
 export default function Home() {
@@ -19,7 +19,8 @@ export default function Home() {
     return topics.filter(topic =>
       topic.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       topic.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      topic.description.toLowerCase().includes(searchQuery.toLowerCase())
+      topic.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      topic.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
     );
   }, [searchQuery]);
 
@@ -36,15 +37,15 @@ export default function Home() {
           <div className="absolute top-20 left-10 w-72 h-72 bg-green-500/10 rounded-full blur-3xl"></div>
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
         </div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 py-20 sm:py-32">
           <div className="text-center">
             <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6">
-              Hello, {user ? user.name.split(' ')[0] : 'What Do You Want'} 
+              Hello, {user ? user.name.split(' ')[0] : 'What Do You Want'}
               <span className="text-green-400"> To Learn?</span>
             </h1>
             <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
-              Master technical skills with 35+ topics and 5000+ interview questions. 
+              Master technical skills with 35+ topics and 5000+ interview questions.
               Practice, learn, and ace your next tech interview!
             </p>
 
@@ -90,6 +91,20 @@ export default function Home() {
               >
                 <FiZap className="w-5 h-5" />
                 Code Practice
+              </Link>
+              <Link
+                href="/practice/database"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-lg transition-colors"
+              >
+                <span className="text-xl">🗄️</span>
+                SQL Practice
+              </Link>
+              <Link
+                href="/interview"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg text-lg transition-colors"
+              >
+                <FiMessageCircle className="w-5 h-5" />
+                AI Interview
               </Link>
               <Link
                 href="/theory"
@@ -139,14 +154,14 @@ export default function Home() {
           <h2 className="text-2xl font-bold text-white mb-8">
             {searchQuery ? `Results for "${searchQuery}"` : '🔥 Popular Topics'}
           </h2>
-          
+
           {filteredTopics.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {(searchQuery ? filteredTopics : popularTopics).map(topic => {
                 const Icon = topicIcons[topic.id]?.icon || FiBook;
                 const color = topicIcons[topic.id]?.color || 'text-gray-400';
                 const bgColor = topicIcons[topic.id]?.bgColor || 'bg-gray-800';
-                
+
                 return (
                   <Link
                     key={topic.id}

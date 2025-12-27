@@ -364,14 +364,16 @@ export const topics: Topic[] = [
     name: 'System Design',
     category: 'Core Concepts',
     description: 'System architecture and design principles',
-    questions: []
+    questions: [],
+    tags: ['architecture', 'scalability', 'design patterns']
   },
   {
     id: 'dsa',
     name: 'Data Structures & Algorithms',
     category: 'Core Concepts',
     description: 'Data structures and algorithm design',
-    questions: []
+    questions: [],
+    tags: ['DSA', 'algorithms', 'data structures', 'leetcode', 'coding']
   },
   {
     id: 'oop',

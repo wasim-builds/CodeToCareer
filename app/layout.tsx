@@ -10,8 +10,10 @@ import { QuizProvider } from '@/contexts/QuizContext'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { GamificationProvider } from '@/contexts/GamificationContext'
 import { PracticeProvider } from '@/contexts/PracticeContext'
+import { BookmarkProvider } from '@/contexts/BookmarkContext'
+import GlobalKeyboardShortcuts from '@/components/GlobalKeyboardShortcuts'
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
 })
@@ -35,13 +37,16 @@ export default function RootLayout({
               <CartProvider>
                 <WishlistProvider>
                   <QuizProvider>
-                    <PracticeProvider>
-                      <Header />
-                      <main className="min-h-screen">
-                        {children}
-                      </main>
-                      <Footer />
-                    </PracticeProvider>
+                    <BookmarkProvider>
+                      <PracticeProvider>
+                        <GlobalKeyboardShortcuts />
+                        <Header />
+                        <main className="min-h-screen">
+                          {children}
+                        </main>
+                        <Footer />
+                      </PracticeProvider>
+                    </BookmarkProvider>
                   </QuizProvider>
                 </WishlistProvider>
               </CartProvider>

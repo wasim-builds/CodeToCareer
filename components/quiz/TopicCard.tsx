@@ -13,14 +13,17 @@ interface TopicCardProps {
 
 export default function TopicCard({ topic }: TopicCardProps) {
   const { results } = useQuiz();
-  
+
   // Calculate progress for this topic
   const topicResults = results.filter(r => r.topicId === topic.id);
-  const questionsAnswered = topicResults.reduce((sum, r) => sum + r.totalQuestions, 0);
-  const totalQuestions = topic.questions.length || 150;
-  const progressPercent = Math.min((questionsAnswered / totalQuestions) * 100, 100);
-  const bestScore = topicResults.length > 0 
-    ? Math.max(...topicResults.map(r => r.score)) 
+
+  // Progress is based on the best score achieved
+  const progressPercent = topicResults.length > 0
+    ? Math.max(...topicResults.map(r => r.score))
+    : 0;
+
+  const bestScore = topicResults.length > 0
+    ? Math.max(...topicResults.map(r => r.score))
     : 0;
 
   const questionCounts = {
@@ -39,7 +42,7 @@ export default function TopicCard({ topic }: TopicCardProps) {
           <div className={`w-14 h-14 ${bgColor} rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
             <Icon className={`w-7 h-7 ${color}`} />
           </div>
-          
+
           <div className="flex-1 min-w-0">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors truncate">
               {topic.name}
@@ -49,7 +52,7 @@ export default function TopicCard({ topic }: TopicCardProps) {
             </span>
           </div>
         </div>
-        
+
         <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
           {topic.description}
         </p>
@@ -61,7 +64,7 @@ export default function TopicCard({ topic }: TopicCardProps) {
             <span className="text-green-600 dark:text-green-400 font-medium">{progressPercent.toFixed(0)}%</span>
           </div>
           <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-            <div 
+            <div
               className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all duration-500"
               style={{ width: `${progressPercent}%` }}
             />
@@ -72,10 +75,9 @@ export default function TopicCard({ topic }: TopicCardProps) {
         {bestScore > 0 && (
           <div className="mb-4 flex items-center gap-2">
             <span className="text-xs text-gray-500 dark:text-gray-400">Best Score:</span>
-            <span className={`text-sm font-bold ${
-              bestScore >= 80 ? 'text-green-500' : 
+            <span className={`text-sm font-bold ${bestScore >= 80 ? 'text-green-500' :
               bestScore >= 60 ? 'text-yellow-500' : 'text-red-500'
-            }`}>
+              }`}>
               {bestScore.toFixed(0)}%
             </span>
           </div>

@@ -250,31 +250,42 @@ export default function TopicPage() {
           onStart={handleModeSelected}
           onStartEndless={async () => {
             try {
+              console.log('[Endless Mode] Starting AI quiz generation...');
               const response = await fetch('/api/quiz/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                   topic: topic?.name || topicId,
                   difficulty: 'medium',
-                  count: 10
+                  count: 50
                 })
               });
 
               const data = await response.json();
+              console.log('[Endless Mode] API Response:', data);
 
               if (!response.ok) {
+                console.error('[Endless Mode] API Error:', data.error);
                 throw new Error(data.error || 'Failed to generate questions');
               }
 
-              if (data.questions && Array.isArray(data.questions)) {
+              if (data.questions && Array.isArray(data.questions) && data.questions.length > 0) {
+                console.log('[Endless Mode] Setting', data.questions.length, 'generated questions');
                 setGeneratedQuestions(data.questions);
+
+                // Small delay to ensure state is updated
+                await new Promise(resolve => setTimeout(resolve, 100));
+
+                console.log('[Endless Mode] Navigating to quiz with mode=endless');
                 router.push(`/quiz/${topicId}/take?mode=endless&difficulty=medium`);
+              } else {
+                console.error('[Endless Mode] No questions in response:', data);
+                throw new Error('No questions generated');
               }
             } catch (error) {
-              console.error('Failed to generate quiz:', error);
-              // You might want to show a toast here
-              alert('Failed to generate AI quiz. Please check if API Key is configured.');
-              throw error; // Re-throw to let selector know it failed
+              console.error('[Endless Mode] Failed to generate quiz:', error);
+              alert('Failed to generate AI quiz. Error: ' + (error instanceof Error ? error.message : 'Unknown error'));
+              throw error;
             }
           }}
           onClose={() => setShowModeSelector(false)}

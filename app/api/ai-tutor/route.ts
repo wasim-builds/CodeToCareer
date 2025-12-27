@@ -1,78 +1,97 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+import { groq } from '@/lib/groq';
+import { generateAITutorResponse } from '@/lib/ai';
 
 export async function POST(request: NextRequest) {
     try {
         const { messages, topicId, topicName, context } = await request.json();
 
-        if (!process.env.GEMINI_API_KEY) {
+        if (!messages || !Array.isArray(messages) || messages.length === 0) {
             return NextResponse.json(
-                { error: 'API key not configured' },
-                { status: 500 }
+                { error: 'Messages array is required' },
+                { status: 400 }
             );
         }
 
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        // Try Groq first for better quality responses
+        if (groq) {
+            try {
+                // Build enhanced context string
+                let systemPrompt = `You are an expert programming tutor helping students master technical concepts for interviews and real-world development.
 
-        // Build context-aware system prompt
-        let systemPrompt = `You are an expert programming tutor helping students prepare for technical interviews. 
-You explain concepts clearly, provide practical examples, and encourage learning.
+Your teaching style:
+- Explain concepts clearly with analogies and examples
+- Provide working code snippets when helpful
+- Break down complex topics into digestible parts
+- Encourage critical thinking with follow-up questions
+- Reference best practices and common pitfalls
+- Be encouraging and supportive`;
 
-Guidelines:
-- Be concise but thorough
-- Use code examples when helpful
-- Break down complex concepts into simple terms
-- Encourage students and build confidence
-- If asked about code, provide working examples
-- Relate concepts to real-world applications
-- For interview prep, mention common patterns and best practices`;
+                if (topicName) {
+                    systemPrompt += `\n\nCurrent topic: ${topicName}`;
+                }
+
+                if (context) {
+                    systemPrompt += `\n\nAdditional context: ${context.substring(0, 500)}`;
+                }
+
+                // Convert messages to Groq format
+                const groqMessages: any[] = [
+                    { role: 'system', content: systemPrompt },
+                    ...messages.map((msg: any) => ({
+                        role: msg.role === 'user' ? 'user' : 'assistant',
+                        content: msg.content
+                    }))
+                ];
+
+                const completion = await groq.chat.completions.create({
+                    messages: groqMessages,
+                    model: 'llama-3.3-70b-versatile',
+                    temperature: 0.7,
+                    max_tokens: 1000,
+                });
+
+                const response = completion.choices[0]?.message?.content ||
+                    "I'm here to help! Could you please rephrase your question?";
+
+                return NextResponse.json({
+                    response,
+                    provider: 'groq',
+                    message: 'Using Groq AI for enhanced tutoring'
+                });
+
+            } catch (groqError) {
+                console.error('Groq AI Tutor Error:', groqError);
+                // Fall through to Hugging Face fallback
+            }
+        }
+
+        // Fallback to Hugging Face
+        let fullContext = `You are an expert programming tutor helping students prepare for technical interviews.`;
 
         if (topicName) {
-            systemPrompt += `\n\nCurrent Topic: ${topicName}`;
+            fullContext += ` Current topic: ${topicName}.`;
         }
 
         if (context) {
-            systemPrompt += `\n\nContext from theory content:\n${context.substring(0, 1000)}`;
+            fullContext += ` Context: ${context.substring(0, 500)}`;
         }
 
-        // Build conversation history
-        const conversationHistory = messages.map((msg: any) => ({
-            role: msg.role === 'user' ? 'user' : 'model',
-            parts: [{ text: msg.content }]
-        }));
+        const response = await generateAITutorResponse(messages, fullContext);
 
-        // Add system prompt as first message
-        const chat = model.startChat({
-            history: [
-                {
-                    role: 'user',
-                    parts: [{ text: systemPrompt }]
-                },
-                {
-                    role: 'model',
-                    parts: [{ text: 'I understand. I\'m ready to help you learn and prepare for technical interviews. What would you like to know?' }]
-                },
-                ...conversationHistory.slice(0, -1) // Exclude the last user message
-            ],
-            generationConfig: {
-                maxOutputTokens: 1000,
-                temperature: 0.7,
-            },
+        return NextResponse.json({
+            response,
+            provider: 'huggingface',
+            message: 'Using free AI service'
         });
-
-        // Get the last user message
-        const lastMessage = messages[messages.length - 1];
-        const result = await chat.sendMessage(lastMessage.content);
-        const response = result.response.text();
-
-        return NextResponse.json({ response });
     } catch (error) {
         console.error('AI Tutor Error:', error);
-        return NextResponse.json(
-            { error: 'Failed to generate response' },
-            { status: 500 }
-        );
+
+        // Return a helpful fallback response instead of error
+        return NextResponse.json({
+            response: "I'm here to help you learn! Could you please rephrase your question? I can explain programming concepts, provide code examples, and help you prepare for technical interviews.",
+            provider: 'local',
+            fallback: true
+        });
     }
 }

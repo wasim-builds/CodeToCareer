@@ -1,6 +1,7 @@
 import { PracticeProblem } from '@/types/practice';
+import { mysqlCodingProblems } from './mysqlCodingProblems';
 
-export const practiceProblems: PracticeProblem[] = [
+const baseProblems: PracticeProblem[] = [
   {
     id: 'two-sum',
     slug: 'two-sum',
@@ -3517,3 +3518,5 @@ export const practiceProblems: PracticeProblem[] = [
   { id: 'find-peak-element', slug: 'find-peak-element', title: 'Find Peak Element', difficulty: 'medium', topics: ['Array', 'Binary Search'], prompt: 'A peak element is an element that is strictly greater than its neighbors. Find a peak element and return its index.', constraints: ['1 <= nums.length <= 1000'], examples: [{ input: 'nums = [1,2,3,1]', output: '2' }], hints: ['Binary search', 'Move towards higher neighbor'], starterCode: [{ language: 'javascript', functionName: 'findPeakElement', code: 'function findPeakElement(nums) {\n  return 0;\n}\n\nmodule.exports = findPeakElement;' }, { language: 'typescript', functionName: 'findPeakElement', code: 'function findPeakElement(nums: number[]): number {\n  return 0;\n}\n\nexport default findPeakElement;' }, { language: 'python', functionName: 'findPeakElement', code: 'def findPeakElement(nums):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { nums: [1, 2, 3, 1] }, output: 2 }], solution: 'Binary search: if nums[mid] < nums[mid+1], search right, else left.' },
   { id: 'search-in-rotated-sorted-array-ii', slug: 'search-in-rotated-sorted-array-ii', title: 'Search in Rotated Sorted Array II', difficulty: 'medium', topics: ['Array', 'Binary Search'], prompt: 'Given the array nums after rotation and an integer target, return true if target is in nums, or false otherwise. Array may contain duplicates.', constraints: ['1 <= nums.length <= 5000'], examples: [{ input: 'nums = [2,5,6,0,0,1,2], target = 0', output: 'true' }], hints: ['Binary search with duplicate handling', 'Skip duplicates at boundaries'], starterCode: [{ language: 'javascript', functionName: 'search', code: 'function search(nums, target) {\n  return false;\n}\n\nmodule.exports = search;' }, { language: 'typescript', functionName: 'search', code: 'function search(nums: number[], target: number): boolean {\n  return false;\n}\n\nexport default search;' }, { language: 'python', functionName: 'search', code: 'def search(nums, target):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { nums: [2, 5, 6, 0, 0, 1, 2], target: 0 }, output: true }], solution: 'Binary search: handle duplicates by incrementing left when nums[left]==nums[mid].' }
 ];
+
+export const practiceProblems = [...baseProblems, ...mysqlCodingProblems];

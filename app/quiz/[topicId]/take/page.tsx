@@ -25,14 +25,22 @@ export default function TakeQuizPage() {
   const { generatedQuestions } = useQuiz();
   const mode = searchParams.get('mode');
 
+  console.log('[Take Quiz] Mode:', mode);
+  console.log('[Take Quiz] Generated questions count:', generatedQuestions?.length || 0);
+
   const questions = useMemo(() => {
     if (mode === 'endless') {
+      console.log('[Take Quiz] Using ENDLESS mode with', generatedQuestions?.length || 0, 'AI-generated questions');
       return generatedQuestions;
     }
     if (difficultyParam && ['easy', 'medium', 'hard'].includes(difficultyParam)) {
-      return getQuestionsByDifficulty(topicId, difficultyParam);
+      const qs = getQuestionsByDifficulty(topicId, difficultyParam);
+      console.log('[Take Quiz] Using difficulty filter:', difficultyParam, '- Questions:', qs.length);
+      return qs;
     }
-    return getQuestionsForTopic(topicId);
+    const qs = getQuestionsForTopic(topicId);
+    console.log('[Take Quiz] Using all questions for topic:', topicId, '- Questions:', qs.length);
+    return qs;
   }, [topicId, difficultyParam, mode, generatedQuestions]);
 
   if (!topic) {

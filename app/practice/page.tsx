@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { PracticeFilters } from '@/components/practice/PracticeFilters';
 import { PracticeList } from '@/components/practice/PracticeList';
 import { practiceProblems } from '@/data/practice/problems';
-import { FiSearch, FiCode } from 'react-icons/fi';
+import { FiSearch, FiCode, FiDatabase } from 'react-icons/fi';
 
 const topics = Array.from(new Set(practiceProblems.flatMap((p) => p.topics))).sort();
 
@@ -51,6 +51,15 @@ export default function PracticePage() {
         <p className="text-gray-400 max-w-3xl text-lg">
           Filter by topic and difficulty, open a problem, and run tests in the built-in playground.
         </p>
+        <div className="pt-2">
+          <a
+            href="/practice/database"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-blue-500/20"
+          >
+            <FiDatabase className="w-5 h-5" />
+            Practice SQL & Database
+          </a>
+        </div>
       </div>
 
       {/* Filters and Search */}

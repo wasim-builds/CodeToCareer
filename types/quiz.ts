@@ -15,6 +15,7 @@ export interface Topic {
   category: string;
   description: string;
   questions: Question[];
+  tags?: string[]; // Search aliases for better discoverability
 }
 
 export interface QuizResult {
