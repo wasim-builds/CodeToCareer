@@ -38,7 +38,7 @@ export default function DifficultyChart({ data }: DifficultyChartProps) {
                                 cx="50%"
                                 cy="50%"
                                 labelLine={false}
-                                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                                label={({ name, percent }) => `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`}
                                 outerRadius={80}
                                 fill="#8884d8"
                                 dataKey="value"
@@ -54,9 +54,9 @@ export default function DifficultyChart({ data }: DifficultyChartProps) {
                                     borderRadius: '8px',
                                     color: '#fff'
                                 }}
-                                formatter={(value: number, name: string, props: any) => [
-                                    `${value} quizzes (Avg: ${props.payload.avgScore}%)`,
-                                    name
+                                formatter={(value: number | undefined, name: string | undefined, props: any) => [
+                                    `${value ?? 0} quizzes (Avg: ${props.payload.avgScore}%)`,
+                                    name ?? ''
                                 ]}
                             />
                         </PieChart>

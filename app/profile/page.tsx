@@ -10,7 +10,7 @@ import { FiUser, FiMail, FiPhone, FiCalendar, FiAward, FiTrendingUp, FiEdit2, Fi
 
 export default function ProfilePage() {
   const { user, isLoading, updateProfile, logout } = useAuth()
-  const { data: gamificationData, achievements } = useGamification()
+  const { data: gamificationData } = useGamification()
   const router = useRouter()
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
@@ -144,29 +144,29 @@ export default function ProfilePage() {
 
         {/* Activity Calendar */}
         <ActivityCalendar />
-{/* Achievements Section */}
+        {/* Achievements Section */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mt-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Achievements</h2>
             <div className="flex items-center gap-2 bg-purple-50 dark:bg-purple-900/20 px-3 py-1.5 rounded-lg">
               <FiAward className="w-4 h-4 text-purple-600 dark:text-purple-400" />
               <span className="text-sm font-semibold text-purple-600 dark:text-purple-400">
-                {gamificationData.badges.length} Unlocked
+                {gamificationData.badges.filter(b => b.unlockedAt).length} Unlocked
               </span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {achievements.map((achievement) => {
-              const isUnlocked = gamificationData.badges.includes(achievement.id);
-              const progress = achievement.type === 'quizzes' 
-                ? (user?.quizzesTaken || 0) 
+            {gamificationData.badges.map((achievement) => {
+              const isUnlocked = !!achievement.unlockedAt;
+              const progress = achievement.type === 'quizzes'
+                ? (user?.quizzesTaken || 0)
                 : achievement.type === 'streak'
-                ? gamificationData.currentStreak
-                : achievement.type === 'score'
-                ? (user?.averageScore || 0)
-                : 0;
-              
+                  ? gamificationData.currentStreak
+                  : achievement.type === 'score'
+                    ? (user?.averageScore || 0)
+                    : 0;
+
               const progressPercent = Math.min((progress / achievement.requirement) * 100, 100);
 
               return (
@@ -174,8 +174,8 @@ export default function ProfilePage() {
                   key={achievement.id}
                   className={`
                     relative group flex flex-col items-center p-4 rounded-xl border-2 transition-all
-                    ${isUnlocked 
-                      ? 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border-yellow-300 dark:border-yellow-700 hover:scale-105' 
+                    ${isUnlocked
+                      ? 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border-yellow-300 dark:border-yellow-700 hover:scale-105'
                       : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 opacity-60'
                     }
                   `}
@@ -189,11 +189,11 @@ export default function ProfilePage() {
                   <p className="text-xs text-center text-gray-500 dark:text-gray-400">
                     {achievement.description}
                   </p>
-                  
+
                   {!isUnlocked && (
                     <div className="mt-2 w-full">
                       <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
-                        <div 
+                        <div
                           className="bg-green-500 h-1.5 rounded-full transition-all"
                           style={{ width: `${progressPercent}%` }}
                         />
@@ -203,7 +203,7 @@ export default function ProfilePage() {
                       </p>
                     </div>
                   )}
-                  
+
                   {isUnlocked && (
                     <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
                       <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -217,12 +217,12 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
           {/* User Details */}
           <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Personal Information</h2>
-            
+
             <div className="space-y-6">
               <div>
                 <label className="flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
@@ -286,7 +286,7 @@ export default function ProfilePage() {
           <div className="space-y-6">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Quiz Statistics</h2>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center gap-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-xl">
                   <div className="w-12 h-12 bg-green-100 dark:bg-green-900/40 rounded-full flex items-center justify-center">

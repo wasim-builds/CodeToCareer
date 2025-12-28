@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { groq } from '@/lib/groq';
+import { getDifficultyState, updateDifficulty, getDifficultyPrompt, getDifficultyInfo } from '@/lib/difficultyManager';
+import { evaluateAnswer, generateQuickFeedback } from '@/lib/answerEvaluator';
+import { saveQuestionScore, getSessionScore } from '@/lib/sessionScoring';
 
 export const runtime = 'nodejs';
 
@@ -18,6 +21,7 @@ interface InterviewChatRequest {
     mode: 'dsa' | 'hr' | 'system';
     conversationHistory?: Message[];
     sessionStats?: SessionStats;
+    sessionId?: string; // For tracking difficulty and scoring
 }
 
 // Context prompts for each mode
@@ -53,7 +57,7 @@ Your role:
 export async function POST(req: NextRequest) {
     try {
         const body: InterviewChatRequest = await req.json();
-        const { message, mode, conversationHistory = [], sessionStats } = body;
+        const { message, mode, conversationHistory = [], sessionStats, sessionId } = body;
 
         if (!message || !mode) {
             return NextResponse.json(
@@ -62,13 +66,17 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        // Generate session ID if not provided
+        const currentSessionId = sessionId || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
         // Check if Groq is available
         if (!groq) {
-            return useFallbackResponse(message, mode);
+            return useFallbackResponse(message, mode, currentSessionId);
         }
 
-        // Build conversation context
-        const systemPrompt = MODE_CONTEXTS[mode];
+        // Get current difficulty state
+        const difficultyState = getDifficultyState(currentSessionId, mode);
+        const difficultyInfo = getDifficultyInfo(difficultyState.currentLevel);
 
         // Determine if user is asking for a new question
         const isAskingForQuestion =
@@ -83,7 +91,7 @@ export async function POST(req: NextRequest) {
         const messages: any[] = [
             {
                 role: 'system',
-                content: systemPrompt,
+                content: MODE_CONTEXTS[mode],
             },
         ];
 
@@ -95,11 +103,51 @@ export async function POST(req: NextRequest) {
             });
         });
 
+        let evaluation = null;
+        let lastQuestion = '';
+
+        // If user is providing an answer (not asking for a question)
+        if (!isAskingForQuestion && conversationHistory.length > 0) {
+            // Get the last bot message (the question)
+            const lastBotMessage = conversationHistory.slice().reverse().find(m => m.from === 'bot');
+            lastQuestion = lastBotMessage?.text || '';
+
+            // Evaluate the answer
+            try {
+                evaluation = await evaluateAnswer(message, lastQuestion, mode);
+                console.log(`[InterviewChat] Answer evaluated - Score: ${evaluation.overallScore}`);
+
+                // Update difficulty based on performance
+                const updatedDifficultyState = updateDifficulty(currentSessionId, mode, {
+                    answerQuality: evaluation.overallScore,
+                });
+
+                // Save question score to session
+                if (typeof window !== 'undefined') {
+                    try {
+                        saveQuestionScore(currentSessionId, mode, {
+                            question: lastQuestion,
+                            answer: message,
+                            evaluation,
+                            difficulty: difficultyState.currentLevel,
+                            timestamp: Date.now(),
+                        });
+                    } catch (error) {
+                        console.log('[InterviewChat] Could not save score (server-side)');
+                    }
+                }
+            } catch (error) {
+                console.error('[InterviewChat] Evaluation error:', error);
+                // Continue without evaluation
+            }
+        }
+
         // Add current message with context
         if (isAskingForQuestion) {
+            const difficultyPrompt = getDifficultyPrompt(difficultyState.currentLevel, mode);
             messages.push({
                 role: 'user',
-                content: `Please ask me a ${mode.toUpperCase()} interview question. Make it challenging but appropriate for a mid-level engineer.`,
+                content: `Please ask me a ${mode.toUpperCase()} interview question.\n\n${difficultyPrompt}`,
             });
         } else {
             messages.push({
@@ -124,27 +172,42 @@ export async function POST(req: NextRequest) {
 
         if (!isAskingForQuestion && reply.length > 100) {
             // Generate a follow-up question
-            const followUpCompletion = await groq.chat.completions.create({
-                messages: [
-                    {
-                        role: 'system',
-                        content: `Based on the candidate's answer, generate ONE brief follow-up question to dig deeper. Keep it under 100 characters. Be specific and relevant.`,
-                    },
-                    {
-                        role: 'user',
-                        content: `Candidate said: "${message}"\n\nMy response: "${reply}"\n\nWhat's a good follow-up question?`,
-                    },
-                ],
-                model: 'llama-3.3-70b-versatile',
-                temperature: 0.8,
-                max_tokens: 100,
-            });
+            try {
+                const followUpCompletion = await groq.chat.completions.create({
+                    messages: [
+                        {
+                            role: 'system',
+                            content: `Based on the candidate's answer, generate ONE brief follow-up question to dig deeper. Keep it under 100 characters. Be specific and relevant.`,
+                        },
+                        {
+                            role: 'user',
+                            content: `Candidate said: "${message}"\n\nMy response: "${reply}"\n\nWhat's a good follow-up question?`,
+                        },
+                    ],
+                    model: 'llama-3.3-70b-versatile',
+                    temperature: 0.8,
+                    max_tokens: 100,
+                });
 
-            const generatedFollowUp = followUpCompletion.choices[0]?.message?.content?.trim();
+                const generatedFollowUp = followUpCompletion.choices[0]?.message?.content?.trim();
 
-            // Only include if it's actually a question
-            if (generatedFollowUp && generatedFollowUp.includes('?')) {
-                followUp = generatedFollowUp;
+                // Only include if it's actually a question
+                if (generatedFollowUp && generatedFollowUp.includes('?')) {
+                    followUp = generatedFollowUp;
+                }
+            } catch (error) {
+                console.error('[InterviewChat] Follow-up generation error:', error);
+            }
+        }
+
+        // Get current session score
+        let sessionScore = undefined;
+        if (typeof window !== 'undefined') {
+            try {
+                const session = getSessionScore(currentSessionId, mode);
+                sessionScore = session.averageScore;
+            } catch (error) {
+                console.log('[InterviewChat] Could not get session score (server-side)');
             }
         }
 
@@ -153,6 +216,12 @@ export async function POST(req: NextRequest) {
             followUp,
             isNewQuestion: isAskingForQuestion,
             provider: 'groq',
+            sessionId: currentSessionId,
+            currentDifficulty: difficultyState.currentLevel,
+            difficultyLabel: difficultyInfo.label,
+            difficultyColor: difficultyInfo.color,
+            evaluation: evaluation || undefined,
+            sessionScore,
         });
 
     } catch (error: any) {
@@ -161,13 +230,14 @@ export async function POST(req: NextRequest) {
         // Fallback to basic response
         return useFallbackResponse(
             (error as any).message || 'Error',
-            'dsa'
+            'dsa',
+            `session_${Date.now()}`
         );
     }
 }
 
 // Fallback when Groq is unavailable
-function useFallbackResponse(message: string, mode: string) {
+function useFallbackResponse(message: string, mode: string, sessionId: string) {
     const fallbackQuestions = {
         dsa: [
             'Given an array of integers, find two numbers that add up to a target sum. What approach would you use?',
@@ -195,5 +265,9 @@ function useFallbackResponse(message: string, mode: string) {
         isNewQuestion: true,
         provider: 'fallback',
         message: 'Using fallback - Groq API not available',
+        sessionId,
+        currentDifficulty: 2,
+        difficultyLabel: 'Intermediate',
+        difficultyColor: '#3b82f6',
     });
 }

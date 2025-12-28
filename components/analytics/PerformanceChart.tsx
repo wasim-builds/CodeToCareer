@@ -47,7 +47,7 @@ export default function PerformanceChart({ data }: PerformanceChartProps) {
                                 borderRadius: '8px',
                                 color: '#fff'
                             }}
-                            formatter={(value: number) => [`${value}%`, 'Score']}
+                            formatter={(value: number | undefined) => [`${value ?? 0}%`, 'Score']}
                         />
                         <Area
                             type="monotone"

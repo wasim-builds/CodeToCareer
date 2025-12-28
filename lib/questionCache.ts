@@ -78,8 +78,9 @@ export function saveToCache(
     difficulty: string,
     questions: GeneratedQuestion[]
 ): void {
+    const key = getCacheKey(topic, difficulty);
+
     try {
-        const key = getCacheKey(topic, difficulty);
         const entry: CacheEntry = {
             questions,
             timestamp: Date.now(),

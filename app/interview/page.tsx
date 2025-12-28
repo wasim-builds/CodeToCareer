@@ -38,7 +38,7 @@ export default function InterviewPage() {
 
       const data = await response.json();
       setResumeText(data.text);
-      
+
       setMessages([{
         role: 'system',
         content: `Resume uploaded successfully! I've analyzed your resume. Ready to start the interview?`,
@@ -62,16 +62,38 @@ export default function InterviewPage() {
       });
 
       const data = await response.json();
-      
+
+      // Check for errors
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to start interview');
+      }
+
+      // Add fallback notice if applicable
+      if (data.usingFallback && data.message) {
+        setMessages(prev => [...prev, {
+          role: 'system',
+          content: data.message,
+          timestamp: new Date()
+        }]);
+      }
+
+      // Add the first question
       setMessages(prev => [...prev, {
         role: 'assistant',
         content: data.firstQuestion,
         timestamp: new Date()
       }]);
-      
+
       setInterviewStarted(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error starting interview:', error);
+
+      // Show user-friendly error message
+      setMessages(prev => [...prev, {
+        role: 'system',
+        content: `Failed to start interview: ${error.message}. Please try again or contact support if the issue persists.`,
+        timestamp: new Date()
+      }]);
     } finally {
       setIsLoading(false);
     }
@@ -103,13 +125,13 @@ export default function InterviewPage() {
       });
 
       const data = await response.json();
-      
+
       setMessages(prev => [...prev, {
         role: 'assistant',
         content: data.response,
         timestamp: new Date()
       }]);
-      
+
       setCurrentQuestion(prev => prev + 1);
     } catch (error) {
       console.error('Error sending message:', error);
@@ -121,11 +143,35 @@ export default function InterviewPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Header */}
         <div className="mb-8">
           <Link href="/" className="text-green-600 dark:text-green-400 hover:underline mb-4 inline-block">
             ← Back to Home
           </Link>
+
+          {/* Voice Interview Banner */}
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 mb-6 shadow-lg">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                  <FiMessageSquare className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-white mb-1">🎤 Want Voice Interview Instead?</h2>
+                  <p className="text-blue-100 text-sm">
+                    Practice with AI using speech! Talk naturally and get real-time feedback.
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/interview-practice"
+                className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors shadow-lg flex items-center gap-2"
+              >
+                <FiMessageSquare className="w-5 h-5" />
+                Start Voice Interview
+              </Link>
+            </div>
+          </div>
+
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
             AI Interview Assistant
           </h1>
@@ -143,7 +189,7 @@ export default function InterviewPage() {
                 <FiFileText className="text-green-600" />
                 Upload Resume
               </h2>
-              
+
               <div className="space-y-4">
                 <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
                   <input
@@ -184,15 +230,14 @@ export default function InterviewPage() {
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
                   Interview Type
                 </h2>
-                
+
                 <div className="space-y-3">
                   <button
                     onClick={() => setInterviewType('technical')}
-                    className={`w-full p-4 rounded-lg border-2 transition-all ${
-                      interviewType === 'technical'
-                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
-                        : 'border-gray-200 dark:border-gray-600 hover:border-green-300'
-                    }`}
+                    className={`w-full p-4 rounded-lg border-2 transition-all ${interviewType === 'technical'
+                      ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-green-300'
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <FiCode className="w-6 h-6 text-green-600" />
@@ -205,11 +250,10 @@ export default function InterviewPage() {
 
                   <button
                     onClick={() => setInterviewType('behavioral')}
-                    className={`w-full p-4 rounded-lg border-2 transition-all ${
-                      interviewType === 'behavioral'
-                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
-                        : 'border-gray-200 dark:border-gray-600 hover:border-green-300'
-                    }`}
+                    className={`w-full p-4 rounded-lg border-2 transition-all ${interviewType === 'behavioral'
+                      ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-green-300'
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <FiMessageSquare className="w-6 h-6 text-blue-600" />
@@ -222,11 +266,10 @@ export default function InterviewPage() {
 
                   <button
                     onClick={() => setInterviewType('coding')}
-                    className={`w-full p-4 rounded-lg border-2 transition-all ${
-                      interviewType === 'coding'
-                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
-                        : 'border-gray-200 dark:border-gray-600 hover:border-green-300'
-                    }`}
+                    className={`w-full p-4 rounded-lg border-2 transition-all ${interviewType === 'coding'
+                      ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-green-300'
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <FiCode className="w-6 h-6 text-purple-600" />
@@ -284,13 +327,12 @@ export default function InterviewPage() {
                       className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
                       <div
-                        className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                          message.role === 'user'
-                            ? 'bg-green-600 text-white'
-                            : message.role === 'system'
+                        className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.role === 'user'
+                          ? 'bg-green-600 text-white'
+                          : message.role === 'system'
                             ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-900 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
                             : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
-                        }`}
+                          }`}
                       >
                         <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                         <span className="text-xs opacity-70 mt-1 block">

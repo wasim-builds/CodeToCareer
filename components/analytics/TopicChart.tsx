@@ -51,7 +51,7 @@ export default function TopicChart({ data }: TopicChartProps) {
                                 borderRadius: '8px',
                                 color: '#fff'
                             }}
-                            formatter={(value: number) => [`${value}%`, 'Avg Score']}
+                            formatter={(value: number | undefined) => [`${value ?? 0}%`, 'Avg Score']}
                         />
                         <Bar dataKey="score" radius={[8, 8, 0, 0]}>
                             {data.map((entry, index) => (

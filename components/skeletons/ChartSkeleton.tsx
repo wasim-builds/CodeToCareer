@@ -7,7 +7,9 @@ export default function ChartSkeleton({ height = 300 }: { height?: number }) {
             <Skeleton className="h-6 w-48 mb-4" />
 
             {/* Chart area */}
-            <Skeleton className="w-full rounded-lg" style={{ height: `${height}px` }} />
+            <div style={{ height: `${height}px` }}>
+                <Skeleton className="w-full h-full rounded-lg" />
+            </div>
         </div>
     );
 }
