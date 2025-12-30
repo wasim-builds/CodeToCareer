@@ -70,7 +70,7 @@ export default function Header() {
                     className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     <FiLogIn className="w-4 h-4" />
-                    <span>Login</span>
+                    <span>Sign In</span>
                   </Link>
                 )}
               </>

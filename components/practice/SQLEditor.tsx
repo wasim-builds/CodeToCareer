@@ -12,13 +12,14 @@ interface SQLEditorProps {
 }
 
 export default function SQLEditor({ problem }: SQLEditorProps) {
-    const [query, setQuery] = useState(problem.solution ? '-- Write your query here\n' : '');
+    const [query, setQuery] = useState('-- Write your query here\n');
     const [results, setResults] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
     const [isRunning, setIsRunning] = useState(false);
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
     const [executor, setExecutor] = useState<SQLExecutor | null>(null);
     const [isInitializing, setIsInitializing] = useState(true);
+    const [showSolution, setShowSolution] = useState(false);
 
     // Initialize SQL Executor
     useEffect(() => {
@@ -32,7 +33,7 @@ export default function SQLEditor({ problem }: SQLEditorProps) {
                     setExecutor(sqlExecutor);
                     setIsInitializing(false);
                     // Set default query if provided
-                    setQuery(`-- ${problem.description}\n${problem.solution || 'SELECT * FROM ' + problem.schema[0].name}`);
+                    setQuery(`-- ${problem.description}\n-- Write your SQL query below\n\n`);
                 }
             } catch (err: any) {
                 if (mounted) {
@@ -78,10 +79,11 @@ export default function SQLEditor({ problem }: SQLEditorProps) {
     };
 
     const handleReset = () => {
-        setQuery(`-- ${problem.description}\nSELECT * FROM ${problem.schema[0].name};`);
+        setQuery(`-- ${problem.description}\n-- Write your SQL query below\n\n`);
         setResults(null);
         setError(null);
         setIsCorrect(null);
+        setShowSolution(false);
     };
 
     if (isInitializing) {
@@ -116,6 +118,20 @@ export default function SQLEditor({ problem }: SQLEditorProps) {
                             title="Reset Query"
                         >
                             <FiRefreshCw />
+                        </button>
+                        <button
+                            onClick={() => {
+                                if (showSolution) {
+                                    setQuery(`-- ${problem.description}\n-- Write your SQL query below\n\n`);
+                                    setShowSolution(false);
+                                } else {
+                                    setQuery(`-- Solution:\n${problem.solution}`);
+                                    setShowSolution(true);
+                                }
+                            }}
+                            className="px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                        >
+                            {showSolution ? 'Hide Solution' : 'Show Solution'}
                         </button>
                         <button
                             onClick={handleRun}

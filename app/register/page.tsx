@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext'
 
 export default function RegisterPage() {
   const router = useRouter()
-  const { user, register } = useAuth()
+  const { register, login } = useAuth()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,11 +18,6 @@ export default function RegisterPage() {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    if (user) {
-      router.push('/profile')
-    }
-  }, [user, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -39,19 +34,27 @@ export default function RegisterPage() {
       return
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters')
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters')
       return
     }
 
     setIsLoading(true)
 
-    const success = await register(formData.name, formData.email, formData.password)
-    
-    if (success) {
-      router.push('/profile')
+    const result = await register(formData.name, formData.email, formData.password)
+
+    if (result.success) {
+      // Auto-login after successful registration
+      const loginSuccess = await login(formData.email, formData.password)
+
+      if (!loginSuccess) {
+        setError('Registration successful but login failed. Please login manually.')
+        router.push('/login')
+      } else {
+        router.push('/profile')
+      }
     } else {
-      setError('Email already exists. Please use a different email.')
+      setError(result.error || 'Registration failed')
     }
     setIsLoading(false)
   }
@@ -173,7 +176,7 @@ export default function RegisterPage() {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   className="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-600 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  placeholder="Confirm your password"
+                  placeholder="At least 8 characters"
                 />
               </div>
             </div>

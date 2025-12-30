@@ -41,7 +41,7 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-4 py-20 sm:py-32">
           <div className="text-center">
             <h1 className="text-4xl sm:text-6xl font-bold text-white mb-6">
-              Hello, {user ? user.name.split(' ')[0] : 'What Do You Want'}
+              {user ? `Hello, ${user.name.split(' ')[0]}!` : 'What Do You Want'}
               <span className="text-green-400"> To Learn?</span>
             </h1>
             <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">

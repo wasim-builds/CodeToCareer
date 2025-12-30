@@ -1,16 +1,19 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { FiMic, FiMicOff, FiX, FiCheck } from 'react-icons/fi';
+import { FiMic, FiMicOff, FiX, FiCheck, FiClock } from 'react-icons/fi';
 import { voiceRecorder } from '@/lib/voiceService';
 import { transcribeWithRetry } from '@/lib/whisperService';
 import { formatDurationMs } from '@/lib/audioUtils';
+import { SilenceDetector } from '@/lib/silenceDetector';
 
 interface VoiceRecorderProps {
     onTranscript: (text: string) => void;
     onError?: (error: Error) => void;
     disabled?: boolean;
     autoSend?: boolean;
+    autoSkipEnabled?: boolean;
+    autoSkipTimeout?: number; // milliseconds
 }
 
 export default function VoiceRecorder({
@@ -18,13 +21,51 @@ export default function VoiceRecorder({
     onError,
     disabled = false,
     autoSend = true,
+    autoSkipEnabled = true,
+    autoSkipTimeout = 10000, // 10 seconds default
 }: VoiceRecorderProps) {
     const [isRecording, setIsRecording] = useState(false);
     const [isTranscribing, setIsTranscribing] = useState(false);
     const [duration, setDuration] = useState(0);
     const [audioLevel, setAudioLevel] = useState(0);
     const [error, setError] = useState<string | null>(null);
+    const [silenceCountdown, setSilenceCountdown] = useState<number | null>(null);
+    const [isSilent, setIsSilent] = useState(false);
     const durationIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const silenceDetectorRef = useRef<SilenceDetector | null>(null);
+
+    // Initialize silence detector
+    useEffect(() => {
+        silenceDetectorRef.current = new SilenceDetector(
+            {
+                silenceThreshold: 0.02,
+                silenceDuration: autoSkipTimeout,
+                checkInterval: 100,
+            },
+            {
+                onSilenceStart: () => {
+                    console.log('[VoiceRecorder] Silence detected, starting countdown');
+                    setIsSilent(true);
+                },
+                onSilenceEnd: () => {
+                    console.log('[VoiceRecorder] Audio detected, stopping countdown');
+                    setIsSilent(false);
+                    setSilenceCountdown(null);
+                },
+                onSilenceTimeout: () => {
+                    console.log('[VoiceRecorder] Auto-skip triggered');
+                    stopRecording();
+                },
+                onCountdown: (remainingMs) => {
+                    setSilenceCountdown(remainingMs);
+                },
+            }
+        );
+
+        return () => {
+            silenceDetectorRef.current?.stop();
+        };
+    }, [autoSkipTimeout]);
 
     // Cleanup on unmount
     useEffect(() => {
@@ -35,6 +76,7 @@ export default function VoiceRecorder({
             if (isRecording) {
                 voiceRecorder.cancelRecording();
             }
+            silenceDetectorRef.current?.stop();
         };
     }, [isRecording]);
 
@@ -50,8 +92,17 @@ export default function VoiceRecorder({
                 },
                 (level) => {
                     setAudioLevel(level);
+                    // Update silence detector with audio level
+                    if (autoSkipEnabled && silenceDetectorRef.current) {
+                        silenceDetectorRef.current.updateAudioLevel(level);
+                    }
                 }
             );
+
+            // Start silence detection
+            if (autoSkipEnabled && silenceDetectorRef.current) {
+                silenceDetectorRef.current.start();
+            }
 
             // Start duration timer
             durationIntervalRef.current = setInterval(() => {
@@ -73,6 +124,11 @@ export default function VoiceRecorder({
                 clearInterval(durationIntervalRef.current);
                 durationIntervalRef.current = null;
             }
+
+            // Stop silence detection
+            silenceDetectorRef.current?.stop();
+            setIsSilent(false);
+            setSilenceCountdown(null);
 
             setIsRecording(false);
             setIsTranscribing(true);
@@ -111,11 +167,14 @@ export default function VoiceRecorder({
             durationIntervalRef.current = null;
         }
 
+        silenceDetectorRef.current?.stop();
         voiceRecorder.cancelRecording();
         setIsRecording(false);
         setDuration(0);
         setAudioLevel(0);
         setError(null);
+        setIsSilent(false);
+        setSilenceCountdown(null);
     };
 
     const toggleRecording = () => {
@@ -133,8 +192,8 @@ export default function VoiceRecorder({
                 onClick={toggleRecording}
                 disabled={disabled || isTranscribing}
                 className={`relative p-3 rounded-xl transition-all duration-300 ${isRecording
-                        ? 'bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/50 animate-pulse'
-                        : 'bg-blue-500 hover:bg-blue-600 shadow-lg shadow-blue-500/20'
+                    ? 'bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/50 animate-pulse'
+                    : 'bg-blue-500 hover:bg-blue-600 shadow-lg shadow-blue-500/20'
                     } ${disabled || isTranscribing
                         ? 'opacity-50 cursor-not-allowed'
                         : 'hover:scale-105'
@@ -173,6 +232,16 @@ export default function VoiceRecorder({
                     <span className="text-sm font-mono text-white">
                         {formatDurationMs(duration)}
                     </span>
+
+                    {/* Silence countdown */}
+                    {autoSkipEnabled && isSilent && silenceCountdown !== null && (
+                        <div className="flex items-center gap-2 px-3 py-1 bg-yellow-500/20 rounded-lg border border-yellow-500/40">
+                            <FiClock className="w-4 h-4 text-yellow-400 animate-pulse" />
+                            <span className="text-xs font-bold text-yellow-300">
+                                Auto-skip in {Math.ceil(silenceCountdown / 1000)}s
+                            </span>
+                        </div>
+                    )}
 
                     {/* Cancel button */}
                     <button

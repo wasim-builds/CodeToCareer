@@ -71,7 +71,7 @@ export default function ProfilePage() {
     return null
   }
 
-  const joinedDate = new Date(user.joinedDate).toLocaleDateString('en-US', {
+  const joinedDate = new Date(user.joinedDate || new Date()).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',

@@ -31,8 +31,32 @@ export function PracticeProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('practice-attempts', JSON.stringify(next));
   };
 
-  const addAttempt = (attempt: PracticeAttempt) => {
-    persist([...attempts, attempt]);
+  const addAttempt = async (attempt: PracticeAttempt) => {
+    // 1. Optimistic update
+    const newAttempts = [...attempts, attempt];
+    persist(newAttempts);
+
+    // 2. Save to database
+    try {
+      const response = await fetch('/api/practice/attempt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          problemId: attempt.problemId,
+          language: attempt.language,
+          code: attempt.code,
+          passed: attempt.passed,
+          testResults: attempt.testResults,
+          timeSpent: attempt.timestamp ? 0 : 0 // Add timestamp tracking if available
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to save practice attempt to database');
+      }
+    } catch (error) {
+      console.error('Error saving practice attempt:', error);
+    }
   };
 
   const clearAttempts = () => {

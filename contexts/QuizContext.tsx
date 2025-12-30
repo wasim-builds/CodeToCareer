@@ -33,10 +33,38 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const addResult = (result: QuizResult) => {
+
+  const addResult = async (result: QuizResult) => {
+    // 1. Update local state immediately (optimistic UI)
     const newResults = [...results, result];
     setResults(newResults);
     localStorage.setItem('quiz-results', JSON.stringify(newResults));
+
+    // 2. Save to database if user is logged in
+    try {
+      const response = await fetch('/api/quiz/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          topicId: result.topicId,
+          difficulty: result.difficulty,
+          mode: result.mode,
+          timerMode: result.settings?.timerMode || 'standard',
+          score: result.score,
+          totalQuestions: result.totalQuestions,
+          correctAnswers: result.correctAnswers,
+          timeSpent: result.timeSpent,
+          xpEarned: result.xpEarned || 0,
+          answers: result.answers
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to save quiz session to database');
+      }
+    } catch (error) {
+      console.error('Error saving quiz result:', error);
+    }
   };
 
   const clearResults = () => {

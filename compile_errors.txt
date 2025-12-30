@@ -1,0 +1,33 @@
+app/profile/page.tsx(74,31): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'string | undefined' is not assignable to parameter of type 'string | number | Date'.
+      Type 'undefined' is not assignable to type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'string | undefined' is not assignable to parameter of type 'string | number'.
+      Type 'undefined' is not assignable to type 'string | number'.
+components/practice/PracticePlayground.tsx(148,69): error TS18048: 'b.createdAt' is possibly 'undefined'.
+components/practice/PracticePlayground.tsx(148,95): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(that: string, locales?: LocalesArgument, options?: CollatorOptions | undefined): number', gave the following error.
+    Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+  Overload 2 of 3, '(that: string, locales?: string | string[] | undefined, options?: CollatorOptions | undefined): number', gave the following error.
+    Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+  Overload 3 of 3, '(that: string): number', gave the following error.
+    Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+components/practice/PracticePlayground.tsx(184,18): error TS2345: Argument of type '{ problemId: string; status: "passed" | "failed"; language: "javascript" | "typescript"; code: string; runtimeMs: number; createdAt: string; }' is not assignable to parameter of type 'PracticeAttempt'.
+  Type '{ problemId: string; status: "passed" | "failed"; language: "javascript" | "typescript"; code: string; runtimeMs: number; createdAt: string; }' is missing the following properties from type 'PracticeAttempt': testResults, passed, timestamp
+components/practice/PracticePlayground.tsx(204,18): error TS2345: Argument of type '{ problemId: string; status: "failed"; language: "javascript" | "typescript"; code: string; runtimeMs: number; createdAt: string; }' is not assignable to parameter of type 'PracticeAttempt'.
+  Type '{ problemId: string; status: "failed"; language: "javascript" | "typescript"; code: string; runtimeMs: number; createdAt: string; }' is missing the following properties from type 'PracticeAttempt': testResults, passed, timestamp
+components/practice/PracticePlayground.tsx(455,41): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'string | undefined' is not assignable to parameter of type 'string | number | Date'.
+      Type 'undefined' is not assignable to type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'string | undefined' is not assignable to parameter of type 'string | number'.
+      Type 'undefined' is not assignable to type 'string | number'.
+components/practice/SolutionViewer.tsx(80,30): error TS18048: 'solution.name' is possibly 'undefined'.
+components/practice/SolutionViewer.tsx(94,114): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+scripts/check-user.ts(10,23): error TS7006: Parameter 'user' implicitly has an 'any' type.

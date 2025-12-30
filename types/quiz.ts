@@ -30,6 +30,11 @@ export interface QuizResult {
   timedMode?: boolean;
   timeLimit?: number;
   timeBonus?: number;
+  // New fields for database sync
+  mode?: string;
+  settings?: QuizSettings;
+  xpEarned?: number;
+  answers?: Record<number, number>;
 }
 
 export interface QuizSettings {

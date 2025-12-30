@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { FiSend, FiRefreshCw, FiClock, FiCode, FiMessageSquare, FiMic, FiVolume2 } from 'react-icons/fi';
+import { FiSend, FiRefreshCw, FiClock, FiCode, FiMessageSquare, FiMic, FiVolume2, FiSettings } from 'react-icons/fi';
 import VoiceRecorder from './VoiceRecorder';
 import { textToSpeech, VoiceSettings, defaultVoiceSettings } from '@/lib/voiceService';
 
@@ -67,6 +67,9 @@ export default function InterviewBot() {
     const [voiceMode, setVoiceMode] = useState(false);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [voiceSettings, setVoiceSettings] = useState<VoiceSettings>(defaultVoiceSettings);
+    const [autoSkipEnabled, setAutoSkipEnabled] = useState(true);
+    const [autoSkipTimeout, setAutoSkipTimeout] = useState(10000); // 10 seconds default
+    const [showVoiceSettings, setShowVoiceSettings] = useState(false);
 
     const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -81,6 +84,8 @@ export default function InterviewBot() {
             try {
                 const parsed = JSON.parse(saved);
                 setVoiceSettings({ ...defaultVoiceSettings, ...parsed, voice: null }); // Reset voice, will be loaded
+                if (parsed.autoSkipEnabled !== undefined) setAutoSkipEnabled(parsed.autoSkipEnabled);
+                if (parsed.autoSkipTimeout !== undefined) setAutoSkipTimeout(parsed.autoSkipTimeout);
             } catch (error) {
                 console.error('Failed to load voice settings:', error);
             }
@@ -95,8 +100,10 @@ export default function InterviewBot() {
             volume: voiceSettings.volume,
             autoPlay: voiceSettings.autoPlay,
             autoListen: voiceSettings.autoListen,
+            autoSkipEnabled,
+            autoSkipTimeout,
         }));
-    }, [voiceSettings]);
+    }, [voiceSettings, autoSkipEnabled, autoSkipTimeout]);
 
     // Initialize with welcome message
     useEffect(() => {
@@ -467,26 +474,40 @@ export default function InterviewBot() {
                     <div className="p-4 bg-gray-900 border-t border-gray-700">
                         {/* Voice/Text Mode Toggle */}
                         <div className="flex items-center justify-between mb-3">
-                            <button
-                                type="button"
-                                onClick={toggleVoiceMode}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${voiceMode
+                            <div className="flex items-center gap-2">
+                                <button
+                                    type="button"
+                                    onClick={toggleVoiceMode}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${voiceMode
                                         ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30'
                                         : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                                    }`}
-                            >
-                                {voiceMode ? (
-                                    <>
-                                        <FiMic className="w-4 h-4" />
-                                        <span className="text-sm font-medium">Voice Mode</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <FiMessageSquare className="w-4 h-4" />
-                                        <span className="text-sm font-medium">Text Mode</span>
-                                    </>
+                                        }`}
+                                >
+                                    {voiceMode ? (
+                                        <>
+                                            <FiMic className="w-4 h-4" />
+                                            <span className="text-sm font-medium">Voice Mode</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FiMessageSquare className="w-4 h-4" />
+                                            <span className="text-sm font-medium">Text Mode</span>
+                                        </>
+                                    )}
+                                </button>
+
+                                {/* Voice Settings Button */}
+                                {voiceMode && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowVoiceSettings(!showVoiceSettings)}
+                                        className="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                                        title="Voice settings"
+                                    >
+                                        <FiSettings className="w-4 h-4 text-gray-300" />
+                                    </button>
                                 )}
-                            </button>
+                            </div>
 
                             {/* Speaking indicator */}
                             {isSpeaking && (
@@ -503,6 +524,52 @@ export default function InterviewBot() {
                             )}
                         </div>
 
+                        {/* Voice Settings Panel */}
+                        {voiceMode && showVoiceSettings && (
+                            <div className="mb-3 p-4 bg-gray-800 border border-gray-700 rounded-xl space-y-3">
+                                <h3 className="text-sm font-semibold text-white mb-2">Voice Settings</h3>
+
+                                {/* Auto-skip toggle */}
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <FiClock className="w-4 h-4 text-blue-400" />
+                                        <span className="text-sm text-gray-300">Auto-skip on silence</span>
+                                    </div>
+                                    <button
+                                        onClick={() => setAutoSkipEnabled(!autoSkipEnabled)}
+                                        className={`relative w-12 h-6 rounded-full transition-colors ${autoSkipEnabled ? 'bg-blue-500' : 'bg-gray-600'
+                                            }`}
+                                    >
+                                        <div
+                                            className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${autoSkipEnabled ? 'translate-x-6' : 'translate-x-0'
+                                                }`}
+                                        />
+                                    </button>
+                                </div>
+
+                                {/* Timeout selector */}
+                                {autoSkipEnabled && (
+                                    <div className="space-y-2">
+                                        <label className="text-xs text-gray-400">Silence timeout</label>
+                                        <div className="grid grid-cols-4 gap-2">
+                                            {[5000, 10000, 15000, 30000].map((timeout) => (
+                                                <button
+                                                    key={timeout}
+                                                    onClick={() => setAutoSkipTimeout(timeout)}
+                                                    className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors ${autoSkipTimeout === timeout
+                                                            ? 'bg-blue-500 text-white'
+                                                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                                        }`}
+                                                >
+                                                    {timeout / 1000}s
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
                         {voiceMode ? (
                             /* Voice Input Mode */
                             <div className="flex items-center gap-3">
@@ -510,6 +577,8 @@ export default function InterviewBot() {
                                     onTranscript={handleVoiceTranscript}
                                     disabled={loading || isSpeaking}
                                     autoSend={voiceSettings.autoListen}
+                                    autoSkipEnabled={autoSkipEnabled}
+                                    autoSkipTimeout={autoSkipTimeout}
                                 />
                                 {input && (
                                     <div className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-gray-300 text-sm">

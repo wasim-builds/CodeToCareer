@@ -1,6 +1,7 @@
 import { SQLProblem } from '@/types/sqlProblem';
 import { intermediateSQLProblems } from './sqlProblemsIntermediate';
 import { advancedSQLProblems } from './sqlProblemsAdvanced';
+import { allMySQLInterviewProblems } from './mysqlInterviewProblems';
 
 const beginnerProblems: SQLProblem[] = [
     // BEGINNER PROBLEMS
@@ -355,7 +356,8 @@ const beginnerProblems: SQLProblem[] = [
 export const sqlProblems: SQLProblem[] = [
     ...beginnerProblems,
     ...intermediateSQLProblems,
-    ...advancedSQLProblems
+    ...advancedSQLProblems,
+    ...allMySQLInterviewProblems
 ];
 
 /**

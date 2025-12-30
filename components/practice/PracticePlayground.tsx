@@ -8,6 +8,7 @@ import { EditorToolbar } from './EditorToolbar';
 import { MonacoCodeEditor } from './MonacoCodeEditor';
 import { TestResultsPanel } from './TestResultsPanel';
 import { SuccessConfetti } from './SuccessConfetti';
+import { SolutionViewer } from './SolutionViewer';
 
 interface RunResult {
   id: string;
@@ -67,7 +68,8 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
   });
   const [results, setResults] = useState<RunResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
-  const [activeTab, setActiveTab] = useState<'description' | 'submissions'>('description');
+  const [activeTab, setActiveTab] = useState<'description' | 'submissions' | 'solution'>('description');
+  const [solutionUnlocked, setSolutionUnlocked] = useState(false);
   const [showTestCase, setShowTestCase] = useState(true);
   const [fontSize, setFontSize] = useState(14);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -143,7 +145,7 @@ func main() {
   const passCount = results.filter((r) => r.pass).length;
   const sampleResults = results.filter((r) => r.type === 'sample');
   const allPassed = results.length > 0 && results.every((r) => r.pass);
-  const attempts = getAttemptsForProblem(problem.id).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const attempts = getAttemptsForProblem(problem.id).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
 
   async function runTests() {
     const started = performance.now();
@@ -185,6 +187,9 @@ func main() {
         language: selectedLanguage as 'javascript' | 'typescript',
         code,
         runtimeMs: execTime,
+        testResults: runResults,
+        passed: allPass,
+        timestamp: Date.now(),
         createdAt: new Date().toISOString(),
       });
     } catch (error) {
@@ -205,6 +210,9 @@ func main() {
         language: selectedLanguage as 'javascript' | 'typescript',
         code,
         runtimeMs: Math.round(performance.now() - started),
+        testResults: [],
+        passed: false,
+        timestamp: Date.now(),
         createdAt: new Date().toISOString(),
       });
     } finally {
@@ -289,24 +297,37 @@ func main() {
         {!isFullScreen && (
           <div className="w-1/2 border-r border-gray-800 flex flex-col">
             {/* Tabs */}
-            <div className="flex border-b border-gray-800 bg-gray-900">
+
+            <div className="flex items-center gap-2 p-1.5 mx-4 mt-4 mb-2 bg-gray-800/50 rounded-xl border border-gray-800">
               <button
                 onClick={() => setActiveTab('description')}
-                className={`px - 4 py - 3 text - sm font - medium border - b - 2 transition - colors ${activeTab === 'description'
-                  ? 'border-green-500 text-green-400'
-                  : 'border-transparent text-gray-400 hover:text-gray-300'
-                  } `}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${activeTab === 'description'
+                  ? 'bg-gray-700 text-white shadow-sm ring-1 ring-inset ring-gray-600'
+                  : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
+                  }`}
               >
                 Description
               </button>
               <button
                 onClick={() => setActiveTab('submissions')}
-                className={`px - 4 py - 3 text - sm font - medium border - b - 2 transition - colors ${activeTab === 'submissions'
-                  ? 'border-green-500 text-green-400'
-                  : 'border-transparent text-gray-400 hover:text-gray-300'
-                  } `}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${activeTab === 'submissions'
+                  ? 'bg-gray-700 text-white shadow-sm ring-1 ring-inset ring-gray-600'
+                  : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
+                  }`}
               >
                 Submissions
+              </button>
+              <button
+                onClick={() => setActiveTab('solution')}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${activeTab === 'solution'
+                  ? 'bg-gray-700 text-white shadow-sm ring-1 ring-inset ring-gray-600'
+                  : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
+                  }`}
+              >
+                <span>Solution</span>
+                {problem.solutions && problem.solutions.length > 0 && (
+                  <span className="text-xs">🔓</span>
+                )}
               </button>
             </div>
 
@@ -410,7 +431,7 @@ func main() {
                     </div>
                   )}
                 </div>
-              ) : (
+              ) : activeTab === 'submissions' ? (
                 <div className="space-y-3">
                   <h3 className="text-lg font-semibold text-white mb-4">Your Submissions</h3>
                   {attempts.length === 0 ? (
@@ -437,7 +458,7 @@ func main() {
                               </span>
                             </div>
                             <span className="text-xs text-gray-400">
-                              {new Date(attempt.createdAt).toLocaleString()}
+                              {new Date(attempt.createdAt || Date.now()).toLocaleString()}
                             </span>
                           </div>
                           <div className="flex items-center gap-4 text-xs text-gray-400">
@@ -448,6 +469,20 @@ func main() {
                           </div>
                         </div>
                       ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="h-full">
+                  {problem.solutions && problem.solutions.length > 0 ? (
+                    <SolutionViewer solutions={problem.solutions} />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-64 text-center px-4">
+                      <div className="text-6xl mb-4">🔒</div>
+                      <h3 className="text-xl font-semibold text-white mb-2">Solution Not Available</h3>
+                      <p className="text-gray-400 max-w-md">
+                        This problem doesn't have a detailed solution yet. Try solving it yourself or check back later!
+                      </p>
                     </div>
                   )}
                 </div>

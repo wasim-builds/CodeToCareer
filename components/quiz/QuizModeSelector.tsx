@@ -101,7 +101,7 @@ export default function QuizModeSelector({
                                         <h3 className="text-base font-bold text-white flex items-center gap-2">
                                             AI Endless Mode <span className="px-2 py-0.5 rounded text-[10px] bg-purple-500 text-white uppercase tracking-wider">Beta</span>
                                         </h3>
-                                        <p className="text-xs text-gray-400">Generate unique questions instantly using Gemini AI</p>
+                                        <p className="text-xs text-gray-400">Generate unique questions instantly using AI</p>
                                     </div>
                                 </div>
                                 <div className="text-purple-400 group-hover:translate-x-1 transition-transform">

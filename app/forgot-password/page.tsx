@@ -13,7 +13,7 @@ export default function ForgotPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    
+
     if (!email) {
       setError('Please enter your email address')
       return
@@ -28,12 +28,25 @@ export default function ForgotPasswordPage() {
 
     setIsLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Password reset requested for:', email)
-      setIsLoading(false)
-      setIsSubmitted(true)
-    }, 1500)
+    try {
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setIsSubmitted(true)
+      } else {
+        setError(data.error || 'Something went wrong')
+      }
+    } catch (error) {
+      setError('Something went wrong')
+    }
+
+    setIsLoading(false)
   }
 
   return (

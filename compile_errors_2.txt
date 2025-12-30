@@ -1,0 +1,1 @@
+scripts/check-user.ts(10,23): error TS7006: Parameter 'user' implicitly has an 'any' type.

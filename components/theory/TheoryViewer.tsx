@@ -6,21 +6,21 @@ import Link from 'next/link';
 import {
   FiChevronDown,
   FiChevronRight,
-  FiArrowLeft,
-  FiBookmark,
+  FiArrowRight,
   FiClock,
   FiLayers,
   FiCheck,
   FiPlay,
   FiMenu,
   FiX,
-  FiBookOpen,
-  FiAward
+  FiAward,
+  FiHome
 } from 'react-icons/fi';
 import { getTopicIcon } from '@/data/topicIcons';
 import { CodeBlock } from './CodeBlock';
 import { Callout } from './Callout';
 import AITutor from './AITutor';
+import { TheorySidebar } from './TheorySidebar';
 
 interface TheoryViewerProps {
   theory: TheoryTopic;
@@ -30,7 +30,7 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set([theory.sections[0]?.id]));
   const [completedSections, setCompletedSections] = useState<Set<string>>(new Set());
   const [activeSection, setActiveSection] = useState<string>(theory.sections[0]?.id || '');
-  const [showToc, setShowToc] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false);
   const [readProgress, setReadProgress] = useState(0);
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -109,7 +109,7 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
   };
 
   const scrollToSection = (sectionId: string) => {
-    setShowToc(false);
+    setShowSidebar(false);
     const element = sectionRefs.current[sectionId];
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -117,7 +117,12 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
     if (!expandedSections.has(sectionId)) {
       toggleSection(sectionId);
     }
+    setActiveSection(sectionId);
   };
+
+  // Get current section and category for breadcrumb
+  const currentSection = theory.sections.find(s => s.id === activeSection);
+  const currentCategory = currentSection?.category || 'General';
 
   // Parse content to support code blocks and callouts
   const renderContent = (content: string) => {
@@ -267,7 +272,7 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gray-900 flex">
       {/* Progress Bar - Fixed at top */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-gray-800 z-50">
         <div
@@ -276,82 +281,57 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
         />
       </div>
 
-      {/* Mobile TOC Toggle */}
+      {/* Mobile Sidebar Toggle */}
       <button
-        onClick={() => setShowToc(!showToc)}
+        onClick={() => setShowSidebar(!showSidebar)}
         className="lg:hidden fixed bottom-6 right-6 z-50 w-14 h-14 bg-green-500 rounded-full shadow-lg flex items-center justify-center text-white"
       >
-        {showToc ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
+        {showSidebar ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
       </button>
 
-      {/* Table of Contents - Sidebar */}
-      <div className={`fixed lg:fixed inset-y-0 left-0 w-72 bg-gray-850 border-r border-gray-700 z-40 transform transition-transform duration-300 lg:translate-x-0 ${showToc ? 'translate-x-0' : '-translate-x-full'
+      {/* Sidebar - Desktop: Always visible, Mobile: Overlay */}
+      <div className={`fixed lg:static inset-y-0 left-0 w-72 z-40 transform transition-transform duration-300 lg:translate-x-0 ${showSidebar ? 'translate-x-0' : '-translate-x-full'
         }`} style={{ top: '4px' }}>
-        <div className="p-4 h-full overflow-y-auto">
-          <Link
-            href="/quiz"
-            className="flex items-center gap-2 text-gray-400 hover:text-green-400 mb-6 text-sm transition-colors"
-          >
-            <FiArrowLeft className="w-4 h-4" />
-            Back to Dashboard
-          </Link>
-
-          <div className="mb-6">
-            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
-              Table of Contents
-            </h3>
-            <nav className="space-y-1">
-              {theory.sections.map((section, index) => (
-                <button
-                  key={section.id}
-                  onClick={() => scrollToSection(section.id)}
-                  className={`w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all ${activeSection === section.id
-                    ? 'bg-green-500/20 text-green-400'
-                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
-                    }`}
-                >
-                  <span className={`w-5 h-5 rounded-md flex items-center justify-center text-xs ${completedSections.has(section.id)
-                    ? 'bg-green-500 text-white'
-                    : 'bg-gray-700 text-gray-500'
-                    }`}>
-                    {completedSections.has(section.id) ? <FiCheck className="w-3 h-3" /> : index + 1}
-                  </span>
-                  <span className="truncate">{section.title}</span>
-                </button>
-              ))}
-            </nav>
-          </div>
-
-          {/* Progress Stats */}
-          <div className="bg-gray-800 rounded-xl p-4 mt-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-400">Progress</span>
-              <span className="text-sm font-bold text-green-400">{Math.round(readProgress)}%</span>
-            </div>
-            <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-green-500 to-green-400 transition-all duration-500"
-                style={{ width: `${readProgress}%` }}
-              />
-            </div>
-            <p className="text-xs text-gray-500 mt-2">
-              {completedSections.size} of {theory.sections.length} sections
-            </p>
-          </div>
-        </div>
+        <TheorySidebar
+          topicId={theory.topicId}
+          topicName={theory.topicName}
+          sections={theory.sections}
+          activeSection={activeSection}
+          completedSections={completedSections}
+          onSectionClick={scrollToSection}
+          readProgress={readProgress}
+        />
       </div>
 
+      {/* Overlay for mobile */}
+      {showSidebar && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/50 z-30"
+          onClick={() => setShowSidebar(false)}
+        />
+      )}
+
       {/* Main Content */}
-      <div className="lg:ml-72 min-h-screen">
+      <div className="flex-1 min-h-screen overflow-x-hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-          {/* Back Button - Mobile */}
-          <Link
-            href="/quiz"
-            className="lg:hidden inline-flex items-center gap-2 text-gray-400 hover:text-green-400 mb-6 text-sm"
-          >
-            <FiArrowLeft className="w-4 h-4" />
-            Back to Dashboard
-          </Link>
+          {/* Breadcrumb Navigation */}
+          <nav className="flex items-center gap-2 text-sm text-gray-400 mb-6">
+            <Link href="/quiz" className="hover:text-green-400 transition-colors">
+              <FiHome className="w-4 h-4" />
+            </Link>
+            <FiChevronRight className="w-3 h-3" />
+            <Link href="/quiz" className="hover:text-green-400 transition-colors">
+              {theory.topicName}
+            </Link>
+            {currentSection && (
+              <>
+                <FiChevronRight className="w-3 h-3" />
+                <span className="text-gray-500">{currentCategory}</span>
+                <FiChevronRight className="w-3 h-3" />
+                <span className="text-white font-medium">{currentSection.title}</span>
+              </>
+            )}
+          </nav>
 
           {/* Hero Section */}
           <div className="bg-gradient-to-br from-gray-800 to-gray-800/50 rounded-2xl p-6 sm:p-8 mb-8 border border-gray-700">
