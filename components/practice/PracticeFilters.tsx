@@ -27,7 +27,10 @@ export function PracticeFilters({
         <select
           className="bg-gray-800/50 border border-gray-700 hover:border-gray-600 rounded-lg pl-10 pr-4 py-2.5 text-sm text-gray-200 appearance-none cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 min-w-[180px]"
           value={selectedTopic}
-          onChange={(e) => onTopicChange(e.target.value)}
+          onChange={(e) => {
+            console.log('🔄 Topic filter changed to:', e.target.value);
+            onTopicChange(e.target.value);
+          }}
         >
           <option value="">All Topics</option>
           {topics.map((topic) => (
@@ -51,7 +54,10 @@ export function PracticeFilters({
         <select
           className="bg-gray-800/50 border border-gray-700 hover:border-gray-600 rounded-lg pl-10 pr-4 py-2.5 text-sm text-gray-200 appearance-none cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 min-w-[160px]"
           value={selectedDifficulty}
-          onChange={(e) => onDifficultyChange(e.target.value)}
+          onChange={(e) => {
+            console.log('🔄 Difficulty filter changed to:', e.target.value);
+            onDifficultyChange(e.target.value);
+          }}
         >
           <option value="">All Levels</option>
           <option value="easy">🟢 Easy</option>

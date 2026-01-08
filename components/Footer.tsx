@@ -17,31 +17,31 @@ export default function Footer() {
               Your journey from code to career starts here. Master technical skills with 35+ topics, 5000+ interview questions, and gamified learning.
             </p>
             <div className="flex items-center gap-4">
-              <a 
-                href="https://github.com" 
-                target="_blank" 
+              <a
+                href="https://github.com"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <FiGithub className="w-5 h-5" />
               </a>
-              <a 
-                href="https://twitter.com" 
-                target="_blank" 
+              <a
+                href="https://twitter.com"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <FiTwitter className="w-5 h-5" />
               </a>
-              <a 
-                href="https://linkedin.com" 
-                target="_blank" 
+              <a
+                href="https://linkedin.com"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <FiLinkedin className="w-5 h-5" />
               </a>
-              <a 
+              <a
                 href="mailto:contact@codetocareer.com"
                 className="text-gray-400 hover:text-white transition-colors"
               >
@@ -62,6 +62,11 @@ export default function Footer() {
               <li>
                 <Link href="/theory" className="text-gray-400 hover:text-green-400 transition-colors">
                   Theory Learning
+                </Link>
+              </li>
+              <li>
+                <Link href="/roadmap" className="text-gray-400 hover:text-green-400 transition-colors">
+                  Career Roadmaps
                 </Link>
               </li>
               <li>

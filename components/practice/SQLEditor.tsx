@@ -70,6 +70,9 @@ export default function SQLEditor({ problem }: SQLEditorProps) {
                 // Validate
                 const validation = executor.validate(execResults);
                 setIsCorrect(validation.correct);
+                if (!validation.correct) {
+                    setError(validation.message);
+                }
             } else {
                 setResults({ columns: [], values: [] });
             }
@@ -177,7 +180,7 @@ export default function SQLEditor({ problem }: SQLEditorProps) {
             {error && (
                 <div className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 p-4 rounded-lg border border-red-200 dark:border-red-800 flex items-start gap-3">
                     <FiAlertCircle className="shrink-0 mt-0.5" />
-                    <div className="font-mono text-sm">{error}</div>
+                    <div className="font-mono text-sm whitespace-pre-wrap">{error}</div>
                 </div>
             )}
 

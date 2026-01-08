@@ -31,6 +31,17 @@ export function useKeyboardShortcuts(
                 return;
             }
 
+            // Don't trigger shortcuts when typing in Monaco Editor or other code editors
+            // Monaco Editor uses divs with specific classes and data attributes
+            if (
+                target.closest('.monaco-editor') ||
+                target.closest('[class*="editor"]') ||
+                target.closest('[role="textbox"]') ||
+                target.closest('[contenteditable="true"]')
+            ) {
+                return;
+            }
+
             // Don't trigger when modifier keys are pressed (except for special combos)
             if (e.ctrlKey || e.metaKey || e.altKey) {
                 return;

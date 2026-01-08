@@ -38,7 +38,12 @@ export class SQLExecutor {
             this.problem.schema.forEach(table => {
                 // 1. Create Table
                 const columns = table.columns
-                    .map(col => `${col.name} ${col.type} ${col.primaryKey ? 'PRIMARY KEY' : ''} ${col.notNull ? 'NOT NULL' : ''}`)
+                    .map(col => {
+                        const parts = [col.name, col.type];
+                        if (col.primaryKey) parts.push('PRIMARY KEY');
+                        if (col.notNull) parts.push('NOT NULL');
+                        return parts.join(' ');
+                    })
                     .join(', ');
 
                 this.db?.run(`CREATE TABLE ${table.name} (${columns});`);
@@ -100,19 +105,62 @@ export class SQLExecutor {
 
         // 2. Check values deep equality
         // We sort both to ensure order doesn't matter unless specified
-        // For simplicity in MVP, we might assume order matters if problem says ORDER BY
         const isOrdered = this.problem.solution.toUpperCase().includes('ORDER BY');
 
         const userRows = isOrdered ? userResult.values : [...userResult.values].sort();
         const expectedRows = isOrdered ? expected : [...expected].sort();
 
-        const isEqual = JSON.stringify(userRows) === JSON.stringify(expectedRows);
+        // Compare with tolerance for floating-point numbers
+        const isEqual = this.compareResults(userRows, expectedRows);
 
         if (isEqual) {
             return { correct: true, message: 'Correct!' };
         } else {
-            return { correct: false, message: 'Result values do not match expected output' };
+            return {
+                correct: false,
+                message: 'Result values do not match expected output.\nExpected: ' +
+                    JSON.stringify(expectedRows.slice(0, 3)) +
+                    (expectedRows.length > 3 ? '...' : '') +
+                    '\nGot: ' +
+                    JSON.stringify(userRows.slice(0, 3)) +
+                    (userRows.length > 3 ? '...' : '')
+            };
         }
+    }
+
+    /**
+     * Compare two result sets with tolerance for floating-point numbers
+     */
+    private compareResults(userRows: any[][], expectedRows: any[][]): boolean {
+        if (userRows.length !== expectedRows.length) return false;
+
+        const EPSILON = 0.0001; // Tolerance for floating-point comparison
+
+        for (let i = 0; i < userRows.length; i++) {
+            const userRow = userRows[i];
+            const expectedRow = expectedRows[i];
+
+            if (userRow.length !== expectedRow.length) return false;
+
+            for (let j = 0; j < userRow.length; j++) {
+                const userVal = userRow[j];
+                const expectedVal = expectedRow[j];
+
+                // Handle null values
+                if (userVal === null && expectedVal === null) continue;
+                if (userVal === null || expectedVal === null) return false;
+
+                // Handle floating-point numbers
+                if (typeof userVal === 'number' && typeof expectedVal === 'number') {
+                    if (Math.abs(userVal - expectedVal) > EPSILON) return false;
+                } else {
+                    // Handle other types (string, boolean, etc.)
+                    if (userVal !== expectedVal) return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**

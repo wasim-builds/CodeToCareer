@@ -35,6 +35,16 @@ export default function PracticePage() {
     });
   }, [selectedDifficulty, selectedTopic, searchQuery]);
 
+  // Debug logging
+  useEffect(() => {
+    console.log('🔍 Filter State:', { selectedTopic, selectedDifficulty, searchQuery });
+    console.log('📊 Filtered Count:', filtered.length, '/', practiceProblems.length);
+    if (selectedTopic) {
+      console.log('🎯 Filtering by topic:', selectedTopic);
+      console.log('✅ Matching problems:', filtered.slice(0, 5).map(p => ({ title: p.title, topics: p.topics })));
+    }
+  }, [selectedTopic, selectedDifficulty, searchQuery, filtered]);
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
       {/* Header */}
@@ -99,7 +109,7 @@ export default function PracticePage() {
       </div>
 
       {/* Problem List */}
-      <PracticeList problems={filtered} />
+      <PracticeList key={`${selectedTopic}-${selectedDifficulty}-${searchQuery}`} problems={filtered} />
     </div>
   );
 }
