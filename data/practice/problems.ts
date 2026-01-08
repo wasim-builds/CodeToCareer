@@ -103,6 +103,40 @@ const baseProblems: PracticeProblem[] = [
             if nums[i] + nums[j] == target:
                 return [i, j]
     return []`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        for (int i = 0; i < nums.length - 1; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if (nums[i] + nums[j] == target) {
+                    return new int[]{i, j};
+                }
+            }
+        }
+        return new int[]{};
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        for (int i = 0; i < nums.size() - 1; i++) {
+            for (int j = i + 1; j < nums.size(); j++) {
+                if (nums[i] + nums[j] == target) {
+                    return {i, j};
+                }
+            }
+        }
+        return {};
+    }
+};`
           }
         ],
         complexity: {
@@ -178,6 +212,54 @@ const baseProblems: PracticeProblem[] = [
         seen[num] = i
     
     return []`
+          },
+          {
+            language: 'java',
+            code: `import java.util.HashMap;
+import java.util.Map;
+
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            
+            if (map.containsKey(complement)) {
+                return new int[]{map.get(complement), i};
+            }
+            
+            map.put(nums[i], i);
+        }
+        
+        return new int[]{};
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <unordered_map>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int, int> seen;
+        
+        for (int i = 0; i < nums.size(); i++) {
+            int complement = target - nums[i];
+            
+            if (seen.find(complement) != seen.end()) {
+                return {seen[complement], i};
+            }
+            
+            seen[nums[i]] = i;
+        }
+        
+        return {};
+    }
+};`
           }
         ],
         complexity: {
@@ -286,6 +368,42 @@ const baseProblems: PracticeProblem[] = [
         return False
     
     return sorted(s) == sorted(t)`
+          },
+          {
+            language: 'java',
+            code: `import java.util.Arrays;
+
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) return false;
+        
+        char[] sChars = s.toCharArray();
+        char[] tChars = t.toCharArray();
+        
+        Arrays.sort(sChars);
+        Arrays.sort(tChars);
+        
+        return Arrays.equals(sChars, tChars);
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        if (s.length() != t.length()) return false;
+        
+        sort(s.begin(), s.end());
+        sort(t.begin(), t.end());
+        
+        return s == t;
+    }
+};`
           }
         ],
         complexity: {
@@ -365,6 +483,58 @@ const baseProblems: PracticeProblem[] = [
         count[char] -= 1
     
     return True`
+          },
+          {
+            language: 'java',
+            code: `import java.util.HashMap;
+import java.util.Map;
+
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) return false;
+        
+        Map<Character, Integer> count = new HashMap<>();
+        
+        for (char c : s.toCharArray()) {
+            count.put(c, count.getOrDefault(c, 0) + 1);
+        }
+        
+        for (char c : t.toCharArray()) {
+            if (!count.containsKey(c) || count.get(c) == 0) {
+                return false;
+            }
+            count.put(c, count.get(c) - 1);
+        }
+        
+        return true;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+#include <unordered_map>
+using namespace std;
+
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        if (s.length() != t.length()) return false;
+        
+        unordered_map<char, int> count;
+        
+        for (char c : s) {
+            count[c]++;
+        }
+        
+        for (char c : t) {
+            if (count[c] == 0) return false;
+            count[c]--;
+        }
+        
+        return true;
+    }
+};`
           }
         ],
         complexity: {
@@ -488,6 +658,52 @@ const baseProblems: PracticeProblem[] = [
         char_map[char] = right
         max_len = max(max_len, right - left + 1)
     return max_len`
+          },
+          {
+            language: 'java',
+            code: `import java.util.HashMap;
+import java.util.Map;
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        int left = 0, maxLen = 0;
+        
+        for (int right = 0; right < s.length(); right++) {
+            char c = s.charAt(right);
+            if (map.containsKey(c) && map.get(c) >= left) {
+                left = map.get(c) + 1;
+            }
+            map.put(c, right);
+            maxLen = Math.max(maxLen, right - left + 1);
+        }
+        return maxLen;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+#include <unordered_map>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        unordered_map<char, int> charMap;
+        int left = 0, maxLen = 0;
+        
+        for (int right = 0; right < s.length(); right++) {
+            if (charMap.find(s[right]) != charMap.end() && charMap[s[right]] >= left) {
+                left = charMap[s[right]] + 1;
+            }
+            charMap[s[right]] = right;
+            maxLen = max(maxLen, right - left + 1);
+        }
+        return maxLen;
+    }
+};`
           }
         ],
         complexity: {
@@ -610,6 +826,48 @@ const baseProblems: PracticeProblem[] = [
             max_sum = max(max_sum, current_sum)
     
     return max_sum`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int maxSubArray(int[] nums) {
+        int maxSum = Integer.MIN_VALUE;
+        
+        for (int i = 0; i < nums.length; i++) {
+            int currentSum = 0;
+            for (int j = i; j < nums.length; j++) {
+                currentSum += nums[j];
+                maxSum = Math.max(maxSum, currentSum);
+            }
+        }
+        
+        return maxSum;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+#include <climits>
+using namespace std;
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int maxSum = INT_MIN;
+        
+        for (int i = 0; i < nums.size(); i++) {
+            int currentSum = 0;
+            for (int j = i; j < nums.size(); j++) {
+                currentSum += nums[j];
+                maxSum = max(maxSum, currentSum);
+            }
+        }
+        
+        return maxSum;
+    }
+};`
           }
         ],
         complexity: {
@@ -671,6 +929,43 @@ const baseProblems: PracticeProblem[] = [
         max_sum = max(max_sum, current_sum)
     
     return max_sum`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int maxSubArray(int[] nums) {
+        int maxSum = nums[0];
+        int currentSum = nums[0];
+        
+        for (int i = 1; i < nums.length; i++) {
+            currentSum = Math.max(nums[i], currentSum + nums[i]);
+            maxSum = Math.max(maxSum, currentSum);
+        }
+        
+        return maxSum;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int maxSum = nums[0];
+        int currentSum = nums[0];
+        
+        for (int i = 1; i < nums.size(); i++) {
+            currentSum = max(nums[i], currentSum + nums[i]);
+            maxSum = max(maxSum, currentSum);
+        }
+        
+        return maxSum;
+    }
+};`
           }
         ],
         complexity: {
@@ -809,6 +1104,65 @@ const baseProblems: PracticeProblem[] = [
             merged.append(current)
     
     return merged`
+          },
+          {
+            language: 'java',
+            code: `import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        if (intervals.length <= 1) return intervals;
+        
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+        List<int[]> merged = new ArrayList<>();
+        merged.add(intervals[0]);
+        
+        for (int i = 1; i < intervals.length; i++) {
+            int[] last = merged.get(merged.size() - 1);
+            int[] current = intervals[i];
+            
+            if (current[0] <= last[1]) {
+                last[1] = Math.max(last[1], current[1]);
+            } else {
+                merged.add(current);
+            }
+        }
+        
+        return merged.toArray(new int[merged.size()][]);
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        if (intervals.size() <= 1) return intervals;
+        
+        sort(intervals.begin(), intervals.end());
+        vector<vector<int>> merged;
+        merged.push_back(intervals[0]);
+        
+        for (int i = 1; i < intervals.size(); i++) {
+            vector<int>& last = merged.back();
+            vector<int>& current = intervals[i];
+            
+            if (current[0] <= last[1]) {
+                last[1] = max(last[1], current[1]);
+            } else {
+                merged.push_back(current);
+            }
+        }
+        
+        return merged;
+    }
+};`
           }
         ],
         complexity: {
@@ -935,6 +1289,54 @@ const baseProblems: PracticeProblem[] = [
             right = mid - 1
     
     return -1`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int search(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        
+        return -1;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int left = 0, right = nums.size() - 1;
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        
+        return -1;
+    }
+};`
           }
         ],
         complexity: {
@@ -4057,6 +4459,55 @@ class RandomizedSet:
             right -= 1
             
     return max_area`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int maxArea(int[] height) {
+        int left = 0, right = height.length - 1;
+        int maxArea = 0;
+        
+        while (left < right) {
+            int minHeight = Math.min(height[left], height[right]);
+            maxArea = Math.max(maxArea, (right - left) * minHeight);
+            
+            if (height[left] < height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        
+        return maxArea;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int left = 0, right = height.size() - 1;
+        int maxArea = 0;
+        
+        while (left < right) {
+            int minHeight = min(height[left], height[right]);
+            maxArea = max(maxArea, (right - left) * minHeight);
+            
+            if (height[left] < height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        
+        return maxArea;
+    }
+};`
           }
         ],
         complexity: {
@@ -4158,6 +4609,53 @@ function reverseList(head: ListNode | null): ListNode | null {
             prev = curr
             curr = next_node
         return prev`
+          },
+          {
+            language: 'java',
+            code: `class ListNode {
+    int val;
+    ListNode next;
+}
+
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        
+        return prev;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `struct ListNode {
+    int val;
+    ListNode *next;
+};
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* prev = nullptr;
+        ListNode* curr = head;
+        
+        while (curr != nullptr) {
+            ListNode* next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        
+        return prev;
+    }
+};`
           }
         ],
         complexity: {
@@ -4255,6 +4753,57 @@ function hasCycle(head: ListNode | null): boolean {
             if slow == fast:
                 return True
         return False`
+          },
+          {
+            language: 'java',
+            code: `class ListNode {
+    int val;
+    ListNode next;
+}
+
+class Solution {
+    public boolean hasCycle(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            
+            if (slow == fast) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `struct ListNode {
+    int val;
+    ListNode *next;
+};
+
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        ListNode* slow = head;
+        ListNode* fast = head;
+        
+        while (fast != nullptr && fast->next != nullptr) {
+            slow = slow->next;
+            fast = fast->next->next;
+            
+            if (slow == fast) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+};`
           }
         ],
         complexity: {
@@ -4379,6 +4928,63 @@ function mergeTwoLists(list1: ListNode | null, list2: ListNode | null): ListNode
             
         current.next = list1 or list2
         return dummy.next`
+          },
+          {
+            language: 'java',
+            code: `class ListNode {
+    int val;
+    ListNode next;
+}
+
+class Solution {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        ListNode dummy = new ListNode(-1);
+        ListNode current = dummy;
+        
+        while (list1 != null && list2 != null) {
+            if (list1.val <= list2.val) {
+                current.next = list1;
+                list1 = list1.next;
+            } else {
+                current.next = list2;
+                list2 = list2.next;
+            }
+            current = current.next;
+        }
+        
+        current.next = (list1 != null) ? list1 : list2;
+        return dummy.next;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `struct ListNode {
+    int val;
+    ListNode *next;
+};
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        ListNode* dummy = new ListNode(-1);
+        ListNode* current = dummy;
+        
+        while (list1 != nullptr && list2 != nullptr) {
+            if (list1->val <= list2->val) {
+                current->next = list1;
+                list1 = list1->next;
+            } else {
+                current->next = list2;
+                list2 = list2->next;
+            }
+            current = current->next;
+        }
+        
+        current->next = (list1 != nullptr) ? list1 : list2;
+        return dummy->next;
+    }
+};`
           }
         ],
         complexity: {
@@ -4492,6 +5098,68 @@ function mergeTwoLists(list1: ListNode | null, list2: ListNode | null): ListNode
             stack.append(char)
             
     return not stack`
+          },
+          {
+            language: 'java',
+            code: `import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+
+class Solution {
+    public boolean isValid(String s) {
+        Stack<Character> stack = new Stack<>();
+        Map<Character, Character> map = new HashMap<>();
+        map.put(')', '(');
+        map.put('}', '{');
+        map.put(']', '[');
+        
+        for (char c : s.toCharArray()) {
+            if (map.containsKey(c)) {
+                char top = stack.isEmpty() ? '#' : stack.pop();
+                if (top != map.get(c)) {
+                    return false;
+                }
+            } else {
+                stack.push(c);
+            }
+        }
+        
+        return stack.isEmpty();
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+#include <stack>
+#include <unordered_map>
+using namespace std;
+
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> stk;
+        unordered_map<char, char> mapping = {
+            {')', '('},
+            {'}', '{'},
+            {']', '['}
+        };
+        
+        for (char c : s) {
+            if (mapping.find(c) != mapping.end()) {
+                char top = stk.empty() ? '#' : stk.top();
+                stk.pop();
+                if (top != mapping[c]) {
+                    return false;
+                }
+            } else {
+                stk.push(c);
+            }
+        }
+        
+        return stk.empty();
+    }
+};`
           }
         ],
         complexity: {
@@ -4836,6 +5504,25 @@ function isSymmetric(root: TreeNode | null): boolean {
     if n <= 2:
         return n
     return climbStairs(n - 1) + climbStairs(n - 2)`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int climbStairs(int n) {
+        if (n <= 2) return n;
+        return climbStairs(n - 1) + climbStairs(n - 2);
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `class Solution {
+public:
+    int climbStairs(int n) {
+        if (n <= 2) return n;
+        return climbStairs(n - 1) + climbStairs(n - 2);
+    }
+};`
           }
         ],
         complexity: {
@@ -4908,6 +5595,45 @@ function isSymmetric(root: TreeNode | null): boolean {
         prev2, prev1 = prev1, prev2 + prev1
         
     return prev1`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int climbStairs(int n) {
+        if (n <= 2) return n;
+        
+        int prev2 = 1;
+        int prev1 = 2;
+        
+        for (int i = 3; i <= n; i++) {
+            int current = prev1 + prev2;
+            prev2 = prev1;
+            prev1 = current;
+        }
+        
+        return prev1;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `class Solution {
+public:
+    int climbStairs(int n) {
+        if (n <= 2) return n;
+        
+        int prev2 = 1;
+        int prev1 = 2;
+        
+        for (int i = 3; i <= n; i++) {
+            int current = prev1 + prev2;
+            prev2 = prev1;
+            prev1 = current;
+        }
+        
+        return prev1;
+    }
+};`
           }
         ],
         complexity: {
@@ -4981,6 +5707,38 @@ function isSymmetric(root: TreeNode | null): boolean {
             return 0
         return max(nums[i] + solve(i + 2), solve(i + 1))
     return solve(0)`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int rob(int[] nums) {
+        return solve(nums, 0);
+    }
+    
+    private int solve(int[] nums, int i) {
+        if (i >= nums.length) return 0;
+        return Math.max(nums[i] + solve(nums, i + 2), solve(nums, i + 1));
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        return solve(nums, 0);
+    }
+    
+private:
+    int solve(vector<int>& nums, int i) {
+        if (i >= nums.size()) return 0;
+        return max(nums[i] + solve(nums, i + 2), solve(nums, i + 1));
+    }
+};`
           }
         ],
         complexity: {
@@ -5046,6 +5804,45 @@ function isSymmetric(root: TreeNode | null): boolean {
         rob2 = temp
         
     return rob2`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int rob(int[] nums) {
+        int rob1 = 0;
+        int rob2 = 0;
+        
+        for (int n : nums) {
+            int temp = Math.max(n + rob1, rob2);
+            rob1 = rob2;
+            rob2 = temp;
+        }
+        
+        return rob2;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        int rob1 = 0;
+        int rob2 = 0;
+        
+        for (int n : nums) {
+            int temp = max(n + rob1, rob2);
+            rob1 = rob2;
+            rob2 = temp;
+        }
+        
+        return rob2;
+    }
+};`
           }
         ],
         complexity: {
@@ -5145,6 +5942,54 @@ function isSymmetric(root: TreeNode | null): boolean {
             result = min(result, sub_result + 1)
             
     return result if result != float('inf') else -1`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int coinChange(int[] coins, int amount) {
+        if (amount == 0) return 0;
+        
+        int result = Integer.MAX_VALUE;
+        
+        for (int coin : coins) {
+            if (amount - coin >= 0) {
+                int subResult = coinChange(coins, amount - coin);
+                if (subResult != -1) {
+                    result = Math.min(result, subResult + 1);
+                }
+            }
+        }
+        
+        return result == Integer.MAX_VALUE ? -1 : result;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+#include <climits>
+using namespace std;
+
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        if (amount == 0) return 0;
+        
+        int result = INT_MAX;
+        
+        for (int coin : coins) {
+            if (amount - coin >= 0) {
+                int subResult = coinChange(coins, amount - coin);
+                if (subResult != -1) {
+                    result = min(result, subResult + 1);
+                }
+            }
+        }
+        
+        return result == INT_MAX ? -1 : result;
+    }
+};`
           }
         ],
         complexity: {
@@ -5216,6 +6061,52 @@ function isSymmetric(root: TreeNode | null): boolean {
                 dp[a] = min(dp[a], 1 + dp[a - c])
                 
     return dp[amount] if dp[amount] <= amount else -1`
+          },
+          {
+            language: 'java',
+            code: `import java.util.Arrays;
+
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, amount + 1);
+        dp[0] = 0;
+        
+        for (int a = 1; a <= amount; a++) {
+            for (int c : coins) {
+                if (a - c >= 0) {
+                    dp[a] = Math.min(dp[a], 1 + dp[a - c]);
+                }
+            }
+        }
+        
+        return dp[amount] > amount ? -1 : dp[amount];
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        vector<int> dp(amount + 1, amount + 1);
+        dp[0] = 0;
+        
+        for (int a = 1; a <= amount; a++) {
+            for (int c : coins) {
+                if (a - c >= 0) {
+                    dp[a] = min(dp[a], 1 + dp[a - c]);
+                }
+            }
+        }
+        
+        return dp[amount] > amount ? -1 : dp[amount];
+    }
+};`
           }
         ],
         complexity: {
@@ -5329,6 +6220,67 @@ function isPalindrome(str: string): boolean {
                 longest = sub
                 
     return longest`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public String longestPalindrome(String s) {
+        String longest = "";
+        
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = i; j < s.length(); j++) {
+                String sub = s.substring(i, j + 1);
+                if (isPalindrome(sub) && sub.length() > longest.length()) {
+                    longest = sub;
+                }
+            }
+        }
+        return longest;
+    }
+    
+    private boolean isPalindrome(String str) {
+        int left = 0, right = str.length() - 1;
+        while (left < right) {
+            if (str.charAt(left) != str.charAt(right)) return false;
+            left++;
+            right--;
+        }
+        return true;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+using namespace std;
+
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        string longest = "";
+        
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = i; j < s.length(); j++) {
+                string sub = s.substr(i, j - i + 1);
+                if (isPalindrome(sub) && sub.length() > longest.length()) {
+                    longest = sub;
+                }
+            }
+        }
+        return longest;
+    }
+    
+private:
+    bool isPalindrome(const string& str) {
+        int left = 0, right = str.length() - 1;
+        while (left < right) {
+            if (str[left] != str[right]) return false;
+            left++;
+            right--;
+        }
+        return true;
+    }
+};`
           }
         ],
         complexity: {
@@ -5434,6 +6386,74 @@ function expand(s: string, left: number, right: number): number {
             r += 1
             
     return res`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public String longestPalindrome(String s) {
+        if (s == null || s.length() < 1) return "";
+        
+        int start = 0, end = 0;
+        
+        for (int i = 0; i < s.length(); i++) {
+            int len1 = expandAroundCenter(s, i, i);
+            int len2 = expandAroundCenter(s, i, i + 1);
+            int len = Math.max(len1, len2);
+            
+            if (len > end - start) {
+                start = i - (len - 1) / 2;
+                end = i + len / 2;
+            }
+        }
+        
+        return s.substring(start, end + 1);
+    }
+    
+    private int expandAroundCenter(String s, int left, int right) {
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+        }
+        return right - left - 1;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        if (s.empty()) return "";
+        
+        int start = 0, end = 0;
+        
+        for (int i = 0; i < s.length(); i++) {
+            int len1 = expandAroundCenter(s, i, i);
+            int len2 = expandAroundCenter(s, i, i + 1);
+            int len = max(len1, len2);
+            
+            if (len > end - start) {
+                start = i - (len - 1) / 2;
+                end = i + len / 2;
+            }
+        }
+        
+        return s.substr(start, end - start + 1);
+    }
+    
+private:
+    int expandAroundCenter(const string& s, int left, int right) {
+        while (left >= 0 && right < s.length() && s[left] == s[right]) {
+            left--;
+            right++;
+        }
+        return right - left - 1;
+    }
+};`
           }
         ],
         complexity: {
@@ -6122,6 +7142,85 @@ function expand(s: string, left: number, right: number): number {
             return False
             
     return True`
+          },
+          {
+            language: 'java',
+            code: `import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        
+        for (int[] prereq : prerequisites) {
+            graph.get(prereq[0]).add(prereq[1]);
+        }
+        
+        int[] status = new int[numCourses];
+        
+        for (int i = 0; i < numCourses; i++) {
+            if (hasCycle(i, graph, status)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private boolean hasCycle(int u, List<List<Integer>> graph, int[] status) {
+        if (status[u] == 1) return true;
+        if (status[u] == 2) return false;
+        
+        status[u] = 1;
+        for (int v : graph.get(u)) {
+            if (hasCycle(v, graph, status)) return true;
+        }
+        status[u] = 2;
+        return false;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> graph(numCourses);
+        
+        for (const auto& prereq : prerequisites) {
+            graph[prereq[0]].push_back(prereq[1]);
+        }
+        
+        vector<int> status(numCourses, 0);
+        
+        for (int i = 0; i < numCourses; i++) {
+            if (hasCycle(i, graph, status)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+private:
+    bool hasCycle(int u, vector<vector<int>>& graph, vector<int>& status) {
+        if (status[u] == 1) return true;
+        if (status[u] == 2) return false;
+        
+        status[u] = 1;
+        for (int v : graph[u]) {
+            if (hasCycle(v, graph, status)) return true;
+        }
+        status[u] = 2;
+        return false;
+    }
+};`
           }
         ],
         complexity: {
@@ -6233,6 +7332,85 @@ function expand(s: string, left: number, right: number): number {
                 queue.append(v)
                 
     return processed == numCourses`
+          },
+          {
+            language: 'java',
+            code: `import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> graph = new ArrayList<>();
+        int[] inDegree = new int[numCourses];
+        
+        for (int i = 0; i < numCourses; i++) {
+            graph.add(new ArrayList<>());
+        }
+        
+        for (int[] prereq : prerequisites) {
+            graph.get(prereq[1]).add(prereq[0]);
+            inDegree[prereq[0]]++;
+        }
+        
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0) queue.offer(i);
+        }
+        
+        int processed = 0;
+        while (!queue.isEmpty()) {
+            int u = queue.poll();
+            processed++;
+            
+            for (int v : graph.get(u)) {
+                inDegree[v]--;
+                if (inDegree[v] == 0) queue.offer(v);
+            }
+        }
+        
+        return processed == numCourses;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <queue>
+using namespace std;
+
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> graph(numCourses);
+        vector<int> inDegree(numCourses, 0);
+        
+        for (const auto& prereq : prerequisites) {
+            graph[prereq[1]].push_back(prereq[0]);
+            inDegree[prereq[0]]++;
+        }
+        
+        queue<int> q;
+        for (int i = 0; i < numCourses; i++) {
+            if (inDegree[i] == 0) q.push(i);
+        }
+        
+        int processed = 0;
+        while (!q.empty()) {
+            int u = q.front();
+            q.pop();
+            processed++;
+            
+            for (int v : graph[u]) {
+                inDegree[v]--;
+                if (inDegree[v] == 0) q.push(v);
+            }
+        }
+        
+        return processed == numCourses;
+    }
+};`
           }
         ],
         complexity: {
@@ -9079,6 +10257,60 @@ export default productExceptSelf;`
         suffix *= nums[i]
     
     return result`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int[] result = new int[n];
+        
+        // Build prefix products
+        int prefix = 1;
+        for (int i = 0; i < n; i++) {
+            result[i] = prefix;
+            prefix *= nums[i];
+        }
+        
+        // Multiply by suffix products
+        int suffix = 1;
+        for (int i = n - 1; i >= 0; i--) {
+            result[i] *= suffix;
+            suffix *= nums[i];
+        }
+        
+        return result;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> result(n, 1);
+        
+        // Build prefix products
+        int prefix = 1;
+        for (int i = 0; i < n; i++) {
+            result[i] = prefix;
+            prefix *= nums[i];
+        }
+        
+        // Multiply by suffix products
+        int suffix = 1;
+        for (int i = n - 1; i >= 0; i--) {
+            result[i] *= suffix;
+            suffix *= nums[i];
+        }
+        
+        return result;
+    }
+};`
           }
         ],
         complexity: {
@@ -9473,6 +10705,81 @@ export default threeSum;`
                 right -= 1
     
     return result`
+          },
+          {
+            language: 'java',
+            code: `import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        
+        for (int i = 0; i < nums.length - 2; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+            
+            int left = i + 1, right = nums.length - 1;
+            
+            while (left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+                
+                if (sum == 0) {
+                    result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    while (left < right && nums[left] == nums[left + 1]) left++;
+                    while (left < right && nums[right] == nums[right - 1]) right--;
+                    left++;
+                    right--;
+                } else if (sum < 0) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        
+        return result;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> result;
+        
+        for (int i = 0; i < nums.size() - 2; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+            
+            int left = i + 1, right = nums.size() - 1;
+            
+            while (left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+                
+                if (sum == 0) {
+                    result.push_back({nums[i], nums[left], nums[right]});
+                    while (left < right && nums[left] == nums[left + 1]) left++;
+                    while (left < right && nums[right] == nums[right - 1]) right--;
+                    left++;
+                    right--;
+                } else if (sum < 0) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        
+        return result;
+    }
+};`
           }
         ],
         complexity: {
@@ -9572,6 +10879,61 @@ export default groupAnagrams;`
         anagram_map[key].append(s)
     
     return list(anagram_map.values())`
+          },
+          {
+            language: 'java',
+            code: `import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        
+        for (String str : strs) {
+            char[] chars = str.toCharArray();
+            Arrays.sort(chars);
+            String key = new String(chars);
+            
+            if (!map.containsKey(key)) {
+                map.put(key, new ArrayList<>());
+            }
+            map.get(key).add(str);
+        }
+        
+        return new ArrayList<>(map.values());
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <string>
+#include <unordered_map>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string, vector<string>> map;
+        
+        for (const string& str : strs) {
+            string key = str;
+            sort(key.begin(), key.end());
+            map[key].push_back(str);
+        }
+        
+        vector<vector<string>> result;
+        for (auto& pair : map) {
+            result.push_back(pair.second);
+        }
+        
+        return result;
+    }
+};`
           }
         ],
         complexity: {
