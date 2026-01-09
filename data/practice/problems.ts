@@ -1489,6 +1489,75 @@ public:
         result.append(current_level)
     
     return result`
+          },
+          {
+            language: 'java',
+            code: `import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) return result;
+        
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        
+        while (!queue.isEmpty()) {
+            int levelSize = queue.size();
+            List<Integer> currentLevel = new ArrayList<>();
+            
+            for (int i = 0; i < levelSize; i++) {
+                TreeNode node = queue.poll();
+                currentLevel.add(node.val);
+                
+                if (node.left != null) queue.offer(node.left);
+                if (node.right != null) queue.offer(node.right);
+            }
+            
+            result.add(currentLevel);
+        }
+        
+        return result;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <queue>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> result;
+        if (!root) return result;
+        
+        queue<TreeNode*> q;
+        q.push(root);
+        
+        while (!q.empty()) {
+            int levelSize = q.size();
+            vector<int> currentLevel;
+            
+            for (int i = 0; i < levelSize; i++) {
+                TreeNode* node = q.front();
+                q.pop();
+                currentLevel.push_back(node->val);
+                
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            
+            result.push_back(currentLevel);
+        }
+        
+        return result;
+    }
+};`
           }
         ],
         complexity: {
@@ -1641,6 +1710,73 @@ public:
             result.append(nums[dq[0]])
     
     return result`
+          },
+          {
+            language: 'java',
+            code: `import java.util.ArrayDeque;
+import java.util.Deque;
+
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        int[] result = new int[n - k + 1];
+        Deque<Integer> deque = new ArrayDeque<>();
+        
+        for (int i = 0; i < n; i++) {
+            // Remove out-of-window indices
+            while (!deque.isEmpty() && deque.peekFirst() < i - k + 1) {
+                deque.pollFirst();
+            }
+            
+            // Remove smaller values
+            while (!deque.isEmpty() && nums[deque.peekLast()] < nums[i]) {
+                deque.pollLast();
+            }
+            
+            deque.offerLast(i);
+            
+            if (i >= k - 1) {
+                result[i - k + 1] = nums[deque.peekFirst()];
+            }
+        }
+        
+        return result;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <deque>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        vector<int> result;
+        deque<int> dq;
+        
+        for (int i = 0; i < nums.size(); i++) {
+            // Remove out-of-window indices
+            while (!dq.empty() && dq.front() < i - k + 1) {
+                dq.pop_front();
+            }
+            
+            // Remove smaller values
+            while (!dq.empty() && nums[dq.back()] < nums[i]) {
+                dq.pop_back();
+            }
+            
+            dq.push_back(i);
+            
+            if (i >= k - 1) {
+                result.push_back(nums[dq.front()]);
+            }
+        }
+        
+        return result;
+    }
+};`
           }
         ],
         complexity: {
@@ -1764,6 +1900,50 @@ public:
         nums1[p] = nums2[p2]
         p2 -= 1
         p -= 1`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int p1 = m - 1, p2 = n - 1, p = m + n - 1;
+        
+        while (p1 >= 0 && p2 >= 0) {
+            if (nums1[p1] > nums2[p2]) {
+                nums1[p--] = nums1[p1--];
+            } else {
+                nums1[p--] = nums2[p2--];
+            }
+        }
+        
+        while (p2 >= 0) {
+            nums1[p--] = nums2[p2--];
+        }
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        int p1 = m - 1, p2 = n - 1, p = m + n - 1;
+        
+        while (p1 >= 0 && p2 >= 0) {
+            if (nums1[p1] > nums2[p2]) {
+                nums1[p--] = nums1[p1--];
+            } else {
+                nums1[p--] = nums2[p2--];
+            }
+        }
+        
+        while (p2 >= 0) {
+            nums1[p--] = nums2[p2--];
+        }
+    }
+};`
           }
         ],
         complexity: {
@@ -1871,6 +2051,42 @@ public:
             k += 1
     
     return k`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int removeElement(int[] nums, int val) {
+        int k = 0;
+        
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != val) {
+                nums[k++] = nums[i];
+            }
+        }
+        
+        return k;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int k = 0;
+        
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] != val) {
+                nums[k++] = nums[i];
+            }
+        }
+        
+        return k;
+    }
+};`
           }
         ],
         complexity: {
@@ -1959,6 +2175,44 @@ public:
             k += 1
     
     return k`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int removeDuplicates(int[] nums) {
+        if (nums.length == 0) return 0;
+        
+        int k = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] != nums[k - 1]) {
+                nums[k++] = nums[i];
+            }
+        }
+        
+        return k;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if (nums.empty()) return 0;
+        
+        int k = 1;
+        for (int i = 1; i < nums.size(); i++) {
+            if (nums[i] != nums[k - 1]) {
+                nums[k++] = nums[i];
+            }
+        }
+        
+        return k;
+    }
+};`
           }
         ],
         complexity: {
@@ -2064,6 +2318,44 @@ public:
         count += 1 if num == candidate else -1
     
     return candidate`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int majorityElement(int[] nums) {
+        int candidate = 0, count = 0;
+        
+        for (int num : nums) {
+            if (count == 0) {
+                candidate = num;
+            }
+            count += (num == candidate) ? 1 : -1;
+        }
+        
+        return candidate;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        int candidate = 0, count = 0;
+        
+        for (int num : nums) {
+            if (count == 0) {
+                candidate = num;
+            }
+            count += (num == candidate) ? 1 : -1;
+        }
+        
+        return candidate;
+    }
+};`
           }
         ],
         complexity: {
@@ -2146,6 +2438,44 @@ public:
         max_profit = max(max_profit, price - min_price)
     
     return max_profit`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int maxProfit(int[] prices) {
+        int minPrice = Integer.MAX_VALUE;
+        int maxProfit = 0;
+        
+        for (int price : prices) {
+            minPrice = Math.min(minPrice, price);
+            maxProfit = Math.max(maxProfit, price - minPrice);
+        }
+        
+        return maxProfit;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+#include <climits>
+using namespace std;
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int minPrice = INT_MAX;
+        int maxProfit = 0;
+        
+        for (int price : prices) {
+            minPrice = min(minPrice, price);
+            maxProfit = max(maxProfit, price - minPrice);
+        }
+        
+        return maxProfit;
+    }
+};`
           }
         ],
         complexity: {
@@ -2272,6 +2602,70 @@ public:
             result += current
     
     return result`
+          },
+          {
+            language: 'java',
+            code: `import java.util.HashMap;
+import java.util.Map;
+
+class Solution {
+    public int romanToInt(String s) {
+        Map<Character, Integer> romanMap = new HashMap<>();
+        romanMap.put('I', 1);
+        romanMap.put('V', 5);
+        romanMap.put('X', 10);
+        romanMap.put('L', 50);
+        romanMap.put('C', 100);
+        romanMap.put('D', 500);
+        romanMap.put('M', 1000);
+        
+        int result = 0;
+        
+        for (int i = 0; i < s.length(); i++) {
+            int current = romanMap.get(s.charAt(i));
+            int next = (i + 1 < s.length()) ? romanMap.get(s.charAt(i + 1)) : 0;
+            
+            if (current < next) {
+                result -= current;
+            } else {
+                result += current;
+            }
+        }
+        
+        return result;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+#include <unordered_map>
+using namespace std;
+
+class Solution {
+public:
+    int romanToInt(string s) {
+        unordered_map<char, int> romanMap = {
+            {'I', 1}, {'V', 5}, {'X', 10}, {'L', 50},
+            {'C', 100}, {'D', 500}, {'M', 1000}
+        };
+        
+        int result = 0;
+        
+        for (int i = 0; i < s.length(); i++) {
+            int current = romanMap[s[i]];
+            int next = (i + 1 < s.length()) ? romanMap[s[i + 1]] : 0;
+            
+            if (current < next) {
+                result -= current;
+            } else {
+                result += current;
+            }
+        }
+        
+        return result;
+    }
+};`
           }
         ],
         complexity: {
@@ -2381,6 +2775,42 @@ public:
         i -= 1
     
     return length`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int lengthOfLastWord(String s) {
+        int length = 0, i = s.length() - 1;
+        
+        while (i >= 0 && s.charAt(i) == ' ') i--;
+        while (i >= 0 && s.charAt(i) != ' ') {
+            length++;
+            i--;
+        }
+        
+        return length;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+using namespace std;
+
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int length = 0, i = s.length() - 1;
+        
+        while (i >= 0 && s[i] == ' ') i--;
+        while (i >= 0 && s[i] != ' ') {
+            length++;
+            i--;
+        }
+        
+        return length;
+    }
+};`
           }
         ],
         complexity: {
@@ -2497,6 +2927,49 @@ public:
                 return strs[0][:i]
     
     return strs[0]`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        if (strs.length == 0) return "";
+        
+        for (int i = 0; i < strs[0].length(); i++) {
+            char c = strs[0].charAt(i);
+            for (int j = 1; j < strs.length; j++) {
+                if (i >= strs[j].length() || strs[j].charAt(i) != c) {
+                    return strs[0].substring(0, i);
+                }
+            }
+        }
+        
+        return strs[0];
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <string>
+using namespace std;
+
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        if (strs.empty()) return "";
+        
+        for (int i = 0; i < strs[0].length(); i++) {
+            char c = strs[0][i];
+            for (int j = 1; j < strs.size(); j++) {
+                if (i >= strs[j].length() || strs[j][i] != c) {
+                    return strs[0].substr(0, i);
+                }
+            }
+        }
+        
+        return strs[0];
+    }
+};`
           }
         ],
         complexity: {
@@ -2607,6 +3080,42 @@ public:
             k += 1
             
     return k`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int removeDuplicates(int[] nums) {
+        int k = 0;
+        
+        for (int num : nums) {
+            if (k < 2 || num > nums[k - 2]) {
+                nums[k++] = num;
+            }
+        }
+        
+        return k;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        int k = 0;
+        
+        for (int num : nums) {
+            if (k < 2 || num > nums[k - 2]) {
+                nums[k++] = num;
+            }
+        }
+        
+        return k;
+    }
+};`
           }
         ],
         complexity: {
@@ -2714,6 +3223,42 @@ public:
             max_profit += prices[i] - prices[i - 1]
             
     return max_profit`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int maxProfit(int[] prices) {
+        int maxProfit = 0;
+        
+        for (int i = 1; i < prices.length; i++) {
+            if (prices[i] > prices[i - 1]) {
+                maxProfit += prices[i] - prices[i - 1];
+            }
+        }
+        
+        return maxProfit;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int maxProfit = 0;
+        
+        for (int i = 1; i < prices.size(); i++) {
+            if (prices[i] > prices[i - 1]) {
+                maxProfit += prices[i] - prices[i - 1];
+            }
+        }
+        
+        return maxProfit;
+    }
+};`
           }
         ],
         complexity: {
@@ -2826,6 +3371,43 @@ public:
             return True
             
     return True`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public boolean canJump(int[] nums) {
+        int maxReach = 0;
+        
+        for (int i = 0; i < nums.length; i++) {
+            if (i > maxReach) return false;
+            maxReach = Math.max(maxReach, i + nums[i]);
+            if (maxReach >= nums.length - 1) return true;
+        }
+        
+        return true;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        int maxReach = 0;
+        
+        for (int i = 0; i < nums.size(); i++) {
+            if (i > maxReach) return false;
+            maxReach = max(maxReach, i + nums[i]);
+            if (maxReach >= nums.size() - 1) return true;
+        }
+        
+        return true;
+    }
+};`
           }
         ],
         complexity: {
@@ -2944,6 +3526,47 @@ public:
             current_end = farthest
             
     return jumps`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int jump(int[] nums) {
+        int jumps = 0, currentEnd = 0, farthest = 0;
+        
+        for (int i = 0; i < nums.length - 1; i++) {
+            farthest = Math.max(farthest, i + nums[i]);
+            if (i == currentEnd) {
+                jumps++;
+                currentEnd = farthest;
+            }
+        }
+        
+        return jumps;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        int jumps = 0, currentEnd = 0, farthest = 0;
+        
+        for (int i = 0; i < nums.size() - 1; i++) {
+            farthest = max(farthest, i + nums[i]);
+            if (i == currentEnd) {
+                jumps++;
+                currentEnd = farthest;
+            }
+        }
+        
+        return jumps;
+    }
+};`
           }
         ],
         complexity: {
@@ -3056,6 +3679,53 @@ public:
         else:
             break
     return h`
+          },
+          {
+            language: 'java',
+            code: `import java.util.Arrays;
+
+class Solution {
+    public int hIndex(int[] citations) {
+        Arrays.sort(citations);
+        int n = citations.length;
+        int h = 0;
+        
+        for (int i = n - 1; i >= 0; i--) {
+            int papers = n - i;
+            if (citations[i] >= papers) {
+                h = papers;
+            } else {
+                break;
+            }
+        }
+        
+        return h;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    int hIndex(vector<int>& citations) {
+        sort(citations.rbegin(), citations.rend());
+        int h = 0;
+        
+        for (int i = 0; i < citations.size(); i++) {
+            if (citations[i] > i) {
+                h++;
+            } else {
+                break;
+            }
+        }
+        
+        return h;
+    }
+};`
           }
         ],
         complexity: {
@@ -3355,6 +4025,54 @@ class RandomizedSet:
             curr_tank = 0
             
     return start_station`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int totalGas = 0, totalCost = 0;
+        int currTank = 0, startStation = 0;
+        
+        for (int i = 0; i < gas.length; i++) {
+            totalGas += gas[i];
+            totalCost += cost[i];
+            currTank += gas[i] - cost[i];
+            
+            if (currTank < 0) {
+                startStation = i + 1;
+                currTank = 0;
+            }
+        }
+        
+        return totalGas < totalCost ? -1 : startStation;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int totalGas = 0, totalCost = 0;
+        int currTank = 0, startStation = 0;
+        
+        for (int i = 0; i < gas.size(); i++) {
+            totalGas += gas[i];
+            totalCost += cost[i];
+            currTank += gas[i] - cost[i];
+            
+            if (currTank < 0) {
+                startStation = i + 1;
+                currTank = 0;
+            }
+        }
+        
+        return totalGas < totalCost ? -1 : startStation;
+    }
+};`
           }
         ],
         complexity: {
@@ -3481,6 +4199,61 @@ class RandomizedSet:
             candies[i] = max(candies[i], candies[i + 1] + 1)
             
     return sum(candies)`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int candy(int[] ratings) {
+        int n = ratings.length;
+        int[] candies = new int[n];
+        for (int i = 0; i < n; i++) candies[i] = 1;
+        
+        for (int i = 1; i < n; i++) {
+            if (ratings[i] > ratings[i - 1]) {
+                candies[i] = candies[i - 1] + 1;
+            }
+        }
+        
+        for (int i = n - 2; i >= 0; i--) {
+            if (ratings[i] > ratings[i + 1]) {
+                candies[i] = Math.max(candies[i], candies[i + 1] + 1);
+            }
+        }
+        
+        int sum = 0;
+        for (int c : candies) sum += c;
+        return sum;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+#include <numeric>
+using namespace std;
+
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        int n = ratings.size();
+        vector<int> candies(n, 1);
+        
+        for (int i = 1; i < n; i++) {
+            if (ratings[i] > ratings[i - 1]) {
+                candies[i] = candies[i - 1] + 1;
+            }
+        }
+        
+        for (int i = n - 2; i >= 0; i--) {
+            if (ratings[i] > ratings[i + 1]) {
+                candies[i] = max(candies[i], candies[i + 1] + 1);
+            }
+        }
+        
+        return accumulate(candies.begin(), candies.end(), 0);
+    }
+};`
           }
         ],
         complexity: {
@@ -3635,6 +4408,70 @@ class RandomizedSet:
             right -= 1
             
     return result`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int trap(int[] height) {
+        int left = 0, right = height.length - 1;
+        int leftMax = 0, rightMax = 0;
+        int result = 0;
+        
+        while (left < right) {
+            if (height[left] < height[right]) {
+                if (height[left] >= leftMax) {
+                    leftMax = height[left];
+                } else {
+                    result += leftMax - height[left];
+                }
+                left++;
+            } else {
+                if (height[right] >= rightMax) {
+                    rightMax = height[right];
+                } else {
+                    result += rightMax - height[right];
+                }
+                right--;
+            }
+        }
+        
+        return result;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int left = 0, right = height.size() - 1;
+        int leftMax = 0, rightMax = 0;
+        int result = 0;
+        
+        while (left < right) {
+            if (height[left] < height[right]) {
+                if (height[left] >= leftMax) {
+                    leftMax = height[left];
+                } else {
+                    result += leftMax - height[left];
+                }
+                left++;
+            } else {
+                if (height[right] >= rightMax) {
+                    rightMax = height[right];
+                } else {
+                    result += rightMax - height[right];
+                }
+                right--;
+            }
+        }
+        
+        return result;
+    }
+};`
           }
         ],
         complexity: {
@@ -3764,6 +4601,49 @@ class RandomizedSet:
             num -= val
             
     return "".join(result)`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public String intToRoman(int num) {
+        int[] values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+        String[] symbols = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+        
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < values.length; i++) {
+            while (num >= values[i]) {
+                result.append(symbols[i]);
+                num -= values[i];
+            }
+        }
+        
+        return result.toString();
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    string intToRoman(int num) {
+        vector<int> values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+        vector<string> symbols = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+        
+        string result = "";
+        for (int i = 0; i < values.size(); i++) {
+            while (num >= values[i]) {
+                result += symbols[i];
+                num -= values[i];
+            }
+        }
+        
+        return result;
+    }
+};`
           }
         ],
         complexity: {
@@ -6592,6 +7472,43 @@ private:
         x //= 10
         
     return x == reversed_half or x == reversed_half // 10`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public boolean isPalindrome(int x) {
+        if (x < 0 || (x % 10 == 0 && x != 0)) {
+            return false;
+        }
+        
+        int reversedHalf = 0;
+        while (x > reversedHalf) {
+            reversedHalf = reversedHalf * 10 + x % 10;
+            x /= 10;
+        }
+        
+        return x == reversedHalf || x == reversedHalf / 10;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `class Solution {
+public:
+    bool isPalindrome(int x) {
+        if (x < 0 || (x % 10 == 0 && x != 0)) {
+            return false;
+        }
+        
+        int reversedHalf = 0;
+        while (x > reversedHalf) {
+            reversedHalf = reversedHalf * 10 + x % 10;
+            x /= 10;
+        }
+        
+        return x == reversedHalf || x == reversedHalf / 10;
+    }
+};`
           }
         ],
         complexity: {
@@ -6726,6 +7643,50 @@ private:
         digits[i] = 0
         
     return [1] + digits`
+          },
+          {
+            language: 'java',
+            code: `import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public int[] plusOne(int[] digits) {
+        for (int i = digits.length - 1; i >= 0; i--) {
+            if (digits[i] < 9) {
+                digits[i]++;
+                return digits;
+            }
+            digits[i] = 0;
+        }
+        
+        // All were 9s, need to prepend 1
+        int[] result = new int[digits.length + 1];
+        result[0] = 1;
+        return result;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) {
+        for (int i = digits.size() - 1; i >= 0; i--) {
+            if (digits[i] < 9) {
+                digits[i]++;
+                return digits;
+            }
+            digits[i] = 0;
+        }
+        
+        // All were 9s, need to prepend 1
+        digits.insert(digits.begin(), 1);
+        return digits;
+    }
+};`
           }
         ],
         complexity: {
@@ -6875,6 +7836,87 @@ private:
                 dfs(i, j)
                 
     return count`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    private int m, n;
+    
+    public int numIslands(char[][] grid) {
+        if (grid == null || grid.length == 0) return 0;
+        
+        m = grid.length;
+        n = grid[0].length;
+        int count = 0;
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1') {
+                    count++;
+                    dfs(grid, i, j);
+                }
+            }
+        }
+        
+        return count;
+    }
+    
+    private void dfs(char[][] grid, int r, int c) {
+        if (r < 0 || r >= m || c < 0 || c >= n || grid[r][c] == '0') {
+            return;
+        }
+        
+        grid[r][c] = '0'; // Mark as visited
+        
+        dfs(grid, r - 1, c);
+        dfs(grid, r + 1, c);
+        dfs(grid, r, c - 1);
+        dfs(grid, r, c + 1);
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+private:
+    int m, n;
+    
+    void dfs(vector<vector<char>>& grid, int r, int c) {
+        if (r < 0 || r >= m || c < 0 || c >= n || grid[r][c] == '0') {
+            return;
+        }
+        
+        grid[r][c] = '0'; // Mark as visited
+        
+        dfs(grid, r - 1, c);
+        dfs(grid, r + 1, c);
+        dfs(grid, r, c - 1);
+        dfs(grid, r, c + 1);
+    }
+    
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        if (grid.empty()) return 0;
+        
+        m = grid.size();
+        n = grid[0].size();
+        int count = 0;
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1') {
+                    count++;
+                    dfs(grid, i, j);
+                }
+            }
+        }
+        
+        return count;
+    }
+};`
           }
         ],
         complexity: {
@@ -7002,6 +8044,94 @@ private:
                             queue.append((nr, nc))
                             
     return count`
+          },
+          {
+            language: 'java',
+            code: `import java.util.LinkedList;
+import java.util.Queue;
+
+class Solution {
+    public int numIslands(char[][] grid) {
+        if (grid == null || grid.length == 0) return 0;
+        
+        int m = grid.length;
+        int n = grid[0].length;
+        int count = 0;
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1') {
+                    count++;
+                    grid[i][j] = '0';
+                    Queue<int[]> queue = new LinkedList<>();
+                    queue.offer(new int[]{i, j});
+                    
+                    while (!queue.isEmpty()) {
+                        int[] curr = queue.poll();
+                        int r = curr[0], c = curr[1];
+                        int[][] dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+                        
+                        for (int[] dir : dirs) {
+                            int nr = r + dir[0];
+                            int nc = c + dir[1];
+                            
+                            if (nr >= 0 && nr < m && nc >= 0 && nc < n && grid[nr][nc] == '1') {
+                                grid[nr][nc] = '0';
+                                queue.offer(new int[]{nr, nc});
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return count;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <queue>
+using namespace std;
+
+class Solution {
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        if (grid.empty()) return 0;
+        
+        int m = grid.size();
+        int n = grid[0].size();
+        int count = 0;
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1') {
+                    count++;
+                    grid[i][j] = '0';
+                    queue<pair<int, int>> q;
+                    q.push({i, j});
+                    
+                    while (!q.empty()) {
+                        auto [r, c] = q.front();
+                        q.pop();
+                        vector<pair<int, int>> dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+                        
+                        for (auto [dr, dc] : dirs) {
+                            int nr = r + dr;
+                            int nc = c + dc;
+                            
+                            if (nr >= 0 && nr < m && nc >= 0 && nc < n && grid[nr][nc] == '1') {
+                                grid[nr][nc] = '0';
+                                q.push({nr, nc});
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return count;
+    }
+};`
           }
         ],
         complexity: {
@@ -7524,6 +8654,66 @@ public:
         return clone
         
     return dfs(node)`
+          },
+          {
+            language: 'java',
+            code: `import java.util.HashMap;
+import java.util.Map;
+
+class Solution {
+    private Map<Node, Node> visited = new HashMap<>();
+    
+    public Node cloneGraph(Node node) {
+        if (node == null) return null;
+        return dfs(node);
+    }
+    
+    private Node dfs(Node curr) {
+        if (visited.containsKey(curr)) {
+            return visited.get(curr);
+        }
+        
+        Node clone = new Node(curr.val);
+        visited.put(curr, clone);
+        
+        for (Node neighbor : curr.neighbors) {
+            clone.neighbors.add(dfs(neighbor));
+        }
+        
+        return clone;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <unordered_map>
+using namespace std;
+
+class Solution {
+private:
+    unordered_map<Node*, Node*> visited;
+    
+    Node* dfs(Node* curr) {
+        if (visited.count(curr)) {
+            return visited[curr];
+        }
+        
+        Node* clone = new Node(curr->val);
+        visited[curr] = clone;
+        
+        for (Node* neighbor : curr->neighbors) {
+            clone->neighbors.push_back(dfs(neighbor));
+        }
+        
+        return clone;
+    }
+    
+public:
+    Node* cloneGraph(Node* node) {
+        if (!node) return nullptr;
+        return dfs(node);
+    }
+};`
           }
         ],
         complexity: {
@@ -7621,6 +8811,73 @@ public:
             visited[curr].neighbors.append(visited[neighbor])
             
     return visited[node]`
+          },
+          {
+            language: 'java',
+            code: `import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+
+class Solution {
+    public Node cloneGraph(Node node) {
+        if (node == null) return null;
+        
+        Map<Node, Node> visited = new HashMap<>();
+        Queue<Node> queue = new LinkedList<>();
+        
+        visited.put(node, new Node(node.val));
+        queue.offer(node);
+        
+        while (!queue.isEmpty()) {
+            Node curr = queue.poll();
+            
+            for (Node neighbor : curr.neighbors) {
+                if (!visited.containsKey(neighbor)) {
+                    visited.put(neighbor, new Node(neighbor.val));
+                    queue.offer(neighbor);
+                }
+                visited.get(curr).neighbors.add(visited.get(neighbor));
+            }
+        }
+        
+        return visited.get(node);
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <unordered_map>
+#include <queue>
+using namespace std;
+
+class Solution {
+public:
+    Node* cloneGraph(Node* node) {
+        if (!node) return nullptr;
+        
+        unordered_map<Node*, Node*> visited;
+        queue<Node*> q;
+        
+        visited[node] = new Node(node->val);
+        q.push(node);
+        
+        while (!q.empty()) {
+            Node* curr = q.front();
+            q.pop();
+            
+            for (Node* neighbor : curr->neighbors) {
+                if (!visited.count(neighbor)) {
+                    visited[neighbor] = new Node(neighbor->val);
+                    q.push(neighbor);
+                }
+                visited[curr]->neighbors.push_back(visited[neighbor]);
+            }
+        }
+        
+        return visited[node];
+    }
+};`
           }
         ],
         complexity: {
@@ -7737,6 +8994,66 @@ public:
                 
     backtrack([])
     return result`
+          },
+          {
+            language: 'java',
+            code: `import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(new ArrayList<>(), nums, result);
+        return result;
+    }
+    
+    private void backtrack(List<Integer> current, int[] nums, List<List<Integer>> result) {
+        if (current.size() == nums.length) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+        
+        for (int num : nums) {
+            if (!current.contains(num)) {
+                current.add(num);
+                backtrack(current, nums, result);
+                current.remove(current.size() - 1);
+            }
+        }
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> result;
+        vector<int> current;
+        backtrack(current, nums, result);
+        return result;
+    }
+    
+private:
+    void backtrack(vector<int>& current, vector<int>& nums, vector<vector<int>>& result) {
+        if (current.size() == nums.size()) {
+            result.push_back(current);
+            return;
+        }
+        
+        for (int num : nums) {
+            if (find(current.begin(), current.end(), num) == current.end()) {
+                current.push_back(num);
+                backtrack(current, nums, result);
+                current.pop_back();
+            }
+        }
+    }
+};`
           }
         ],
         complexity: {
@@ -7822,6 +9139,71 @@ public:
             
     backtrack(0)
     return result`
+          },
+          {
+            language: 'java',
+            code: `import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(0, nums, result);
+        return result;
+    }
+    
+    private void backtrack(int start, int[] nums, List<List<Integer>> result) {
+        if (start == nums.length) {
+            List<Integer> permutation = new ArrayList<>();
+            for (int num : nums) {
+                permutation.add(num);
+            }
+            result.add(permutation);
+            return;
+        }
+        
+        for (int i = start; i < nums.length; i++) {
+            swap(nums, start, i);
+            backtrack(start + 1, nums, result);
+            swap(nums, start, i);
+        }
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> result;
+        backtrack(0, nums, result);
+        return result;
+    }
+    
+private:
+    void backtrack(int start, vector<int>& nums, vector<vector<int>>& result) {
+        if (start == nums.size()) {
+            result.push_back(nums);
+            return;
+        }
+        
+        for (int i = start; i < nums.size(); i++) {
+            swap(nums[start], nums[i]);
+            backtrack(start + 1, nums, result);
+            swap(nums[start], nums[i]);
+        }
+    }
+};`
           }
         ],
         complexity: {
@@ -7928,6 +9310,55 @@ export default subsets;`
     
     backtrack(0, [])
     return result`
+          },
+          {
+            language: 'java',
+            code: `import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(0, new ArrayList<>(), nums, result);
+        return result;
+    }
+    
+    private void backtrack(int start, List<Integer> current, int[] nums, List<List<Integer>> result) {
+        result.add(new ArrayList<>(current));
+        
+        for (int i = start; i < nums.length; i++) {
+            current.add(nums[i]);
+            backtrack(i + 1, current, nums, result);
+            current.remove(current.size() - 1);
+        }
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> result;
+        vector<int> current;
+        backtrack(0, current, nums, result);
+        return result;
+    }
+    
+private:
+    void backtrack(int start, vector<int>& current, vector<int>& nums, vector<vector<int>>& result) {
+        result.push_back(current);
+        
+        for (int i = start; i < nums.size(); i++) {
+            current.push_back(nums[i]);
+            backtrack(i + 1, current, nums, result);
+            current.pop_back();
+        }
+    }
+};`
           }
         ],
         complexity: {
@@ -8016,6 +9447,59 @@ export default subsets;`
         result.append(subset)
     
     return result`
+          },
+          {
+            language: 'java',
+            code: `import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        int n = nums.length;
+        int totalSubsets = 1 << n; // 2^n
+        List<List<Integer>> result = new ArrayList<>();
+        
+        for (int i = 0; i < totalSubsets; i++) {
+            List<Integer> subset = new ArrayList<>();
+            for (int j = 0; j < n; j++) {
+                // Check if jth bit is set
+                if ((i & (1 << j)) != 0) {
+                    subset.add(nums[j]);
+                }
+            }
+            result.add(subset);
+        }
+        
+        return result;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        int n = nums.size();
+        int totalSubsets = 1 << n; // 2^n
+        vector<vector<int>> result;
+        
+        for (int i = 0; i < totalSubsets; i++) {
+            vector<int> subset;
+            for (int j = 0; j < n; j++) {
+                // Check if jth bit is set
+                if (i & (1 << j)) {
+                    subset.push_back(nums[j]);
+                }
+            }
+            result.push_back(subset);
+        }
+        
+        return result;
+    }
+};`
           }
         ],
         complexity: {
@@ -8135,6 +9619,63 @@ export default combinationSum;`
     
     backtrack(0, [], target)
     return result`
+          },
+          {
+            language: 'java',
+            code: `import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(0, new ArrayList<>(), target, candidates, result);
+        return result;
+    }
+    
+    private void backtrack(int start, List<Integer> current, int remaining, int[] candidates, List<List<Integer>> result) {
+        if (remaining == 0) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+        if (remaining < 0) return;
+        
+        for (int i = start; i < candidates.length; i++) {
+            current.add(candidates[i]);
+            backtrack(i, current, remaining - candidates[i], candidates, result); // i not i+1 to allow reuse
+            current.remove(current.size() - 1);
+        }
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> result;
+        vector<int> current;
+        backtrack(0, current, target, candidates, result);
+        return result;
+    }
+    
+private:
+    void backtrack(int start, vector<int>& current, int remaining, vector<int>& candidates, vector<vector<int>>& result) {
+        if (remaining == 0) {
+            result.push_back(current);
+            return;
+        }
+        if (remaining < 0) return;
+        
+        for (int i = start; i < candidates.size(); i++) {
+            current.push_back(candidates[i]);
+            backtrack(i, current, remaining - candidates[i], candidates, result); // i not i+1 to allow reuse
+            current.pop_back();
+        }
+    }
+};`
           }
         ],
         complexity: {
@@ -8253,6 +9794,63 @@ export default generateParenthesis;`
     
     backtrack('', 0, 0)
     return result`
+          },
+          {
+            language: 'java',
+            code: `import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> result = new ArrayList<>();
+        backtrack("", 0, 0, n, result);
+        return result;
+    }
+    
+    private void backtrack(String current, int open, int close, int n, List<String> result) {
+        if (current.length() == 2 * n) {
+            result.add(current);
+            return;
+        }
+        
+        if (open < n) {
+            backtrack(current + "(", open + 1, close, n, result);
+        }
+        if (close < open) {
+            backtrack(current + ")", open, close + 1, n, result);
+        }
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <string>
+using namespace std;
+
+class Solution {
+public:
+    vector<string> generateParenthesis(int n) {
+        vector<string> result;
+        backtrack("", 0, 0, n, result);
+        return result;
+    }
+    
+private:
+    void backtrack(string current, int open, int close, int n, vector<string>& result) {
+        if (current.length() == 2 * n) {
+            result.push_back(current);
+            return;
+        }
+        
+        if (open < n) {
+            backtrack(current + "(", open + 1, close, n, result);
+        }
+        if (close < open) {
+            backtrack(current + ")", open, close + 1, n, result);
+        }
+    }
+};`
           }
         ],
         complexity: {
@@ -8347,8 +9945,52 @@ export default singleNumber;`
             seen.remove(num)
         else:
             seen.add(num)
-    
+            
     return list(seen)[0]`
+          },
+          {
+            language: 'java',
+            code: `import java.util.HashSet;
+import java.util.Set;
+
+class Solution {
+    public int singleNumber(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        
+        for (int num : nums) {
+            if (set.contains(num)) {
+                set.remove(num);
+            } else {
+                set.add(num);
+            }
+        }
+        
+        return set.iterator().next();
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <unordered_set>
+using namespace std;
+
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        unordered_set<int> set;
+        
+        for (int num : nums) {
+            if (set.count(num)) {
+                set.erase(num);
+            } else {
+                set.insert(num);
+            }
+        }
+        
+        return *set.begin();
+    }
+};`
           }
         ],
         complexity: {
@@ -8408,6 +10050,38 @@ export default singleNumber;`
         result ^= num
     
     return result`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int singleNumber(int[] nums) {
+        int result = 0;
+        
+        for (int num : nums) {
+            result ^= num;
+        }
+        
+        return result;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int result = 0;
+        
+        for (int num : nums) {
+            result ^= num;
+        }
+        
+        return result;
+    }
+};`
           }
         ],
         complexity: {
@@ -8493,6 +10167,37 @@ export default hammingWeight;`
         n >>= 1
     
     return count`
+          },
+          {
+            language: 'java',
+            code: `public class Solution {
+    // you need to treat n as an unsigned value
+    public int hammingWeight(int n) {
+        int count = 0;
+        while (n != 0) {
+            count += (n & 1);
+            n >>>= 1; // Unsigned right shift
+        }
+        return count;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <cstdint>
+using namespace std;
+
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        int count = 0;
+        while (n != 0) {
+            count += (n & 1);
+            n >>= 1;
+        }
+        return count;
+    }
+};`
           }
         ],
         complexity: {
@@ -8556,6 +10261,37 @@ export default hammingWeight;`
         count += 1
     
     return count`
+          },
+          {
+            language: 'java',
+            code: `public class Solution {
+    // you need to treat n as an unsigned value
+    public int hammingWeight(int n) {
+        int count = 0;
+        while (n != 0) {
+            n &= (n - 1); // Remove rightmost 1
+            count++;
+        }
+        return count;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <cstdint>
+using namespace std;
+
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        int count = 0;
+        while (n != 0) {
+            n &= (n - 1); // Remove rightmost 1
+            count++;
+        }
+        return count;
+    }
+};`
           }
         ],
         complexity: {
@@ -8640,6 +10376,38 @@ export default countBits;`
         ans[i] = ans[i >> 1] + (i & 1)
     
     return ans`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int[] countBits(int n) {
+        int[] ans = new int[n + 1];
+        
+        for (int i = 1; i <= n; i++) {
+            ans[i] = ans[i >> 1] + (i & 1);
+        }
+        
+        return ans;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> countBits(int n) {
+        vector<int> ans(n + 1);
+        
+        for (int i = 1; i <= n; i++) {
+            ans[i] = ans[i >> 1] + (i & 1);
+        }
+        
+        return ans;
+    }
+};`
           }
         ],
         complexity: {
@@ -8706,6 +10474,31 @@ export default findKthLargest;`
             code: `def findKthLargest(nums, k):
     nums.sort(reverse=True)
     return nums[k - 1]`
+          },
+          {
+            language: 'java',
+            code: `import java.util.Arrays;
+
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        Arrays.sort(nums);
+        return nums[nums.length - k];
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        sort(nums.begin(), nums.end(), greater<int>());
+        return nums[k - 1];
+    }
+};`
           }
         ],
         complexity: {
@@ -8821,6 +10614,47 @@ def findKthLargest(nums, k):
             heapq.heapreplace(heap, num)
     
     return heap[0]`
+          },
+          {
+            language: 'java',
+            code: `import java.util.PriorityQueue;
+
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        
+        for (int num : nums) {
+            minHeap.offer(num);
+            if (minHeap.size() > k) {
+                minHeap.poll();
+            }
+        }
+        
+        return minHeap.peek();
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <queue>
+using namespace std;
+
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        priority_queue<int, vector<int>, greater<int>> minHeap;
+        
+        for (int num : nums) {
+            minHeap.push(num);
+            if (minHeap.size() > k) {
+                minHeap.pop();
+            }
+        }
+        
+        return minHeap.top();
+    }
+};`
           }
         ],
         complexity: {
@@ -8907,6 +10741,62 @@ export default topKFrequent;`
     
     freq_map = Counter(nums)
     return [num for num, _ in freq_map.most_common(k)]`
+          },
+          {
+            language: 'java',
+            code: `import java.util.*;
+
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> freqMap = new HashMap<>();
+        for (int num : nums) {
+            freqMap.put(num, freqMap.getOrDefault(num, 0) + 1);
+        }
+        
+        List<Map.Entry<Integer, Integer>> list = new ArrayList<>(freqMap.entrySet());
+        list.sort((a, b) -> b.getValue() - a.getValue());
+        
+        int[] result = new int[k];
+        for (int i = 0; i < k; i++) {
+            result[i] = list.get(i).getKey();
+        }
+        
+        return result;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <unordered_map>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> freqMap;
+        for (int num : nums) {
+            freqMap[num]++;
+        }
+        
+        vector<pair<int, int>> pairs;
+        for (auto& entry : freqMap) {
+            pairs.push_back(entry);
+        }
+        
+        sort(pairs.begin(), pairs.end(), [](const pair<int, int>& a, const pair<int, int>& b) {
+            return a.second > b.second;
+        });
+        
+        vector<int> result;
+        for (int i = 0; i < k; i++) {
+            result.push_back(pairs[i].first);
+        }
+        
+        return result;
+    }
+};`
           }
         ],
         complexity: {
@@ -9005,6 +10895,75 @@ export default topKFrequent;`
                 break
     
     return result[:k]`
+          },
+          {
+            language: 'java',
+            code: `import java.util.*;
+
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> freqMap = new HashMap<>();
+        for (int num : nums) {
+            freqMap.put(num, freqMap.getOrDefault(num, 0) + 1);
+        }
+        
+        List<Integer>[] buckets = new List[nums.length + 1];
+        for (int i = 0; i <= nums.length; i++) {
+            buckets[i] = new ArrayList<>();
+        }
+        
+        for (int num : freqMap.keySet()) {
+            int freq = freqMap.get(num);
+            buckets[freq].add(num);
+        }
+        
+        List<Integer> result = new ArrayList<>();
+        for (int i = buckets.length - 1; i >= 0 && result.size() < k; i--) {
+            if (!buckets[i].isEmpty()) {
+                result.addAll(buckets[i]);
+            }
+        }
+        
+        int[] res = new int[k];
+        for (int i = 0; i < k; i++) {
+            res[i] = result.get(i);
+        }
+        return res;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <unordered_map>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> freqMap;
+        for (int num : nums) {
+            freqMap[num]++;
+        }
+        
+        vector<vector<int>> buckets(nums.size() + 1);
+        for (auto& entry : freqMap) {
+            buckets[entry.second].push_back(entry.first);
+        }
+        
+        vector<int> result;
+        for (int i = buckets.size() - 1; i >= 0 && result.size() < k; i--) {
+            if (!buckets[i].empty()) {
+                result.insert(result.end(), buckets[i].begin(), buckets[i].end());
+            }
+        }
+        
+        if (result.size() > k) {
+            result.resize(k);
+        }
+        return result;
+    }
+};`
           }
         ],
         complexity: {
@@ -9198,6 +11157,119 @@ class Trie:
                 return False
             node = node.children[char]
         return True`
+          },
+          {
+            language: 'java',
+            code: `import java.util.HashMap;
+import java.util.Map;
+
+class Trie {
+    private class TrieNode {
+        Map<Character, TrieNode> children = new HashMap<>();
+        boolean isEnd = false;
+    }
+    
+    private TrieNode root;
+
+    public Trie() {
+        root = new TrieNode();
+    }
+    
+    public void insert(String word) {
+        TrieNode node = root;
+        for (char c : word.toCharArray()) {
+            node.children.putIfAbsent(c, new TrieNode());
+            node = node.children.get(c);
+        }
+        node.isEnd = true;
+    }
+    
+    public boolean search(String word) {
+        TrieNode node = root;
+        for (char c : word.toCharArray()) {
+            if (!node.children.containsKey(c)) {
+                return false;
+            }
+            node = node.children.get(c);
+        }
+        return node.isEnd;
+    }
+    
+    public boolean startsWith(String prefix) {
+        TrieNode node = root;
+        for (char c : prefix.toCharArray()) {
+            if (!node.children.containsKey(c)) {
+                return false;
+            }
+            node = node.children.get(c);
+        }
+        return true;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <unordered_map>
+#include <string>
+using namespace std;
+
+class Trie {
+private:
+    struct TrieNode {
+        unordered_map<char, TrieNode*> children;
+        bool isEnd = false;
+        
+        ~TrieNode() {
+            for (auto& pair : children) {
+                delete pair.second;
+            }
+        }
+    };
+    
+    TrieNode* root;
+    
+public:
+    Trie() {
+        root = new TrieNode();
+    }
+    
+    ~Trie() {
+        delete root;
+    }
+    
+    void insert(string word) {
+        TrieNode* node = root;
+        for (char c : word) {
+            if (!node->children.count(c)) {
+                node->children[c] = new TrieNode();
+            }
+            node = node->children[c];
+        }
+        node->isEnd = true;
+    }
+    
+    bool search(string word) {
+        TrieNode* node = root;
+        for (char c : word) {
+            if (!node->children.count(c)) {
+                return false;
+            }
+            node = node->children[c];
+        }
+        return node->isEnd;
+    }
+    
+    bool startsWith(string prefix) {
+        TrieNode* node = root;
+        for (char c : prefix) {
+            if (!node->children.count(c)) {
+                return false;
+            }
+            node = node->children[c];
+        }
+        return true;
+    }
+};`
           }
         ],
         complexity: {
@@ -9304,6 +11376,48 @@ export default uniquePaths;`
             dp[i][j] = dp[i-1][j] + dp[i][j-1]
     
     return dp[m-1][n-1]`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int uniquePaths(int m, int n) {
+        int[][] dp = new int[m][n];
+        
+        for (int i = 0; i < m; i++) dp[i][0] = 1;
+        for (int j = 0; j < n; j++) dp[0][j] = 1;
+        
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            }
+        }
+        
+        return dp[m-1][n-1];
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        vector<vector<int>> dp(m, vector<int>(n, 0));
+        
+        for (int i = 0; i < m; i++) dp[i][0] = 1;
+        for (int j = 0; j < n; j++) dp[0][j] = 1;
+        
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = dp[i-1][j] + dp[i][j-1];
+            }
+        }
+        
+        return dp[m-1][n-1];
+    }
+};`
           }
         ],
         complexity: {
@@ -9369,6 +11483,43 @@ export default uniquePaths;`
             dp[j] += dp[j-1]
     
     return dp[n-1]`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int uniquePaths(int m, int n) {
+        int[] dp = new int[n];
+        for (int i = 0; i < n; i++) dp[i] = 1;
+        
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[j] += dp[j-1];
+            }
+        }
+        
+        return dp[n-1];
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        vector<int> dp(n, 1);
+        
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[j] += dp[j-1];
+            }
+        }
+        
+        return dp[n-1];
+    }
+};`
           }
         ],
         complexity: {
@@ -9475,6 +11626,56 @@ export default wordBreak;`
                 break
     
     return dp[n]`
+          },
+          {
+            language: 'java',
+            code: `import java.util.*;
+
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> wordSet = new HashSet<>(wordDict);
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (dp[j] && wordSet.contains(s.substring(j, i))) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        
+        return dp[s.length()];
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <string>
+#include <unordered_set>
+using namespace std;
+
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> wordSet(wordDict.begin(), wordDict.end());
+        vector<bool> dp(s.length() + 1, false);
+        dp[0] = true;
+        
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (dp[j] && wordSet.count(s.substr(j, i - j))) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        
+        return dp[s.length()];
+    }
+};`
           }
         ],
         complexity: {
@@ -16017,6 +18218,95 @@ export default Codec;`
             return node
         
         return dfs()`
+          },
+          {
+            language: 'java',
+            code: `public class Codec {
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        dfs(root, sb);
+        if (sb.length() > 0) sb.setLength(sb.length() - 1);
+        return sb.toString();
+    }
+    
+    private void dfs(TreeNode node, StringBuilder sb) {
+        if (node == null) {
+            sb.append("null,");
+            return;
+        }
+        sb.append(node.val).append(",");
+        dfs(node.left, sb);
+        dfs(node.right, sb);
+    }
+
+    public TreeNode deserialize(String data) {
+        if (data == null || data.isEmpty()) return null;
+        String[] values = data.split(",");
+        java.util.Queue<String> queue = new java.util.LinkedList<>(java.util.Arrays.asList(values));
+        return build(queue);
+    }
+    
+    private TreeNode build(java.util.Queue<String> queue) {
+        if (queue.isEmpty()) return null;
+        String val = queue.poll();
+        if (val.equals("null")) {
+            return null;
+        }
+        TreeNode node = new TreeNode(Integer.parseInt(val));
+        node.left = build(queue);
+        node.right = build(queue);
+        return node;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+#include <queue>
+#include <sstream>
+using namespace std;
+
+class Codec {
+public:
+    string serialize(TreeNode* root) {
+        string s = "";
+        serializeHelper(root, s);
+        if (!s.empty()) s.pop_back();
+        return s;
+    }
+    
+    void serializeHelper(TreeNode* node, string& s) {
+        if (!node) {
+            s += "null,";
+            return;
+        }
+        s += to_string(node->val) + ",";
+        serializeHelper(node->left, s);
+        serializeHelper(node->right, s);
+    }
+
+    TreeNode* deserialize(string data) {
+        if (data.empty()) return nullptr;
+        stringstream ss(data);
+        string item;
+        queue<string> q;
+        while (getline(ss, item, ',')) {
+            q.push(item);
+        }
+        return build(q);
+    }
+    
+    TreeNode* build(queue<string>& q) {
+        if (q.empty()) return nullptr;
+        string val = q.front();
+        q.pop();
+        if (val == "null") return nullptr;
+        TreeNode* node = new TreeNode(stoi(val));
+        node->left = build(q);
+        node->right = build(q);
+        return node;
+    }
+};`
           }
         ],
         complexity: {
@@ -16132,6 +18422,62 @@ export default kthSmallest;`
     
     inorder(root)
     return result[0]`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    private int count = 0;
+    private int result = 0;
+    
+    public int kthSmallest(TreeNode root, int k) {
+        count = 0;
+        inorder(root, k);
+        return result;
+    }
+    
+    private void inorder(TreeNode node, int k) {
+        if (node == null || count >= k) return;
+        
+        inorder(node.left, k);
+        
+        count++;
+        if (count == k) {
+            result = node.val;
+            return;
+        }
+        
+        inorder(node.right, k);
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int kthSmallest(TreeNode* root, int k) {
+        int count = 0;
+        int result = 0;
+        inorder(root, k, count, result);
+        return result;
+    }
+    
+    void inorder(TreeNode* node, int k, int& count, int& result) {
+        if (!node || count >= k) return;
+        
+        inorder(node->left, k, count, result);
+        
+        count++;
+        if (count == k) {
+            result = node->val;
+            return;
+        }
+        
+        inorder(node->right, k, count, result);
+    }
+};`
           }
         ],
         complexity: {
@@ -16222,6 +18568,46 @@ export default isValidBST;`
         return validate(node.left, min_val, node.val) and validate(node.right, node.val, max_val)
     
     return validate(root, float('-inf'), float('inf'))`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public boolean isValidBST(TreeNode root) {
+        return validate(root, null, null);
+    }
+    
+    private boolean validate(TreeNode node, Integer min, Integer max) {
+        if (node == null) return true;
+        
+        if ((min != null && node.val <= min) || (max != null && node.val >= max)) {
+            return false;
+        }
+        
+        return validate(node.left, min, node.val) && validate(node.right, node.val, max);
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <climits>
+using namespace std;
+
+class Solution {
+public:
+    bool isValidBST(TreeNode* root) {
+        return validate(root, nullptr, nullptr);
+    }
+    
+    bool validate(TreeNode* node, TreeNode* minNode, TreeNode* maxNode) {
+        if (!node) return true;
+        
+        if ((minNode && node->val <= minNode->val) || (maxNode && node->val >= maxNode->val)) {
+            return false;
+        }
+        
+        return validate(node->left, minNode, node) && validate(node->right, node, maxNode);
+    }
+};`
           }
         ],
         complexity: {
@@ -16346,6 +18732,84 @@ export default recoverTree;`
     
     inorder(root)
     first.val, second.val = second.val, first.val`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    private TreeNode first = null;
+    private TreeNode second = null;
+    private TreeNode prev = null;
+    
+    public void recoverTree(TreeNode root) {
+        first = null;
+        second = null;
+        prev = null;
+        
+        inorder(root);
+        
+        if (first != null && second != null) {
+            int temp = first.val;
+            first.val = second.val;
+            second.val = temp;
+        }
+    }
+    
+    private void inorder(TreeNode node) {
+        if (node == null) return;
+        
+        inorder(node.left);
+        
+        if (prev != null && prev.val > node.val) {
+            if (first == null) {
+                first = prev;
+            }
+            second = node;
+        }
+        prev = node;
+        
+        inorder(node.right);
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <algorithm>
+using namespace std;
+
+class Solution {
+    TreeNode* first = nullptr;
+    TreeNode* second = nullptr;
+    TreeNode* prev = nullptr;
+    
+public:
+    void recoverTree(TreeNode* root) {
+        first = nullptr;
+        second = nullptr;
+        prev = nullptr;
+        
+        inorder(root);
+        
+        if (first && second) {
+            swap(first->val, second->val);
+        }
+    }
+    
+    void inorder(TreeNode* node) {
+        if (!node) return;
+        
+        inorder(node->left);
+        
+        if (prev && prev->val > node->val) {
+            if (!first) {
+                first = prev;
+            }
+            second = node;
+        }
+        prev = node;
+        
+        inorder(node->right);
+    }
+};`
           }
         ],
         complexity: {
@@ -16427,6 +18891,31 @@ export default isSameTree;`
     if p.val != q.val:
         return False
     return isSameTree(p.left, q.left) and isSameTree(p.right, q.right)`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p == null && q == null) return true;
+        if (p == null || q == null) return false;
+        if (p.val != q.val) return false;
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `using namespace std;
+
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        if (!p && !q) return true;
+        if (!p || !q) return false;
+        if (p->val != q->val) return false;
+        return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+    }
+};`
           }
         ],
         complexity: {
@@ -16516,6 +19005,39 @@ export default isSymmetric;`
         return left.val == right.val and is_mirror(left.left, right.right) and is_mirror(left.right, right.left)
     
     return not root or is_mirror(root.left, root.right)`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null) return true;
+        return isMirror(root.left, root.right);
+    }
+    
+    private boolean isMirror(TreeNode t1, TreeNode t2) {
+        if (t1 == null && t2 == null) return true;
+        if (t1 == null || t2 == null) return false;
+        return (t1.val == t2.val) && isMirror(t1.left, t2.right) && isMirror(t1.right, t2.left);
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `using namespace std;
+
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        if (!root) return true;
+        return isMirror(root->left, root->right);
+    }
+    
+    bool isMirror(TreeNode* t1, TreeNode* t2) {
+        if (!t1 && !t2) return true;
+        if (!t1 || !t2) return false;
+        return (t1->val == t2->val) && isMirror(t1->left, t2->right) && isMirror(t1->right, t2->left);
+    }
+};`
           }
         ],
         complexity: {
@@ -16603,6 +19125,37 @@ export default invertTree;`
     invertTree(root.right)
     
     return root`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public TreeNode invertTree(TreeNode root) {
+        if (root == null) return null;
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+        invertTree(root.left);
+        invertTree(root.right);
+        return root;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `using namespace std;
+
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if (!root) return nullptr;
+        TreeNode* temp = root->left;
+        root->left = root->right;
+        root->right = temp;
+        invertTree(root->left);
+        invertTree(root->right);
+        return root;
+    }
+};`
           }
         ],
         complexity: {
@@ -16715,6 +19268,49 @@ export default diameterOfBinaryTree;`
     
     dfs(root)
     return diameter[0]`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    int max = 0;
+    
+    public int diameterOfBinaryTree(TreeNode root) {
+        max = 0;
+        maxCount(root);
+        return max;
+    }
+    
+    private int maxCount(TreeNode root) {
+        if (root == null) return 0;
+        int left = maxCount(root.left);
+        int right = maxCount(root.right);
+        max = Math.max(max, left + right);
+        return Math.max(left, right) + 1;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <algorithm>
+using namespace std;
+
+class Solution {
+    int maxDia = 0;
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        maxDia = 0;
+        maxCount(root);
+        return maxDia;
+    }
+    
+    int maxCount(TreeNode* root) {
+        if (!root) return 0;
+        int left = maxCount(root->left);
+        int right = maxCount(root->right);
+        maxDia = max(maxDia, left + right);
+        return max(left, right) + 1;
+    }
+};`
           }
         ],
         complexity: {
@@ -17052,36 +19648,3365 @@ export default maxDepth;`
     tests: [
       { id: 's1', type: 'sample', input: { root1: [1, 3, 2, 5], root2: [2, 1, 3, null, 4, null, 7] }, output: [3, 4, 5, 5, 4, null, 7] }
     ],
-    solution: 'If both null, return null. If one null, return other. Create new node with sum, recursively merge children.'
+    solutions: [
+      {
+        methodName: 'recursive',
+        title: 'Recursive DFS',
+        intuition: 'Recursively merge trees by creating new nodes. If both nodes exist, sum their values. If only one exists, use it.',
+        explanation: 'For each pair of nodes, create a new node with the sum of values (if both exist). Recursively merge left and right subtrees.',
+        algorithm: [
+          'If both root1 and root2 are null, return null',
+          'If only root1 is null, return root2',
+          'If only root2 is null, return root1',
+          'Create new node with sum of root1.val and root2.val',
+          'Recursively merge left subtrees',
+          'Recursively merge right subtrees',
+          'Return the new merged node'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function mergeTrees(root1, root2) {
+  if (!root1 && !root2) return null;
+  if (!root1) return root2;
+  if (!root2) return root1;
+  
+  const merged = {
+    val: root1.val + root2.val,
+    left: mergeTrees(root1.left, root2.left),
+    right: mergeTrees(root1.right, root2.right)
+  };
+  
+  return merged;
+}
+
+module.exports = mergeTrees;`
+          },
+          {
+            language: 'typescript',
+            code: `function mergeTrees(root1: TreeNode | null, root2: TreeNode | null): TreeNode | null {
+  if (!root1 && !root2) return null;
+  if (!root1) return root2;
+  if (!root2) return root1;
+  
+  const merged: TreeNode = {
+    val: root1.val + root2.val,
+    left: mergeTrees(root1.left, root2.left),
+    right: mergeTrees(root1.right, root2.right)
+  };
+  
+  return merged;
+}
+
+export default mergeTrees;`
+          },
+          {
+            language: 'python',
+            code: `def mergeTrees(root1, root2):
+    if not root1 and not root2:
+        return None
+    if not root1:
+        return root2
+    if not root2:
+        return root1
+    
+    merged = TreeNode(root1.val + root2.val)
+    merged.left = mergeTrees(root1.left, root2.left)
+    merged.right = mergeTrees(root1.right, root2.right)
+    
+    return merged`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public TreeNode mergeTrees(TreeNode root1, TreeNode root2) {
+        if (root1 == null && root2 == null) return null;
+        if (root1 == null) return root2;
+        if (root2 == null) return root1;
+        
+        TreeNode merged = new TreeNode(root1.val + root2.val);
+        merged.left = mergeTrees(root1.left, root2.left);
+        merged.right = mergeTrees(root1.right, root2.right);
+        
+        return merged;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `using namespace std;
+
+class Solution {
+public:
+    TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
+        if (!root1 && !root2) return nullptr;
+        if (!root1) return root2;
+        if (!root2) return root1;
+        
+        TreeNode* merged = new TreeNode(root1->val + root2->val);
+        merged->left = mergeTrees(root1->left, root2->left);
+        merged->right = mergeTrees(root1->right, root2->right);
+        
+        return merged;
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(min(N, M))',
+          space: 'O(min(H1, H2))',
+          explanation: 'We visit each overlapping node once. N and M are the number of nodes in each tree. Recursion stack uses space proportional to the minimum height of the two trees.'
+        },
+        pros: ['Simple and elegant', 'Easy to understand', 'Optimal solution'],
+        cons: ['Uses recursion stack space', 'Creates new tree nodes']
+      }
+    ],
+    solved: false
   },
-  { id: 'number-of-islands', slug: 'number-of-islands', title: 'Number of Islands', difficulty: 'medium', topics: ['Graph', 'DFS', 'BFS'], prompt: 'Given an m x n 2D binary grid which represents a map of 1s (land) and 0s (water), return the number of islands.', constraints: ['m == grid.length', 'n == grid[i].length'], examples: [{ input: 'grid = [["1","1","0"],["1","1","0"],["0","0","1"]]', output: '2' }], hints: ['DFS/BFS from each unvisited land cell', 'Mark visited cells'], starterCode: [{ language: 'javascript', functionName: 'numIslands', code: 'function numIslands(grid) {\n  return 0;\n}\n\nmodule.exports = numIslands;' }, { language: 'typescript', functionName: 'numIslands', code: 'function numIslands(grid: string[][]): number {\n  return 0;\n}\n\nexport default numIslands;' }, { language: 'python', functionName: 'numIslands', code: 'def numIslands(grid):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { grid: [['1', '1', '0'], ['1', '1', '0'], ['0', '0', '1']] }, output: 2 }], solution: 'DFS/BFS from each 1, mark as visited, count islands.' },
-  { id: 'clone-graph', slug: 'clone-graph', title: 'Clone Graph', difficulty: 'medium', topics: ['Graph', 'DFS', 'BFS'], prompt: 'Given a reference of a node in a connected undirected graph, return a deep copy (clone) of the graph.', constraints: ['The number of nodes in the graph is in the range [0, 100]'], examples: [{ input: 'adjList = [[2,4],[1,3],[2,4],[1,3]]', output: '[[2,4],[1,3],[2,4],[1,3]]' }], hints: ['Use HashMap to track cloned nodes', 'DFS/BFS to traverse'], starterCode: [{ language: 'javascript', functionName: 'cloneGraph', code: 'function cloneGraph(node) {\n  return null;\n}\n\nmodule.exports = cloneGraph;' }, { language: 'typescript', functionName: 'cloneGraph', code: 'function cloneGraph(node: Node | null): Node | null {\n  return null;\n}\n\nexport default cloneGraph;' }, { language: 'python', functionName: 'cloneGraph', code: 'def cloneGraph(node):\n    return None' }], tests: [{ id: 's1', type: 'sample', input: { adjList: [[2, 4], [1, 3], [2, 4], [1, 3]] }, output: [[2, 4], [1, 3], [2, 4], [1, 3]] }], solution: 'HashMap + DFS: clone nodes, connect neighbors.' },
-  { id: 'course-schedule', slug: 'course-schedule', title: 'Course Schedule', difficulty: 'medium', topics: ['Graph', 'Topological Sort'], prompt: 'There are numCourses courses labeled from 0 to numCourses - 1. Given prerequisites array, return true if you can finish all courses.', constraints: ['1 <= numCourses <= 2000'], examples: [{ input: 'numCourses = 2, prerequisites = [[1,0]]', output: 'true' }], hints: ['Detect cycle in directed graph', 'Use DFS with 3 states or Kahn algorithm'], starterCode: [{ language: 'javascript', functionName: 'canFinish', code: 'function canFinish(numCourses, prerequisites) {\n  return false;\n}\n\nmodule.exports = canFinish;' }, { language: 'typescript', functionName: 'canFinish', code: 'function canFinish(numCourses: number, prerequisites: number[][]): boolean {\n  return false;\n}\n\nexport default canFinish;' }, { language: 'python', functionName: 'canFinish', code: 'def canFinish(numCourses, prerequisites):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { numCourses: 2, prerequisites: [[1, 0]] }, output: true }], solution: 'Topological sort: if cycle exists, return false.' },
-  { id: 'longest-increasing-subsequence', slug: 'longest-increasing-subsequence', title: 'Longest Increasing Subsequence', difficulty: 'medium', topics: ['Array', 'DP', 'Binary Search'], prompt: 'Given an integer array nums, return the length of the longest strictly increasing subsequence.', constraints: ['1 <= nums.length <= 2500'], examples: [{ input: 'nums = [10,9,2,5,3,7,101,18]', output: '4' }], hints: ['DP: dp[i] = max LIS ending at i', 'Or binary search with patience sorting'], starterCode: [{ language: 'javascript', functionName: 'lengthOfLIS', code: 'function lengthOfLIS(nums) {\n  return 0;\n}\n\nmodule.exports = lengthOfLIS;' }, { language: 'typescript', functionName: 'lengthOfLIS', code: 'function lengthOfLIS(nums: number[]): number {\n  return 0;\n}\n\nexport default lengthOfLIS;' }, { language: 'python', functionName: 'lengthOfLIS', code: 'def lengthOfLIS(nums):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { nums: [10, 9, 2, 5, 3, 7, 101, 18] }, output: 4 }], solution: 'DP O(n²) or Binary Search O(n log n).' },
-  { id: 'edit-distance', slug: 'edit-distance', title: 'Edit Distance', difficulty: 'hard', topics: ['String', 'DP'], prompt: 'Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2. Operations: insert, delete, replace.', constraints: ['0 <= word1.length, word2.length <= 500'], examples: [{ input: 'word1 = "horse", word2 = "ros"', output: '3' }], hints: ['DP: dp[i][j] = min ops to convert word1[0:i] to word2[0:j]'], starterCode: [{ language: 'javascript', functionName: 'minDistance', code: 'function minDistance(word1, word2) {\n  return 0;\n}\n\nmodule.exports = minDistance;' }, { language: 'typescript', functionName: 'minDistance', code: 'function minDistance(word1: string, word2: string): number {\n  return 0;\n}\n\nexport default minDistance;' }, { language: 'python', functionName: 'minDistance', code: 'def minDistance(word1, word2):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { word1: 'horse', word2: 'ros' }, output: 3 }], solution: 'DP: if chars match, dp[i][j]=dp[i-1][j-1], else 1+min(insert,delete,replace).' },
-  { id: 'word-ladder', slug: 'word-ladder', title: 'Word Ladder', difficulty: 'hard', topics: ['String', 'BFS', 'Graph'], prompt: 'Given two words beginWord and endWord, and a dictionary wordList, return the length of shortest transformation sequence from beginWord to endWord.', constraints: ['1 <= beginWord.length <= 10'], examples: [{ input: 'beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]', output: '5' }], hints: ['BFS from beginWord', 'Try all 1-char transformations'], starterCode: [{ language: 'javascript', functionName: 'ladderLength', code: 'function ladderLength(beginWord, endWord, wordList) {\n  return 0;\n}\n\nmodule.exports = ladderLength;' }, { language: 'typescript', functionName: 'ladderLength', code: 'function ladderLength(beginWord: string, endWord: string, wordList: string[]): number {\n  return 0;\n}\n\nexport default ladderLength;' }, { language: 'python', functionName: 'ladderLength', code: 'def ladderLength(beginWord, endWord, wordList):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { beginWord: 'hit', endWord: 'cog', wordList: ['hot', 'dot', 'dog', 'lot', 'log', 'cog'] }, output: 5 }], solution: 'BFS: try all 1-char changes, track visited.' },
-  { id: 'word-search', slug: 'word-search', title: 'Word Search', difficulty: 'medium', topics: ['Array', 'Backtracking'], prompt: 'Given an m x n grid of characters board and a string word, return true if word exists in the grid.', constraints: ['m == board.length', 'n = board[i].length'], examples: [{ input: 'board = [["A","B","C"],["S","F","C"],["A","D","E"]], word = "ABCCED"', output: 'true' }], hints: ['Backtrack from each cell', 'Mark visited, unmark on backtrack'], starterCode: [{ language: 'javascript', functionName: 'exist', code: 'function exist(board, word) {\n  return false;\n}\n\nmodule.exports = exist;' }, { language: 'typescript', functionName: 'exist', code: 'function exist(board: string[][], word: string): boolean {\n  return false;\n}\n\nexport default exist;' }, { language: 'python', functionName: 'exist', code: 'def exist(board, word):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { board: [['A', 'B', 'C'], ['S', 'F', 'C'], ['A', 'D', 'E']], word: 'ABCCED' }, output: true }], solution: 'DFS backtracking from each cell.' },
-  { id: 'find-minimum-in-rotated-sorted-array', slug: 'find-minimum-in-rotated-sorted-array', title: 'Find Minimum in Rotated Sorted Array', difficulty: 'medium', topics: ['Array', 'Binary Search'], prompt: 'Suppose an array of length n sorted in ascending order is rotated. Find the minimum element.', constraints: ['n == nums.length', '1 <= n <= 5000'], examples: [{ input: 'nums = [3,4,5,1,2]', output: '1' }], hints: ['Binary search', 'Compare mid with right'], starterCode: [{ language: 'javascript', functionName: 'findMin', code: 'function findMin(nums) {\n  return 0;\n}\n\nmodule.exports = findMin;' }, { language: 'typescript', functionName: 'findMin', code: 'function findMin(nums: number[]): number {\n  return 0;\n}\n\nexport default findMin;' }, { language: 'python', functionName: 'findMin', code: 'def findMin(nums):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { nums: [3, 4, 5, 1, 2] }, output: 1 }], solution: 'Binary search: if nums[mid] > nums[right], min in right half.' },
+  {
+    id: 'number-of-islands',
+    slug: 'number-of-islands',
+    title: 'Number of Islands',
+    difficulty: 'medium',
+    topics: ['Graph', 'DFS', 'BFS'],
+    prompt: 'Given an m x n 2D binary grid which represents a map of 1s (land) and 0s (water), return the number of islands.',
+    constraints: ['m == grid.length', 'n == grid[i].length'],
+    examples: [{ input: 'grid = [["1","1","0"],["1","1","0"],["0","0","1"]]', output: '2' }],
+    hints: ['DFS/BFS from each unvisited land cell', 'Mark visited cells'],
+    starterCode: [
+      { language: 'javascript', functionName: 'numIslands', code: 'function numIslands(grid) {\n  return 0;\n}\n\nmodule.exports = numIslands;' },
+      { language: 'typescript', functionName: 'numIslands', code: 'function numIslands(grid: string[][]): number {\n  return 0;\n}\n\nexport default numIslands;' },
+      { language: 'python', functionName: 'numIslands', code: 'def numIslands(grid):\n    return 0' },
+      { language: 'java', functionName: 'numIslands', code: 'class Solution {\n    public int numIslands(char[][] grid) {\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'numIslands', code: '#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numIslands(vector<vector<char>>& grid) {\n        return 0;\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { grid: [['1', '1', '0'], ['1', '1', '0'], ['0', '0', '1']] }, output: 2 }],
+    solutions: [
+      {
+        methodName: 'dfs',
+        title: 'DFS with Marking',
+        intuition: 'Iterate through grid. When we find a "1", increment island count and use DFS to mark all connected land cells as visited.',
+        explanation: 'For each unvisited land cell, start a DFS to mark all connected land cells. Each DFS traversal represents one island.',
+        algorithm: [
+          'Initialize count = 0',
+          'For each cell in grid:',
+          '  - If cell is "1", increment count and run DFS',
+          'DFS marks current cell as visited ("0")',
+          'DFS recursively visits all 4 adjacent cells',
+          'Return count'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function numIslands(grid) {
+  if (!grid || grid.length === 0) return 0;
+  
+  let count = 0;
+  const rows = grid.length;
+  const cols = grid[0].length;
+  
+  function dfs(r, c) {
+    if (r < 0 || r >= rows || c < 0 || c >= cols || grid[r][c] === '0') {
+      return;
+    }
+    
+    grid[r][c] = '0'; // Mark as visited
+    dfs(r + 1, c);
+    dfs(r - 1, c);
+    dfs(r, c + 1);
+    dfs(r, c - 1);
+  }
+  
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (grid[r][c] === '1') {
+        count++;
+        dfs(r, c);
+      }
+    }
+  }
+  
+  return count;
+}
+
+module.exports = numIslands;`
+          },
+          {
+            language: 'typescript',
+            code: `function numIslands(grid: string[][]): number {
+  if (!grid || grid.length === 0) return 0;
+  
+  let count = 0;
+  const rows = grid.length;
+  const cols = grid[0].length;
+  
+  function dfs(r: number, c: number): void {
+    if (r < 0 || r >= rows || c < 0 || c >= cols || grid[r][c] === '0') {
+      return;
+    }
+    
+    grid[r][c] = '0'; // Mark as visited
+    dfs(r + 1, c);
+    dfs(r - 1, c);
+    dfs(r, c + 1);
+    dfs(r, c - 1);
+  }
+  
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (grid[r][c] === '1') {
+        count++;
+        dfs(r, c);
+      }
+    }
+  }
+  
+  return count;
+}
+
+export default numIslands;`
+          },
+          {
+            language: 'python',
+            code: `def numIslands(grid):
+    if not grid:
+        return 0
+    
+    count = 0
+    rows, cols = len(grid), len(grid[0])
+    
+    def dfs(r, c):
+        if r < 0 or r >= rows or c < 0 or c >= cols or grid[r][c] == '0':
+            return
+        
+        grid[r][c] = '0'  # Mark as visited
+        dfs(r + 1, c)
+        dfs(r - 1, c)
+        dfs(r, c + 1)
+        dfs(r, c - 1)
+    
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == '1':
+                count += 1
+                dfs(r, c)
+    
+    return count`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int numIslands(char[][] grid) {
+        if (grid == null || grid.length == 0) return 0;
+        
+        int count = 0;
+        int rows = grid.length;
+        int cols = grid[0].length;
+        
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (grid[r][c] == '1') {
+                    count++;
+                    dfs(grid, r, c);
+                }
+            }
+        }
+        
+        return count;
+    }
+    
+    private void dfs(char[][] grid, int r, int c) {
+        int rows = grid.length;
+        int cols = grid[0].length;
+        
+        if (r < 0 || r >= rows || c < 0 || c >= cols || grid[r][c] == '0') {
+            return;
+        }
+        
+        grid[r][c] = '0'; // Mark as visited
+        dfs(grid, r + 1, c);
+        dfs(grid, r - 1, c);
+        dfs(grid, r, c + 1);
+        dfs(grid, r, c - 1);
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        if (grid.empty()) return 0;
+        
+        int count = 0;
+        int rows = grid.size();
+        int cols = grid[0].size();
+        
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (grid[r][c] == '1') {
+                    count++;
+                    dfs(grid, r, c);
+                }
+            }
+        }
+        
+        return count;
+    }
+    
+private:
+    void dfs(vector<vector<char>>& grid, int r, int c) {
+        int rows = grid.size();
+        int cols = grid[0].size();
+        
+        if (r < 0 || r >= rows || c < 0 || c >= cols || grid[r][c] == '0') {
+            return;
+        }
+        
+        grid[r][c] = '0'; // Mark as visited
+        dfs(grid, r + 1, c);
+        dfs(grid, r - 1, c);
+        dfs(grid, r, c + 1);
+        dfs(grid, r, c - 1);
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(M × N)',
+          space: 'O(M × N)',
+          explanation: 'We visit each cell once. In worst case (all land), recursion stack can go M × N deep.'
+        },
+        pros: ['Simple and intuitive', 'Modifies grid in-place (no extra visited array needed)'],
+        cons: ['Modifies input grid', 'Can cause stack overflow for very large grids']
+      }
+    ],
+    solved: false
+  },
+  {
+    id: 'clone-graph',
+    slug: 'clone-graph',
+    title: 'Clone Graph',
+    difficulty: 'medium',
+    topics: ['Graph', 'DFS', 'BFS'],
+    prompt: 'Given a reference of a node in a connected undirected graph, return a deep copy (clone) of the graph.',
+    constraints: ['The number of nodes in the graph is in the range [0, 100]'],
+    examples: [{ input: 'adjList = [[2,4],[1,3],[2,4],[1,3]]', output: '[[2,4],[1,3],[2,4],[1,3]]' }],
+    hints: ['Use HashMap to track cloned nodes', 'DFS/BFS to traverse'],
+    starterCode: [
+      { language: 'javascript', functionName: 'cloneGraph', code: 'function cloneGraph(node) {\n  return null;\n}\n\nmodule.exports = cloneGraph;' },
+      { language: 'typescript', functionName: 'cloneGraph', code: 'class Node {\n  val: number;\n  neighbors: Node[];\n}\n\nfunction cloneGraph(node: Node | null): Node | null {\n  return null;\n}\n\nexport default cloneGraph;' },
+      { language: 'python', functionName: 'cloneGraph', code: 'def cloneGraph(node):\n    return None' },
+      { language: 'java', functionName: 'cloneGraph', code: 'class Solution {\n    public Node cloneGraph(Node node) {\n        return null;\n    }\n}' },
+      { language: 'cpp', functionName: 'cloneGraph', code: 'class Solution {\npublic:\n    Node* cloneGraph(Node* node) {\n        return nullptr;\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { adjList: [[2, 4], [1, 3], [2, 4], [1, 3]] }, output: [[2, 4], [1, 3], [2, 4], [1, 3]] }],
+    solutions: [
+      {
+        methodName: 'dfs-hashmap',
+        title: 'DFS with HashMap',
+        intuition: 'Use a HashMap to track cloned nodes and avoid infinite loops. DFS to traverse and clone all connected nodes.',
+        explanation: 'Create a map from original nodes to cloned nodes. For each node, clone it and recursively clone all its neighbors.',
+        algorithm: [
+          'If node is null, return null',
+          'Create a HashMap to store original -> cloned node mapping',
+          'Define DFS function:',
+          '  - If node already cloned (in map), return cloned node',
+          '  - Create new cloned node with same value',
+          '  - Add to map',
+          '  - For each neighbor, recursively clone and add to cloned node neighbors',
+          '  - Return cloned node',
+          'Call DFS on input node and return result'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function cloneGraph(node) {
+  if (!node) return null;
+  
+  const cloned = new Map();
+  
+  function dfs(node) {
+    if (cloned.has(node)) {
+      return cloned.get(node);
+    }
+    
+    const clone = { val: node.val, neighbors: [] };
+    cloned.set(node, clone);
+    
+    for (const neighbor of node.neighbors) {
+      clone.neighbors.push(dfs(neighbor));
+    }
+    
+    return clone;
+  }
+  
+  return dfs(node);
+}
+
+module.exports = cloneGraph;`
+          },
+          {
+            language: 'typescript',
+            code: `function cloneGraph(node: Node | null): Node | null {
+  if (!node) return null;
+  
+  const cloned = new Map<Node, Node>();
+  
+  function dfs(node: Node): Node {
+    if (cloned.has(node)) {
+      return cloned.get(node)!;
+    }
+    
+    const clone: Node = { val: node.val, neighbors: [] };
+    cloned.set(node, clone);
+    
+    for (const neighbor of node.neighbors) {
+      clone.neighbors.push(dfs(neighbor));
+    }
+    
+    return clone;
+  }
+  
+  return dfs(node);
+}
+
+export default cloneGraph;`
+          },
+          {
+            language: 'python',
+            code: `def cloneGraph(node):
+    if not node:
+        return None
+    
+    cloned = {}
+    
+    def dfs(node):
+        if node in cloned:
+            return cloned[node]
+        
+        clone = Node(node.val, [])
+        cloned[node] = clone
+        
+        for neighbor in node.neighbors:
+            clone.neighbors.append(dfs(neighbor))
+        
+        return clone
+    
+    return dfs(node)`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    private Map<Node, Node> cloned = new HashMap<>();
+    
+    public Node cloneGraph(Node node) {
+        if (node == null) return null;
+        return dfs(node);
+    }
+    
+    private Node dfs(Node node) {
+        if (cloned.containsKey(node)) {
+            return cloned.get(node);
+        }
+        
+        Node clone = new Node(node.val, new ArrayList<>());
+        cloned.put(node, clone);
+        
+        for (Node neighbor : node.neighbors) {
+            clone.neighbors.add(dfs(neighbor));
+        }
+        
+        return clone;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <unordered_map>
+using namespace std;
+
+class Solution {
+    unordered_map<Node*, Node*> cloned;
+    
+public:
+    Node* cloneGraph(Node* node) {
+        if (!node) return nullptr;
+        return dfs(node);
+    }
+    
+private:
+    Node* dfs(Node* node) {
+        if (cloned.count(node)) {
+            return cloned[node];
+        }
+        
+        Node* clone = new Node(node->val);
+        cloned[node] = clone;
+        
+        for (Node* neighbor : node->neighbors) {
+            clone->neighbors.push_back(dfs(neighbor));
+        }
+        
+        return clone;
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(N + E)',
+          space: 'O(N)',
+          explanation: 'We visit each node once and traverse each edge once. N is number of nodes, E is number of edges. HashMap stores N nodes.'
+        },
+        pros: ['Handles cycles correctly', 'Clean and elegant', 'Optimal solution'],
+        cons: ['Uses extra space for HashMap', 'Recursive (uses call stack)']
+      }
+    ],
+    solved: false
+  },
+  {
+    id: 'course-schedule',
+    slug: 'course-schedule',
+    title: 'Course Schedule',
+    difficulty: 'medium',
+    topics: ['Graph', 'Topological Sort'],
+    prompt: 'There are numCourses courses labeled from 0 to numCourses - 1. Given prerequisites array, return true if you can finish all courses.',
+    constraints: ['1 <= numCourses <= 2000'],
+    examples: [{ input: 'numCourses = 2, prerequisites = [[1,0]]', output: 'true' }],
+    hints: ['Detect cycle in directed graph', 'Use DFS with 3 states or Kahn algorithm'],
+    starterCode: [
+      { language: 'javascript', functionName: 'canFinish', code: 'function canFinish(numCourses, prerequisites) {\n  return false;\n}\n\nmodule.exports = canFinish;' },
+      { language: 'typescript', functionName: 'canFinish', code: 'function canFinish(numCourses: number, prerequisites: number[][]): boolean {\n  return false;\n}\n\nexport default canFinish;' },
+      { language: 'python', functionName: 'canFinish', code: 'def canFinish(numCourses, prerequisites):\n    return False' },
+      { language: 'java', functionName: 'canFinish', code: 'class Solution {\n    public boolean canFinish(int numCourses, int[][] prerequisites) {\n        return false;\n    }\n}' },
+      { language: 'cpp', functionName: 'canFinish', code: '#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {\n        return false;\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { numCourses: 2, prerequisites: [[1, 0]] }, output: true }],
+    solutions: [
+      {
+        methodName: 'dfs-cycle-detection',
+        title: 'DFS Cycle Detection',
+        intuition: 'Build a graph and use DFS to detect cycles. If there\'s a cycle, courses cannot be completed.',
+        explanation: 'Use 3 states: unvisited (0), visiting (1), visited (2). If we encounter a node in visiting state during DFS, there\'s a cycle.',
+        algorithm: [
+          'Build adjacency list from prerequisites',
+          'Create state array: 0=unvisited, 1=visiting, 2=visited',
+          'For each course, run DFS if unvisited',
+          'DFS: mark as visiting, visit neighbors, mark as visited',
+          'If we visit a node already in visiting state, cycle detected',
+          'Return true if no cycles found'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function canFinish(numCourses, prerequisites) {
+  const graph = Array.from({ length: numCourses }, () => []);
+  for (const [course, prereq] of prerequisites) {
+    graph[prereq].push(course);
+  }
+  
+  const state = new Array(numCourses).fill(0); // 0=unvisited, 1=visiting, 2=visited
+  
+  function hasCycle(course) {
+    if (state[course] === 1) return true; // Cycle detected
+    if (state[course] === 2) return false; // Already visited
+    
+    state[course] = 1; // Mark as visiting
+    for (const next of graph[course]) {
+      if (hasCycle(next)) return true;
+    }
+    state[course] = 2; // Mark as visited
+    return false;
+  }
+  
+  for (let i = 0; i < numCourses; i++) {
+    if (state[i] === 0 && hasCycle(i)) {
+      return false;
+    }
+  }
+  
+  return true;
+}
+
+module.exports = canFinish;`
+          },
+          {
+            language: 'typescript',
+            code: `function canFinish(numCourses: number, prerequisites: number[][]): boolean {
+  const graph: number[][] = Array.from({ length: numCourses }, () => []);
+  for (const [course, prereq] of prerequisites) {
+    graph[prereq].push(course);
+  }
+  
+  const state: number[] = new Array(numCourses).fill(0);
+  
+  function hasCycle(course: number): boolean {
+    if (state[course] === 1) return true;
+    if (state[course] === 2) return false;
+    
+    state[course] = 1;
+    for (const next of graph[course]) {
+      if (hasCycle(next)) return true;
+    }
+    state[course] = 2;
+    return false;
+  }
+  
+  for (let i = 0; i < numCourses; i++) {
+    if (state[i] === 0 && hasCycle(i)) {
+      return false;
+    }
+  }
+  
+  return true;
+}
+
+export default canFinish;`
+          },
+          {
+            language: 'python',
+            code: `def canFinish(numCourses, prerequisites):
+    graph = [[] for _ in range(numCourses)]
+    for course, prereq in prerequisites:
+        graph[prereq].append(course)
+    
+    state = [0] * numCourses  # 0=unvisited, 1=visiting, 2=visited
+    
+    def has_cycle(course):
+        if state[course] == 1:
+            return True
+        if state[course] == 2:
+            return False
+        
+        state[course] = 1
+        for next_course in graph[course]:
+            if has_cycle(next_course):
+                return True
+        state[course] = 2
+        return False
+    
+    for i in range(numCourses):
+        if state[i] == 0 and has_cycle(i):
+            return False
+    
+    return True`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<Integer>[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] prereq : prerequisites) {
+            graph[prereq[1]].add(prereq[0]);
+        }
+        
+        int[] state = new int[numCourses];
+        
+        for (int i = 0; i < numCourses; i++) {
+            if (state[i] == 0 && hasCycle(i, graph, state)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private boolean hasCycle(int course, List<Integer>[] graph, int[] state) {
+        if (state[course] == 1) return true;
+        if (state[course] == 2) return false;
+        
+        state[course] = 1;
+        for (int next : graph[course]) {
+            if (hasCycle(next, graph, state)) return true;
+        }
+        state[course] = 2;
+        return false;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> graph(numCourses);
+        for (auto& prereq : prerequisites) {
+            graph[prereq[1]].push_back(prereq[0]);
+        }
+        
+        vector<int> state(numCourses, 0);
+        
+        for (int i = 0; i < numCourses; i++) {
+            if (state[i] == 0 && hasCycle(i, graph, state)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+private:
+    bool hasCycle(int course, vector<vector<int>>& graph, vector<int>& state) {
+        if (state[course] == 1) return true;
+        if (state[course] == 2) return false;
+        
+        state[course] = 1;
+        for (int next : graph[course]) {
+            if (hasCycle(next, graph, state)) return true;
+        }
+        state[course] = 2;
+        return false;
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(V + E)',
+          space: 'O(V + E)',
+          explanation: 'V is number of courses, E is number of prerequisites. We visit each node once and traverse each edge once. Graph and state array use O(V+E) space.'
+        },
+        pros: ['Efficient cycle detection', 'Clear 3-state approach', 'Optimal solution'],
+        cons: ['Requires understanding of graph traversal', 'Recursive (uses call stack)']
+      }
+    ],
+    solved: false
+  },
+  {
+    id: 'longest-increasing-subsequence',
+    slug: 'longest-increasing-subsequence',
+    title: 'Longest Increasing Subsequence',
+    difficulty: 'medium',
+    topics: ['Array', 'DP', 'Binary Search'],
+    prompt: 'Given an integer array nums, return the length of the longest strictly increasing subsequence.',
+    constraints: ['1 <= nums.length <= 2500'],
+    examples: [{ input: 'nums = [10,9,2,5,3,7,101,18]', output: '4' }],
+    hints: ['DP: dp[i] = max LIS ending at i', 'Or binary search with patience sorting'],
+    starterCode: [
+      { language: 'javascript', functionName: 'lengthOfLIS', code: 'function lengthOfLIS(nums) {\n  return 0;\n}\n\nmodule.exports = lengthOfLIS;' },
+      { language: 'typescript', functionName: 'lengthOfLIS', code: 'function lengthOfLIS(nums: number[]): number {\n  return 0;\n}\n\nexport default lengthOfLIS;' },
+      { language: 'python', functionName: 'lengthOfLIS', code: 'def lengthOfLIS(nums):\n    return 0' },
+      { language: 'java', functionName: 'lengthOfLIS', code: 'class Solution {\n    public int lengthOfLIS(int[] nums) {\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'lengthOfLIS', code: '#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    int lengthOfLIS(vector<int>& nums) {\n        return 0;\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { nums: [10, 9, 2, 5, 3, 7, 101, 18] }, output: 4 }],
+    solutions: [
+      {
+        methodName: 'binary-search',
+        title: 'Binary Search (Optimal)',
+        intuition: 'Maintain an array of smallest tail elements for increasing subsequences of each length. Use binary search to find position.',
+        explanation: 'Keep array tails where tails[i] is the smallest tail of all increasing subsequences of length i+1. For each number, binary search for its position.',
+        algorithm: [
+          'Initialize empty tails array',
+          'For each number in nums:',
+          '  - Binary search for position in tails',
+          '  - If number is larger than all tails, append it',
+          '  - Otherwise, replace the first element >= number',
+          'Return length of tails array'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function lengthOfLIS(nums) {
+  const tails = [];
+  
+  for (const num of nums) {
+    let left = 0;
+    let right = tails.length;
+    
+    while (left < right) {
+      const mid = Math.floor((left + right) / 2);
+      if (tails[mid] < num) {
+        left = mid + 1;
+      } else {
+        right = mid;
+      }
+    }
+    
+    if (left === tails.length) {
+      tails.push(num);
+    } else {
+      tails[left] = num;
+    }
+  }
+  
+  return tails.length;
+}
+
+module.exports = lengthOfLIS;`
+          },
+          {
+            language: 'typescript',
+            code: `function lengthOfLIS(nums: number[]): number {
+  const tails: number[] = [];
+  
+  for (const num of nums) {
+    let left = 0;
+    let right = tails.length;
+    
+    while (left < right) {
+      const mid = Math.floor((left + right) / 2);
+      if (tails[mid] < num) {
+        left = mid + 1;
+      } else {
+        right = mid;
+      }
+    }
+    
+    if (left === tails.length) {
+      tails.push(num);
+    } else {
+      tails[left] = num;
+    }
+  }
+  
+  return tails.length;
+}
+
+export default lengthOfLIS;`
+          },
+          {
+            language: 'python',
+            code: `def lengthOfLIS(nums):
+    tails = []
+    
+    for num in nums:
+        left, right = 0, len(tails)
+        
+        while left < right:
+            mid = (left + right) // 2
+            if tails[mid] < num:
+                left = mid + 1
+            else:
+                right = mid
+        
+        if left == len(tails):
+            tails.append(num)
+        else:
+            tails[left] = num
+    
+    return len(tails)`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int lengthOfLIS(int[] nums) {
+        List<Integer> tails = new ArrayList<>();
+        
+        for (int num : nums) {
+            int left = 0;
+            int right = tails.size();
+            
+            while (left < right) {
+                int mid = left + (right - left) / 2;
+                if (tails.get(mid) < num) {
+                    left = mid + 1;
+                } else {
+                    right = mid;
+                }
+            }
+            
+            if (left == tails.size()) {
+                tails.add(num);
+            } else {
+                tails.set(left, num);
+            }
+        }
+        
+        return tails.size();
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        vector<int> tails;
+        
+        for (int num : nums) {
+            int left = 0;
+            int right = tails.size();
+            
+            while (left < right) {
+                int mid = left + (right - left) / 2;
+                if (tails[mid] < num) {
+                    left = mid + 1;
+                } else {
+                    right = mid;
+                }
+            }
+            
+            if (left == tails.size()) {
+                tails.push_back(num);
+            } else {
+                tails[left] = num;
+            }
+        }
+        
+        return tails.size();
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(N log N)',
+          space: 'O(N)',
+          explanation: 'For each of N elements, we do binary search on tails array (log N). Tails array can grow up to size N.'
+        },
+        pros: ['Optimal time complexity', 'Elegant solution', 'Uses binary search efficiently'],
+        cons: ['More complex than DP approach', 'Doesn\'t give actual subsequence without modification']
+      }
+    ],
+    solved: false
+  },
+  {
+    id: 'edit-distance',
+    slug: 'edit-distance',
+    title: 'Edit Distance',
+    difficulty: 'hard',
+    topics: ['String', 'DP'],
+    prompt: 'Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2. Operations: insert, delete, replace.',
+    constraints: ['0 <= word1.length, word2.length <= 500'],
+    examples: [{ input: 'word1 = "horse", word2 = "ros"', output: '3' }],
+    hints: ['DP: dp[i][j] = min ops to convert word1[0:i] to word2[0:j]'],
+    starterCode: [
+      { language: 'javascript', functionName: 'minDistance', code: 'function minDistance(word1, word2) {\n  return 0;\n}\n\nmodule.exports = minDistance;' },
+      { language: 'typescript', functionName: 'minDistance', code: 'function minDistance(word1: string, word2: string): number {\n  return 0;\n}\n\nexport default minDistance;' },
+      { language: 'python', functionName: 'minDistance', code: 'def minDistance(word1, word2):\n    return 0' },
+      { language: 'java', functionName: 'minDistance', code: 'class Solution {\n    public int minDistance(String word1, String word2) {\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'minDistance', code: '#include <string>\nusing namespace std;\n\nclass Solution {\npublic:\n    int minDistance(string word1, string word2) {\n        return 0;\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { word1: 'horse', word2: 'ros' }, output: 3 }],
+    solutions: [
+      {
+        methodName: 'dp-2d',
+        title: '2D Dynamic Programming',
+        intuition: 'Build a table where dp[i][j] represents minimum operations to convert word1[0..i-1] to word2[0..j-1].',
+        explanation: 'If characters match, no operation needed. Otherwise, try insert, delete, or replace and take minimum.',
+        algorithm: [
+          'Create 2D DP table of size (m+1) × (n+1)',
+          'Initialize first row: dp[0][j] = j (insert j chars)',
+          'Initialize first column: dp[i][0] = i (delete i chars)',
+          'For each i from 1 to m:',
+          '  For each j from 1 to n:',
+          '    - If word1[i-1] == word2[j-1]: dp[i][j] = dp[i-1][j-1]',
+          '    - Else: dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])',
+          'Return dp[m][n]'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function minDistance(word1, word2) {
+  const m = word1.length;
+  const n = word2.length;
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (word1[i - 1] === word2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      } else {
+        dp[i][j] = 1 + Math.min(
+          dp[i - 1][j],     // delete
+          dp[i][j - 1],     // insert
+          dp[i - 1][j - 1]  // replace
+        );
+      }
+    }
+  }
+  
+  return dp[m][n];
+}
+
+module.exports = minDistance;`
+          },
+          {
+            language: 'typescript',
+            code: `function minDistance(word1: string, word2: string): number {
+  const m = word1.length;
+  const n = word2.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (word1[i - 1] === word2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      } else {
+        dp[i][j] = 1 + Math.min(
+          dp[i - 1][j],
+          dp[i][j - 1],
+          dp[i - 1][j - 1]
+        );
+      }
+    }
+  }
+  
+  return dp[m][n];
+}
+
+export default minDistance;`
+          },
+          {
+            language: 'python',
+            code: `def minDistance(word1, word2):
+    m, n = len(word1), len(word2)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    
+    for i in range(m + 1):
+        dp[i][0] = i
+    for j in range(n + 1):
+        dp[0][j] = j
+    
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if word1[i - 1] == word2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]
+            else:
+                dp[i][j] = 1 + min(
+                    dp[i - 1][j],      # delete
+                    dp[i][j - 1],      # insert
+                    dp[i - 1][j - 1]   # replace
+                )
+    
+    return dp[m][n]`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int minDistance(String word1, String word2) {
+        int m = word1.length();
+        int n = word2.length();
+        int[][] dp = new int[m + 1][n + 1];
+        
+        for (int i = 0; i <= m; i++) dp[i][0] = i;
+        for (int j = 0; j <= n; j++) dp[0][j] = j;
+        
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = 1 + Math.min(
+                        Math.min(dp[i - 1][j], dp[i][j - 1]),
+                        dp[i - 1][j - 1]
+                    );
+                }
+            }
+        }
+        
+        return dp[m][n];
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    int minDistance(string word1, string word2) {
+        int m = word1.length();
+        int n = word2.length();
+        vector<vector<int>> dp(m + 1, vector<int>(n + 1));
+        
+        for (int i = 0; i <= m; i++) dp[i][0] = i;
+        for (int j = 0; j <= n; j++) dp[0][j] = j;
+        
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (word1[i - 1] == word2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = 1 + min({
+                        dp[i - 1][j],
+                        dp[i][j - 1],
+                        dp[i - 1][j - 1]
+                    });
+                }
+            }
+        }
+        
+        return dp[m][n];
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(M × N)',
+          space: 'O(M × N)',
+          explanation: 'We fill a 2D table of size M×N. Each cell takes constant time. Space can be optimized to O(min(M,N)) using rolling arrays.'
+        },
+        pros: ['Classic DP solution', 'Handles all three operations', 'Can be space-optimized'],
+        cons: ['O(M×N) space in basic form', 'Requires understanding of DP']
+      }
+    ],
+    solved: false
+  },
+  {
+    id: 'word-ladder',
+    slug: 'word-ladder',
+    title: 'Word Ladder',
+    difficulty: 'hard',
+    topics: ['String', 'BFS', 'Graph'],
+    prompt: 'Given two words beginWord and endWord, and a dictionary wordList, return the length of shortest transformation sequence from beginWord to endWord.',
+    constraints: ['1 <= beginWord.length <= 10'],
+    examples: [{ input: 'beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]', output: '5' }],
+    hints: ['BFS from beginWord', 'Try all 1-char transformations'],
+    starterCode: [
+      { language: 'javascript', functionName: 'ladderLength', code: 'function ladderLength(beginWord, endWord, wordList) {\n  return 0;\n}\n\nmodule.exports = ladderLength;' },
+      { language: 'typescript', functionName: 'ladderLength', code: 'function ladderLength(beginWord: string, endWord: string, wordList: string[]): number {\n  return 0;\n}\n\nexport default ladderLength;' },
+      { language: 'python', functionName: 'ladderLength', code: 'def ladderLength(beginWord, endWord, wordList):\n    return 0' },
+      { language: 'java', functionName: 'ladderLength', code: 'class Solution {\n    public int ladderLength(String beginWord, String endWord, List<String> wordList) {\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'ladderLength', code: '#include <vector>\n#include <string>\nusing namespace std;\n\nclass Solution {\npublic:\n    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {\n        return 0;\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { beginWord: 'hit', endWord: 'cog', wordList: ['hot', 'dot', 'dog', 'lot', 'log', 'cog'] }, output: 5 }],
+    solutions: [
+      {
+        methodName: 'bfs',
+        title: 'BFS Graph Traversal',
+        intuition: 'Treat this as a graph problem where each word is a node. Use BFS to find shortest path from beginWord to endWord.',
+        explanation: 'For each word, try changing each character to all 26 letters. If the new word is in wordList and not visited, add to queue.',
+        algorithm: [
+          'Convert wordList to Set for O(1) lookup',
+          'If endWord not in Set, return 0',
+          'Initialize queue with [beginWord, 1]',
+          'Initialize visited set',
+          'While queue not empty:',
+          '  - Dequeue current word and level',
+          '  - If current == endWord, return level',
+          '  - Try all 1-char transformations',
+          '  - If transformation in wordList and not visited, enqueue',
+          'Return 0 if no path found'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function ladderLength(beginWord, endWord, wordList) {
+  const wordSet = new Set(wordList);
+  if (!wordSet.has(endWord)) return 0;
+  
+  const queue = [[beginWord, 1]];
+  const visited = new Set([beginWord]);
+  
+  while (queue.length > 0) {
+    const [word, level] = queue.shift();
+    
+    if (word === endWord) return level;
+    
+    for (let i = 0; i < word.length; i++) {
+      for (let c = 97; c <= 122; c++) {
+        const newWord = word.slice(0, i) + String.fromCharCode(c) + word.slice(i + 1);
+        
+        if (wordSet.has(newWord) && !visited.has(newWord)) {
+          visited.add(newWord);
+          queue.push([newWord, level + 1]);
+        }
+      }
+    }
+  }
+  
+  return 0;
+}
+
+module.exports = ladderLength;`
+          },
+          {
+            language: 'typescript',
+            code: `function ladderLength(beginWord: string, endWord: string, wordList: string[]): number {
+  const wordSet = new Set(wordList);
+  if (!wordSet.has(endWord)) return 0;
+  
+  const queue: [string, number][] = [[beginWord, 1]];
+  const visited = new Set([beginWord]);
+  
+  while (queue.length > 0) {
+    const [word, level] = queue.shift()!;
+    
+    if (word === endWord) return level;
+    
+    for (let i = 0; i < word.length; i++) {
+      for (let c = 97; c <= 122; c++) {
+        const newWord = word.slice(0, i) + String.fromCharCode(c) + word.slice(i + 1);
+        
+        if (wordSet.has(newWord) && !visited.has(newWord)) {
+          visited.add(newWord);
+          queue.push([newWord, level + 1]);
+        }
+      }
+    }
+  }
+  
+  return 0;
+}
+
+export default ladderLength;`
+          },
+          {
+            language: 'python',
+            code: `def ladderLength(beginWord, endWord, wordList):
+    from collections import deque
+    
+    word_set = set(wordList)
+    if endWord not in word_set:
+        return 0
+    
+    queue = deque([(beginWord, 1)])
+    visited = {beginWord}
+    
+    while queue:
+        word, level = queue.popleft()
+        
+        if word == endWord:
+            return level
+        
+        for i in range(len(word)):
+            for c in 'abcdefghijklmnopqrstuvwxyz':
+                new_word = word[:i] + c + word[i+1:]
+                
+                if new_word in word_set and new_word not in visited:
+                    visited.add(new_word)
+                    queue.append((new_word, level + 1))
+    
+    return 0`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        Set<String> wordSet = new HashSet<>(wordList);
+        if (!wordSet.contains(endWord)) return 0;
+        
+        Queue<Pair<String, Integer>> queue = new LinkedList<>();
+        queue.offer(new Pair<>(beginWord, 1));
+        Set<String> visited = new HashSet<>();
+        visited.add(beginWord);
+        
+        while (!queue.isEmpty()) {
+            Pair<String, Integer> pair = queue.poll();
+            String word = pair.getKey();
+            int level = pair.getValue();
+            
+            if (word.equals(endWord)) return level;
+            
+            char[] chars = word.toCharArray();
+            for (int i = 0; i < chars.length; i++) {
+                char original = chars[i];
+                for (char c = 'a'; c <= 'z'; c++) {
+                    chars[i] = c;
+                    String newWord = new String(chars);
+                    
+                    if (wordSet.contains(newWord) && !visited.contains(newWord)) {
+                        visited.add(newWord);
+                        queue.offer(new Pair<>(newWord, level + 1));
+                    }
+                }
+                chars[i] = original;
+            }
+        }
+        
+        return 0;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <string>
+#include <unordered_set>
+#include <queue>
+using namespace std;
+
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_set<string> wordSet(wordList.begin(), wordList.end());
+        if (wordSet.find(endWord) == wordSet.end()) return 0;
+        
+        queue<pair<string, int>> q;
+        q.push({beginWord, 1});
+        unordered_set<string> visited;
+        visited.insert(beginWord);
+        
+        while (!q.empty()) {
+            auto [word, level] = q.front();
+            q.pop();
+            
+            if (word == endWord) return level;
+            
+            for (int i = 0; i < word.length(); i++) {
+                char original = word[i];
+                for (char c = 'a'; c <= 'z'; c++) {
+                    word[i] = c;
+                    
+                    if (wordSet.count(word) && !visited.count(word)) {
+                        visited.insert(word);
+                        q.push({word, level + 1});
+                    }
+                }
+                word[i] = original;
+            }
+        }
+        
+        return 0;
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(M² × N)',
+          space: 'O(M × N)',
+          explanation: 'M is word length, N is number of words. For each word, we try M positions × 26 letters. Queue and visited set can hold all words.'
+        },
+        pros: ['Finds shortest path', 'BFS guarantees optimal solution', 'Clear graph approach'],
+        cons: ['Can be slow for large dictionaries', 'Uses extra space for visited set']
+      }
+    ],
+    solved: false
+  },
+  {
+    id: 'word-search',
+    slug: 'word-search',
+    title: 'Word Search',
+    difficulty: 'medium',
+    topics: ['Array', 'Backtracking'],
+    prompt: 'Given an m x n grid of characters board and a string word, return true if word exists in the grid.',
+    constraints: ['m == board.length', 'n = board[i].length'],
+    examples: [{ input: 'board = [["A","B","C"],["S","F","C"],["A","D","E"]], word = "ABCCED"', output: 'true' }],
+    hints: ['Backtrack from each cell', 'Mark visited, unmark on backtrack'],
+    starterCode: [
+      { language: 'javascript', functionName: 'exist', code: 'function exist(board, word) {\n  return false;\n}\n\nmodule.exports = exist;' },
+      { language: 'typescript', functionName: 'exist', code: 'function exist(board: string[][], word: string): boolean {\n  return false;\n}\n\nexport default exist;' },
+      { language: 'python', functionName: 'exist', code: 'def exist(board, word):\n    return False' },
+      { language: 'java', functionName: 'exist', code: 'class Solution {\n    public boolean exist(char[][] board, String word) {\n        return false;\n    }\n}' },
+      { language: 'cpp', functionName: 'exist', code: '#include <vector>\n#include <string>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool exist(vector<vector<char>>& board, string word) {\n        return false;\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { board: [['A', 'B', 'C'], ['S', 'F', 'C'], ['A', 'D', 'E']], word: 'ABCCED' }, output: true }],
+    solutions: [
+      {
+        methodName: 'backtracking',
+        title: 'DFS Backtracking',
+        intuition: 'Try to build the word starting from each cell. Use DFS with backtracking to explore all paths.',
+        explanation: 'For each cell, if it matches the first character, start DFS. Mark cells as visited during search, unmark when backtracking.',
+        algorithm: [
+          'For each cell in board:',
+          '  - If cell matches first char of word, start DFS',
+          'DFS(row, col, index):',
+          '  - If index == word.length, found word, return true',
+          '  - If out of bounds or cell != word[index] or visited, return false',
+          '  - Mark cell as visited',
+          '  - Try all 4 directions',
+          '  - Unmark cell (backtrack)',
+          '  - Return result'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function exist(board, word) {
+  const rows = board.length;
+  const cols = board[0].length;
+  
+  function dfs(r, c, index) {
+    if (index === word.length) return true;
+    if (r < 0 || r >= rows || c < 0 || c >= cols || board[r][c] !== word[index]) {
+      return false;
+    }
+    
+    const temp = board[r][c];
+    board[r][c] = '#'; // Mark as visited
+    
+    const found = dfs(r + 1, c, index + 1) ||
+                  dfs(r - 1, c, index + 1) ||
+                  dfs(r, c + 1, index + 1) ||
+                  dfs(r, c - 1, index + 1);
+    
+    board[r][c] = temp; // Backtrack
+    return found;
+  }
+  
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (dfs(r, c, 0)) return true;
+    }
+  }
+  
+  return false;
+}
+
+module.exports = exist;`
+          },
+          {
+            language: 'typescript',
+            code: `function exist(board: string[][], word: string): boolean {
+  const rows = board.length;
+  const cols = board[0].length;
+  
+  function dfs(r: number, c: number, index: number): boolean {
+    if (index === word.length) return true;
+    if (r < 0 || r >= rows || c < 0 || c >= cols || board[r][c] !== word[index]) {
+      return false;
+    }
+    
+    const temp = board[r][c];
+    board[r][c] = '#';
+    
+    const found = dfs(r + 1, c, index + 1) ||
+                  dfs(r - 1, c, index + 1) ||
+                  dfs(r, c + 1, index + 1) ||
+                  dfs(r, c - 1, index + 1);
+    
+    board[r][c] = temp;
+    return found;
+  }
+  
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (dfs(r, c, 0)) return true;
+    }
+  }
+  
+  return false;
+}
+
+export default exist;`
+          },
+          {
+            language: 'python',
+            code: `def exist(board, word):
+    rows, cols = len(board), len(board[0])
+    
+    def dfs(r, c, index):
+        if index == len(word):
+            return True
+        if r < 0 or r >= rows or c < 0 or c >= cols or board[r][c] != word[index]:
+            return False
+        
+        temp = board[r][c]
+        board[r][c] = '#'
+        
+        found = (dfs(r + 1, c, index + 1) or
+                 dfs(r - 1, c, index + 1) or
+                 dfs(r, c + 1, index + 1) or
+                 dfs(r, c - 1, index + 1))
+        
+        board[r][c] = temp
+        return found
+    
+    for r in range(rows):
+        for c in range(cols):
+            if dfs(r, c, 0):
+                return True
+    
+    return False`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public boolean exist(char[][] board, String word) {
+        int rows = board.length;
+        int cols = board[0].length;
+        
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (dfs(board, word, r, c, 0)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    private boolean dfs(char[][] board, String word, int r, int c, int index) {
+        if (index == word.length()) return true;
+        if (r < 0 || r >= board.length || c < 0 || c >= board[0].length || 
+            board[r][c] != word.charAt(index)) {
+            return false;
+        }
+        
+        char temp = board[r][c];
+        board[r][c] = '#';
+        
+        boolean found = dfs(board, word, r + 1, c, index + 1) ||
+                        dfs(board, word, r - 1, c, index + 1) ||
+                        dfs(board, word, r, c + 1, index + 1) ||
+                        dfs(board, word, r, c - 1, index + 1);
+        
+        board[r][c] = temp;
+        return found;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <string>
+using namespace std;
+
+class Solution {
+public:
+    bool exist(vector<vector<char>>& board, string word) {
+        int rows = board.size();
+        int cols = board[0].size();
+        
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (dfs(board, word, r, c, 0)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+private:
+    bool dfs(vector<vector<char>>& board, string& word, int r, int c, int index) {
+        if (index == word.length()) return true;
+        if (r < 0 || r >= board.size() || c < 0 || c >= board[0].size() || 
+            board[r][c] != word[index]) {
+            return false;
+        }
+        
+        char temp = board[r][c];
+        board[r][c] = '#';
+        
+        bool found = dfs(board, word, r + 1, c, index + 1) ||
+                     dfs(board, word, r - 1, c, index + 1) ||
+                     dfs(board, word, r, c + 1, index + 1) ||
+                     dfs(board, word, r, c - 1, index + 1);
+        
+        board[r][c] = temp;
+        return found;
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(M × N × 4^L)',
+          space: 'O(L)',
+          explanation: 'M×N cells, each can start a search. For each cell, we explore 4 directions up to L (word length) deep. Recursion stack uses O(L) space.'
+        },
+        pros: ['Elegant backtracking solution', 'Modifies board in-place (no extra visited array)'],
+        cons: ['Exponential time complexity', 'Modifies input board']
+      }
+    ],
+    solved: false
+  },
+  {
+    id: 'find-minimum-in-rotated-sorted-array',
+    slug: 'find-minimum-in-rotated-sorted-array',
+    title: 'Find Minimum in Rotated Sorted Array',
+    difficulty: 'medium',
+    topics: ['Array', 'Binary Search'],
+    prompt: 'Suppose an array of length n sorted in ascending order is rotated. Find the minimum element.',
+    constraints: ['n == nums.length', '1 <= n <= 5000'],
+    examples: [{ input: 'nums = [3,4,5,1,2]', output: '1' }],
+    hints: ['Binary search', 'Compare mid with right'],
+    starterCode: [
+      { language: 'javascript', functionName: 'findMin', code: 'function findMin(nums) {\n  return 0;\n}\n\nmodule.exports = findMin;' },
+      { language: 'typescript', functionName: 'findMin', code: 'function findMin(nums: number[]): number {\n  return 0;\n}\n\nexport default findMin;' },
+      { language: 'python', functionName: 'findMin', code: 'def findMin(nums):\n    return 0' },
+      { language: 'java', functionName: 'findMin', code: 'class Solution {\n    public int findMin(int[] nums) {\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'findMin', code: '#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findMin(vector<int>& nums) {\n        return 0;\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { nums: [3, 4, 5, 1, 2] }, output: 1 }],
+    solutions: [
+      {
+        methodName: 'binary-search',
+        title: 'Binary Search',
+        intuition: 'Use binary search. If mid element is greater than right element, minimum is in right half. Otherwise, it\'s in left half.',
+        explanation: 'Compare mid with right boundary. If nums[mid] > nums[right], the minimum must be to the right of mid. Otherwise, it could be mid or to the left.',
+        algorithm: [
+          'Initialize left = 0, right = nums.length - 1',
+          'While left < right:',
+          '  - Calculate mid',
+          '  - If nums[mid] > nums[right], minimum is in right half: left = mid + 1',
+          '  - Else, minimum is in left half (including mid): right = mid',
+          'Return nums[left]'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function findMin(nums) {
+  let left = 0;
+  let right = nums.length - 1;
+  
+  while (left < right) {
+    const mid = Math.floor((left + right) / 2);
+    
+    if (nums[mid] > nums[right]) {
+      left = mid + 1;
+    } else {
+      right = mid;
+    }
+  }
+  
+  return nums[left];
+}
+
+module.exports = findMin;`
+          },
+          {
+            language: 'typescript',
+            code: `function findMin(nums: number[]): number {
+  let left = 0;
+  let right = nums.length - 1;
+  
+  while (left < right) {
+    const mid = Math.floor((left + right) / 2);
+    
+    if (nums[mid] > nums[right]) {
+      left = mid + 1;
+    } else {
+      right = mid;
+    }
+  }
+  
+  return nums[left];
+}
+
+export default findMin;`
+          },
+          {
+            language: 'python',
+            code: `def findMin(nums):
+    left, right = 0, len(nums) - 1
+    
+    while left < right:
+        mid = (left + right) // 2
+        
+        if nums[mid] > nums[right]:
+            left = mid + 1
+        else:
+            right = mid
+    
+    return nums[left]`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int findMin(int[] nums) {
+        int left = 0;
+        int right = nums.length - 1;
+        
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] > nums[right]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        
+        return nums[left];
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int left = 0;
+        int right = nums.size() - 1;
+        
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] > nums[right]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        
+        return nums[left];
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(log N)',
+          space: 'O(1)',
+          explanation: 'Binary search halves the search space each iteration. Only uses constant extra space.'
+        },
+        pros: ['Optimal logarithmic time', 'Simple and elegant', 'No extra space needed'],
+        cons: ['Requires understanding of binary search on rotated arrays']
+      }
+    ],
+    solved: false
+  },
   { id: 'median-of-two-sorted-arrays', slug: 'median-of-two-sorted-arrays', title: 'Median of Two Sorted Arrays', difficulty: 'hard', topics: ['Array', 'Binary Search'], prompt: 'Given two sorted arrays nums1 and nums2, return the median of the two sorted arrays.', constraints: ['nums1.length == m', 'nums2.length == n'], examples: [{ input: 'nums1 = [1,3], nums2 = [2]', output: '2.0' }], hints: ['Binary search on smaller array', 'Partition both arrays'], starterCode: [{ language: 'javascript', functionName: 'findMedianSortedArrays', code: 'function findMedianSortedArrays(nums1, nums2) {\n  return 0.0;\n}\n\nmodule.exports = findMedianSortedArrays;' }, { language: 'typescript', functionName: 'findMedianSortedArrays', code: 'function findMedianSortedArrays(nums1: number[], nums2: number[]): number {\n  return 0.0;\n}\n\nexport default findMedianSortedArrays;' }, { language: 'python', functionName: 'findMedianSortedArrays', code: 'def findMedianSortedArrays(nums1, nums2):\n    return 0.0' }], tests: [{ id: 's1', type: 'sample', input: { nums1: [1, 3], nums2: [2] }, output: 2.0 }], solution: 'Binary search to partition arrays equally.' },
   { id: 'longest-substring-without-repeating', slug: 'longest-substring-without-repeating', title: 'Longest Substring Without Repeating Characters', difficulty: 'medium', topics: ['String', 'Sliding Window'], prompt: 'Given a string s, find the length of the longest substring without repeating characters.', constraints: ['0 <= s.length <= 5 * 10^4'], examples: [{ input: 's = "abcabcbb"', output: '3' }], hints: ['Sliding window with HashSet', 'Track char positions'], starterCode: [{ language: 'javascript', functionName: 'lengthOfLongestSubstring', code: 'function lengthOfLongestSubstring(s) {\n  return 0;\n}\n\nmodule.exports = lengthOfLongestSubstring;' }, { language: 'typescript', functionName: 'lengthOfLongestSubstring', code: 'function lengthOfLongestSubstring(s: string): number {\n  return 0;\n}\n\nexport default lengthOfLongestSubstring;' }, { language: 'python', functionName: 'lengthOfLongestSubstring', code: 'def lengthOfLongestSubstring(s):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { s: 'abcabcbb' }, output: 3 }], solution: 'Sliding window: move left when duplicate found.' },
   { id: 'minimum-window-substring', slug: 'minimum-window-substring', title: 'Minimum Window Substring', difficulty: 'hard', topics: ['String', 'Sliding Window'], prompt: 'Given two strings s and t, return the minimum window substring of s such that every character in t is included in the window.', constraints: ['m == s.length', 'n == t.length'], examples: [{ input: 's = "ADOBECODEBANC", t = "ABC"', output: '"BANC"' }], hints: ['Sliding window with two pointers', 'Track char frequencies'], starterCode: [{ language: 'javascript', functionName: 'minWindow', code: 'function minWindow(s, t) {\n  return "";\n}\n\nmodule.exports = minWindow;' }, { language: 'typescript', functionName: 'minWindow', code: 'function minWindow(s: string, t: string): string {\n  return "";\n}\n\nexport default minWindow;' }, { language: 'python', functionName: 'minWindow', code: 'def minWindow(s, t):\n    return ""' }], tests: [{ id: 's1', type: 'sample', input: { s: 'ADOBECODEBANC', t: 'ABC' }, output: 'BANC' }], solution: 'Sliding window: expand right, contract left when valid.' },
   { id: 'sliding-window-maximum', slug: 'sliding-window-maximum', title: 'Sliding Window Maximum', difficulty: 'hard', topics: ['Array', 'Sliding Window', 'Heap'], prompt: 'Given an array nums and sliding window of size k, return the max sliding window.', constraints: ['1 <= nums.length <= 10^5'], examples: [{ input: 'nums = [1,3,-1,-3,5,3,6,7], k = 3', output: '[3,3,5,5,6,7]' }], hints: ['Use deque to track indices', 'Keep deque decreasing'], starterCode: [{ language: 'javascript', functionName: 'maxSlidingWindow', code: 'function maxSlidingWindow(nums, k) {\n  return [];\n}\n\nmodule.exports = maxSlidingWindow;' }, { language: 'typescript', functionName: 'maxSlidingWindow', code: 'function maxSlidingWindow(nums: number[], k: number): number[] {\n  return [];\n}\n\nexport default maxSlidingWindow;' }, { language: 'python', functionName: 'maxSlidingWindow', code: 'def maxSlidingWindow(nums, k):\n    return []' }], tests: [{ id: 's1', type: 'sample', input: { nums: [1, 3, -1, -3, 5, 3, 6, 7], k: 3 }, output: [3, 3, 5, 5, 6, 7] }], solution: 'Deque: maintain decreasing order, front is max.' },
-  { id: 'longest-palindromic-substring', slug: 'longest-palindromic-substring', title: 'Longest Palindromic Substring', difficulty: 'medium', topics: ['String', 'DP'], prompt: 'Given a string s, return the longest palindromic substring in s.', constraints: ['1 <= s.length <= 1000'], examples: [{ input: 's = "babad"', output: '"bab"' }], hints: ['Expand around center', 'Or DP: dp[i][j] = is s[i:j+1] palindrome'], starterCode: [{ language: 'javascript', functionName: 'longestPalindrome', code: 'function longestPalindrome(s) {\n  return "";\n}\n\nmodule.exports = longestPalindrome;' }, { language: 'typescript', functionName: 'longestPalindrome', code: 'function longestPalindrome(s: string): string {\n  return "";\n}\n\nexport default longestPalindrome;' }, { language: 'python', functionName: 'longestPalindrome', code: 'def longestPalindrome(s):\n    return ""' }], tests: [{ id: 's1', type: 'sample', input: { s: 'babad' }, output: 'bab' }], solution: 'Expand around each center (odd/even length).' },
-  { id: 'group-anagrams', slug: 'group-anagrams', title: 'Group Anagrams', difficulty: 'medium', topics: ['String', 'Hash Table'], prompt: 'Given an array of strings strs, group the anagrams together.', constraints: ['1 <= strs.length <= 10^4'], examples: [{ input: 'strs = ["eat","tea","tan","ate","nat","bat"]', output: '[["bat"],["nat","tan"],["ate","eat","tea"]]' }], hints: ['Use sorted string as key', 'Or char count as key'], starterCode: [{ language: 'javascript', functionName: 'groupAnagrams', code: 'function groupAnagrams(strs) {\n  return [];\n}\n\nmodule.exports = groupAnagrams;' }, { language: 'typescript', functionName: 'groupAnagrams', code: 'function groupAnagrams(strs: string[]): string[][] {\n  return [];\n}\n\nexport default groupAnagrams;' }, { language: 'python', functionName: 'groupAnagrams', code: 'def groupAnagrams(strs):\n    return []' }], tests: [{ id: 's1', type: 'sample', input: { strs: ['eat', 'tea', 'tan', 'ate', 'nat', 'bat'] }, output: [['bat'], ['nat', 'tan'], ['ate', 'eat', 'tea']] }], solution: 'HashMap with sorted string as key.' },
+  {
+    id: 'longest-palindromic-substring',
+    slug: 'longest-palindromic-substring',
+    title: 'Longest Palindromic Substring',
+    difficulty: 'medium',
+    topics: ['String', 'DP'],
+    prompt: 'Given a string s, return the longest palindromic substring in s.',
+    constraints: ['1 <= s.length <= 1000'],
+    examples: [{ input: 's = "babad"', output: '"bab"' }],
+    hints: ['Expand around center', 'Or DP: dp[i][j] = is s[i:j+1] palindrome'],
+    starterCode: [
+      { language: 'javascript', functionName: 'longestPalindrome', code: 'function longestPalindrome(s) {\n  return "";\n}\n\nmodule.exports = longestPalindrome;' },
+      { language: 'typescript', functionName: 'longestPalindrome', code: 'function longestPalindrome(s: string): string {\n  return "";\n}\n\nexport default longestPalindrome;' },
+      { language: 'python', functionName: 'longestPalindrome', code: 'def longestPalindrome(s):\n    return ""' },
+      { language: 'java', functionName: 'longestPalindrome', code: 'class Solution {\n    public String longestPalindrome(String s) {\n        return "";\n    }\n}' },
+      { language: 'cpp', functionName: 'longestPalindrome', code: '#include <string>\nusing namespace std;\n\nclass Solution {\npublic:\n    string longestPalindrome(string s) {\n        return "";\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { s: 'babad' }, output: 'bab' }],
+    solutions: [
+      {
+        methodName: 'expand-around-center',
+        title: 'Expand Around Center',
+        intuition: 'A palindrome mirrors around its center. For each possible center, expand outward while characters match.',
+        explanation: 'Try each position as a center (both odd and even length palindromes). Expand while characters match and track the longest.',
+        algorithm: [
+          'Initialize start = 0, maxLen = 0',
+          'For each index i in string:',
+          '  - Expand around i (odd length palindrome)',
+          '  - Expand around i and i+1 (even length palindrome)',
+          '  - Update start and maxLen if longer palindrome found',
+          'Return substring from start with length maxLen'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function longestPalindrome(s) {
+  if (s.length < 2) return s;
+  
+  let start = 0;
+  let maxLen = 0;
+  
+  function expandAroundCenter(left, right) {
+    while (left >= 0 && right < s.length && s[left] === s[right]) {
+      left--;
+      right++;
+    }
+    return right - left - 1;
+  }
+  
+  for (let i = 0; i < s.length; i++) {
+    const len1 = expandAroundCenter(i, i);
+    const len2 = expandAroundCenter(i, i + 1);
+    const len = Math.max(len1, len2);
+    
+    if (len > maxLen) {
+      maxLen = len;
+      start = i - Math.floor((len - 1) / 2);
+    }
+  }
+  
+  return s.substring(start, start + maxLen);
+}
+
+module.exports = longestPalindrome;`
+          },
+          {
+            language: 'typescript',
+            code: `function longestPalindrome(s: string): string {
+  if (s.length < 2) return s;
+  
+  let start = 0;
+  let maxLen = 0;
+  
+  function expandAroundCenter(left: number, right: number): number {
+    while (left >= 0 && right < s.length && s[left] === s[right]) {
+      left--;
+      right++;
+    }
+    return right - left - 1;
+  }
+  
+  for (let i = 0; i < s.length; i++) {
+    const len1 = expandAroundCenter(i, i);
+    const len2 = expandAroundCenter(i, i + 1);
+    const len = Math.max(len1, len2);
+    
+    if (len > maxLen) {
+      maxLen = len;
+      start = i - Math.floor((len - 1) / 2);
+    }
+  }
+  
+  return s.substring(start, start + maxLen);
+}
+
+export default longestPalindrome;`
+          },
+          {
+            language: 'python',
+            code: `def longestPalindrome(s):
+    if len(s) < 2:
+        return s
+    
+    start = 0
+    max_len = 0
+    
+    def expand_around_center(left, right):
+        while left >= 0 and right < len(s) and s[left] == s[right]:
+            left -= 1
+            right += 1
+        return right - left - 1
+    
+    for i in range(len(s)):
+        len1 = expand_around_center(i, i)
+        len2 = expand_around_center(i, i + 1)
+        length = max(len1, len2)
+        
+        if length > max_len:
+            max_len = length
+            start = i - (length - 1) // 2
+    
+    return s[start:start + max_len]`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public String longestPalindrome(String s) {
+        if (s.length() < 2) return s;
+        
+        int start = 0;
+        int maxLen = 0;
+        
+        for (int i = 0; i < s.length(); i++) {
+            int len1 = expandAroundCenter(s, i, i);
+            int len2 = expandAroundCenter(s, i, i + 1);
+            int len = Math.max(len1, len2);
+            
+            if (len > maxLen) {
+                maxLen = len;
+                start = i - (len - 1) / 2;
+            }
+        }
+        
+        return s.substring(start, start + maxLen);
+    }
+    
+    private int expandAroundCenter(String s, int left, int right) {
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+        }
+        return right - left - 1;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        if (s.length() < 2) return s;
+        
+        int start = 0;
+        int maxLen = 0;
+        
+        for (int i = 0; i < s.length(); i++) {
+            int len1 = expandAroundCenter(s, i, i);
+            int len2 = expandAroundCenter(s, i, i + 1);
+            int len = max(len1, len2);
+            
+            if (len > maxLen) {
+                maxLen = len;
+                start = i - (len - 1) / 2;
+            }
+        }
+        
+        return s.substr(start, maxLen);
+    }
+    
+private:
+    int expandAroundCenter(const string& s, int left, int right) {
+        while (left >= 0 && right < s.length() && s[left] == s[right]) {
+            left--;
+            right++;
+        }
+        return right - left - 1;
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(N²)',
+          space: 'O(1)',
+          explanation: 'For each of N positions, we expand which can take O(N) time in worst case. Only constant extra space used.'
+        },
+        pros: ['Simple and intuitive', 'O(1) space', 'Handles both odd and even length palindromes'],
+        cons: ['O(N²) time complexity', 'Not optimal for very long strings']
+      }
+    ],
+    solved: false
+  },
+  {
+    id: 'group-anagrams',
+    slug: 'group-anagrams',
+    title: 'Group Anagrams',
+    difficulty: 'medium',
+    topics: ['String', 'Hash Table'],
+    prompt: 'Given an array of strings strs, group the anagrams together.',
+    constraints: ['1 <= strs.length <= 10^4'],
+    examples: [{ input: 'strs = ["eat","tea","tan","ate","nat","bat"]', output: '[["bat"],["nat","tan"],["ate","eat","tea"]]' }],
+    hints: ['Use sorted string as key', 'Or char count as key'],
+    starterCode: [
+      { language: 'javascript', functionName: 'groupAnagrams', code: 'function groupAnagrams(strs) {\n  return [];\n}\n\nmodule.exports = groupAnagrams;' },
+      { language: 'typescript', functionName: 'groupAnagrams', code: 'function groupAnagrams(strs: string[]): string[][] {\n  return [];\n}\n\nexport default groupAnagrams;' },
+      { language: 'python', functionName: 'groupAnagrams', code: 'def groupAnagrams(strs):\n    return []' },
+      { language: 'java', functionName: 'groupAnagrams', code: 'class Solution {\n    public List<List<String>> groupAnagrams(String[] strs) {\n        return new ArrayList<>();\n    }\n}' },
+      { language: 'cpp', functionName: 'groupAnagrams', code: '#include <vector>\n#include <string>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<vector<string>> groupAnagrams(vector<string>& strs) {\n        return {};\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { strs: ['eat', 'tea', 'tan', 'ate', 'nat', 'bat'] }, output: [['bat'], ['nat', 'tan'], ['ate', 'eat', 'tea']] }],
+    solutions: [
+      {
+        methodName: 'sorted-key',
+        title: 'HashMap with Sorted Key',
+        intuition: 'Anagrams have the same characters. Sort each string and use it as a key to group anagrams together.',
+        explanation: 'Create a HashMap where the key is the sorted version of the string. All anagrams will have the same sorted key.',
+        algorithm: [
+          'Create a HashMap to store sorted string -> list of anagrams',
+          'For each string in strs:',
+          '  - Sort the string to get the key',
+          '  - Add the original string to the list for that key',
+          'Return all values from the HashMap'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function groupAnagrams(strs) {
+  const map = new Map();
+  
+  for (const str of strs) {
+    const key = str.split('').sort().join('');
+    if (!map.has(key)) {
+      map.set(key, []);
+    }
+    map.get(key).push(str);
+  }
+  
+  return Array.from(map.values());
+}
+
+module.exports = groupAnagrams;`
+          },
+          {
+            language: 'typescript',
+            code: `function groupAnagrams(strs: string[]): string[][] {
+  const map = new Map<string, string[]>();
+  
+  for (const str of strs) {
+    const key = str.split('').sort().join('');
+    if (!map.has(key)) {
+      map.set(key, []);
+    }
+    map.get(key)!.push(str);
+  }
+  
+  return Array.from(map.values());
+}
+
+export default groupAnagrams;`
+          },
+          {
+            language: 'python',
+            code: `def groupAnagrams(strs):
+    from collections import defaultdict
+    
+    anagrams = defaultdict(list)
+    
+    for s in strs:
+        key = ''.join(sorted(s))
+        anagrams[key].append(s)
+    
+    return list(anagrams.values())`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        
+        for (String str : strs) {
+            char[] chars = str.toCharArray();
+            Arrays.sort(chars);
+            String key = new String(chars);
+            
+            if (!map.containsKey(key)) {
+                map.put(key, new ArrayList<>());
+            }
+            map.get(key).add(str);
+        }
+        
+        return new ArrayList<>(map.values());
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <string>
+#include <unordered_map>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string, vector<string>> map;
+        
+        for (const string& str : strs) {
+            string key = str;
+            sort(key.begin(), key.end());
+            map[key].push_back(str);
+        }
+        
+        vector<vector<string>> result;
+        for (auto& pair : map) {
+            result.push_back(pair.second);
+        }
+        
+        return result;
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(N × K log K)',
+          space: 'O(N × K)',
+          explanation: 'N is number of strings, K is max length of a string. Sorting each string takes O(K log K). HashMap stores all strings.'
+        },
+        pros: ['Simple and intuitive', 'Works for all cases', 'Easy to implement'],
+        cons: ['Sorting each string adds overhead', 'Could be optimized with character counting']
+      }
+    ],
+    solved: false
+  },
   { id: 'valid-parentheses', slug: 'valid-parentheses', title: 'Valid Parentheses', difficulty: 'easy', topics: ['String', 'Stack'], prompt: 'Given a string s containing just the characters (),{},[], determine if the input string is valid.', constraints: ['1 <= s.length <= 10^4'], examples: [{ input: 's = "()"', output: 'true' }], hints: ['Use stack', 'Push opening, pop on closing'], starterCode: [{ language: 'javascript', functionName: 'isValid', code: 'function isValid(s) {\n  return false;\n}\n\nmodule.exports = isValid;' }, { language: 'typescript', functionName: 'isValid', code: 'function isValid(s: string): boolean {\n  return false;\n}\n\nexport default isValid;' }, { language: 'python', functionName: 'isValid', code: 'def isValid(s):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { s: '()' }, output: true }], solution: 'Stack: push opening brackets, pop and match closing.' },
   { id: 'regular-expression-matching', slug: 'regular-expression-matching', title: 'Regular Expression Matching', difficulty: 'hard', topics: ['String', 'DP'], prompt: 'Given an input string s and a pattern p, implement regular expression matching with support for . and *.', constraints: ['1 <= s.length <= 20'], examples: [{ input: 's = "aa", p = "a*"', output: 'true' }], hints: ['DP: dp[i][j] = does s[0:i] match p[0:j]'], starterCode: [{ language: 'javascript', functionName: 'isMatch', code: 'function isMatch(s, p) {\n  return false;\n}\n\nmodule.exports = isMatch;' }, { language: 'typescript', functionName: 'isMatch', code: 'function isMatch(s: string, p: string): boolean {\n  return false;\n}\n\nexport default isMatch;' }, { language: 'python', functionName: 'isMatch', code: 'def isMatch(s, p):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { s: 'aa', p: 'a*' }, output: true }], solution: 'DP: handle . and * cases.' },
   { id: 'wildcard-matching', slug: 'wildcard-matching', title: 'Wildcard Matching', difficulty: 'hard', topics: ['String', 'DP'], prompt: 'Given an input string s and a pattern p, implement wildcard pattern matching with support for ? and *.', constraints: ['0 <= s.length, p.length <= 2000'], examples: [{ input: 's = "aa", p = "*"', output: 'true' }], hints: ['DP or greedy with backtracking'], starterCode: [{ language: 'javascript', functionName: 'isMatch', code: 'function isMatch(s, p) {\n  return false;\n}\n\nmodule.exports = isMatch;' }, { language: 'typescript', functionName: 'isMatch', code: 'function isMatch(s: string, p: string): boolean {\n  return false;\n}\n\nexport default isMatch;' }, { language: 'python', functionName: 'isMatch', code: 'def isMatch(s, p):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { s: 'aa', p: '*' }, output: true }], solution: 'DP or greedy matching with * backtracking.' },
-  { id: 'longest-common-subsequence', slug: 'longest-common-subsequence', title: 'Longest Common Subsequence', difficulty: 'medium', topics: ['String', 'DP'], prompt: 'Given two strings text1 and text2, return the length of their longest common subsequence.', constraints: ['1 <= text1.length, text2.length <= 1000'], examples: [{ input: 'text1 = "abcde", text2 = "ace"', output: '3' }], hints: ['DP: dp[i][j] = LCS of text1[0:i] and text2[0:j]'], starterCode: [{ language: 'javascript', functionName: 'longestCommonSubsequence', code: 'function longestCommonSubsequence(text1, text2) {\n  return 0;\n}\n\nmodule.exports = longestCommonSubsequence;' }, { language: 'typescript', functionName: 'longestCommonSubsequence', code: 'function longestCommonSubsequence(text1: string, text2: string): number {\n  return 0;\n}\n\nexport default longestCommonSubsequence;' }, { language: 'python', functionName: 'longestCommonSubsequence', code: 'def longestCommonSubsequence(text1, text2):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { text1: 'abcde', text2: 'ace' }, output: 3 }], solution: 'DP: if chars match, dp[i][j]=1+dp[i-1][j-1], else max(dp[i-1][j], dp[i][j-1]).' },
-  { id: 'distinct-subsequences', slug: 'distinct-subsequences', title: 'Distinct Subsequences', difficulty: 'hard', topics: ['String', 'DP'], prompt: 'Given two strings s and t, return the number of distinct subsequences of s which equals t.', constraints: ['1 <= s.length, t.length <= 1000'], examples: [{ input: 's = "rabbbit", t = "rabbit"', output: '3' }], hints: ['DP: dp[i][j] = count of t[0:j] in s[0:i]'], starterCode: [{ language: 'javascript', functionName: 'numDistinct', code: 'function numDistinct(s, t) {\n  return 0;\n}\n\nmodule.exports = numDistinct;' }, { language: 'typescript', functionName: 'numDistinct', code: 'function numDistinct(s: string, t: string): number {\n  return 0;\n}\n\nexport default numDistinct;' }, { language: 'python', functionName: 'numDistinct', code: 'def numDistinct(s, t):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { s: 'rabbbit', t: 'rabbit' }, output: 3 }], solution: 'DP: if s[i]==t[j], dp[i][j]=dp[i-1][j-1]+dp[i-1][j], else dp[i-1][j].' },
-  { id: 'interleaving-string', slug: 'interleaving-string', title: 'Interleaving String', difficulty: 'medium', topics: ['String', 'DP'], prompt: 'Given strings s1, s2, and s3, find whether s3 is formed by an interleaving of s1 and s2.', constraints: ['0 <= s1.length, s2.length <= 100'], examples: [{ input: 's1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac"', output: 'true' }], hints: ['DP: dp[i][j] = can s3[0:i+j] be formed from s1[0:i] and s2[0:j]'], starterCode: [{ language: 'javascript', functionName: 'isInterleave', code: 'function isInterleave(s1, s2, s3) {\n  return false;\n}\n\nmodule.exports = isInterleave;' }, { language: 'typescript', functionName: 'isInterleave', code: 'function isInterleave(s1: string, s2: string, s3: string): boolean {\n  return false;\n}\n\nexport default isInterleave;' }, { language: 'python', functionName: 'isInterleave', code: 'def isInterleave(s1, s2, s3):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { s1: 'aabcc', s2: 'dbbca', s3: 'aadbbcbcac' }, output: true }], solution: 'DP: check if s3[i+j-1] matches s1[i-1] or s2[j-1].' },
+  {
+    id: 'longest-common-subsequence',
+    slug: 'longest-common-subsequence',
+    title: 'Longest Common Subsequence',
+    difficulty: 'medium',
+    topics: ['String', 'DP'],
+    prompt: 'Given two strings text1 and text2, return the length of their longest common subsequence.',
+    constraints: ['1 <= text1.length, text2.length <= 1000'],
+    examples: [{ input: 'text1 = "abcde", text2 = "ace"', output: '3' }],
+    hints: ['DP: dp[i][j] = LCS of text1[0:i] and text2[0:j]'],
+    starterCode: [
+      { language: 'javascript', functionName: 'longestCommonSubsequence', code: 'function longestCommonSubsequence(text1, text2) {\n  return 0;\n}\n\nmodule.exports = longestCommonSubsequence;' },
+      { language: 'typescript', functionName: 'longestCommonSubsequence', code: 'function longestCommonSubsequence(text1: string, text2: string): number {\n  return 0;\n}\n\nexport default longestCommonSubsequence;' },
+      { language: 'python', functionName: 'longestCommonSubsequence', code: 'def longestCommonSubsequence(text1, text2):\n    return 0' },
+      { language: 'java', functionName: 'longestCommonSubsequence', code: 'class Solution {\n    public int longestCommonSubsequence(String text1, String text2) {\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'longestCommonSubsequence', code: '#include <string>\nusing namespace std;\n\nclass Solution {\npublic:\n    int longestCommonSubsequence(string text1, string text2) {\n        return 0;\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { text1: 'abcde', text2: 'ace' }, output: 3 }],
+    solutions: [
+      {
+        methodName: 'dp-2d',
+        title: '2D Dynamic Programming',
+        intuition: 'Build a 2D table where dp[i][j] represents the LCS length of text1[0..i-1] and text2[0..j-1].',
+        explanation: 'If characters match, add 1 to the diagonal value. Otherwise, take the maximum of top or left cell.',
+        algorithm: [
+          'Create 2D DP table of size (m+1) × (n+1)',
+          'Initialize first row and column to 0',
+          'For each i from 1 to m:',
+          '  For each j from 1 to n:',
+          '    - If text1[i-1] == text2[j-1]: dp[i][j] = 1 + dp[i-1][j-1]',
+          '    - Else: dp[i][j] = max(dp[i-1][j], dp[i][j-1])',
+          'Return dp[m][n]'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function longestCommonSubsequence(text1, text2) {
+  const m = text1.length;
+  const n = text2.length;
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (text1[i - 1] === text2[j - 1]) {
+        dp[i][j] = 1 + dp[i - 1][j - 1];
+      } else {
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+      }
+    }
+  }
+  
+  return dp[m][n];
+}
+
+module.exports = longestCommonSubsequence;`
+          },
+          {
+            language: 'typescript',
+            code: `function longestCommonSubsequence(text1: string, text2: string): number {
+  const m = text1.length;
+  const n = text2.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (text1[i - 1] === text2[j - 1]) {
+        dp[i][j] = 1 + dp[i - 1][j - 1];
+      } else {
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+      }
+    }
+  }
+  
+  return dp[m][n];
+}
+
+export default longestCommonSubsequence;`
+          },
+          {
+            language: 'python',
+            code: `def longestCommonSubsequence(text1, text2):
+    m, n = len(text1), len(text2)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if text1[i - 1] == text2[j - 1]:
+                dp[i][j] = 1 + dp[i - 1][j - 1]
+            else:
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+    
+    return dp[m][n]`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        int m = text1.length();
+        int n = text2.length();
+        int[][] dp = new int[m + 1][n + 1];
+        
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (text1.charAt(i - 1) == text2.charAt(j - 1)) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        
+        return dp[m][n];
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    int longestCommonSubsequence(string text1, string text2) {
+        int m = text1.length();
+        int n = text2.length();
+        vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+        
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (text1[i - 1] == text2[j - 1]) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        
+        return dp[m][n];
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(M × N)',
+          space: 'O(M × N)',
+          explanation: 'We fill a 2D table of size M×N. Each cell takes constant time to compute. Space can be optimized to O(min(M,N)) using rolling arrays.'
+        },
+        pros: ['Classic DP solution', 'Easy to understand', 'Can be optimized for space'],
+        cons: ['Uses O(M×N) space in basic form', 'Not the most space-efficient']
+      }
+    ],
+    solved: false
+  },
+  {
+    id: 'distinct-subsequences',
+    slug: 'distinct-subsequences',
+    title: 'Distinct Subsequences',
+    difficulty: 'hard',
+    topics: ['String', 'DP'],
+    prompt: 'Given two strings s and t, return the number of distinct subsequences of s which equals t.',
+    constraints: ['1 <= s.length, t.length <= 1000'],
+    examples: [{ input: 's = "rabbbit", t = "rabbit"', output: '3' }],
+    hints: ['DP: dp[i][j] = count of t[0:j] in s[0:i]'],
+    starterCode: [
+      { language: 'javascript', functionName: 'numDistinct', code: 'function numDistinct(s, t) {\n  return 0;\n}\n\nmodule.exports = numDistinct;' },
+      { language: 'typescript', functionName: 'numDistinct', code: 'function numDistinct(s: string, t: string): number {\n  return 0;\n}\n\nexport default numDistinct;' },
+      { language: 'python', functionName: 'numDistinct', code: 'def numDistinct(s, t):\n    return 0' },
+      { language: 'java', functionName: 'numDistinct', code: 'class Solution {\n    public int numDistinct(String s, String t) {\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'numDistinct', code: '#include <string>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numDistinct(string s, string t) {\n        return 0;\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { s: 'rabbbit', t: 'rabbit' }, output: 3 }],
+    solutions: [
+      {
+        methodName: 'dp-2d',
+        title: '2D Dynamic Programming',
+        intuition: 'Use DP where dp[i][j] represents the number of ways to form t[0..j-1] using s[0..i-1].',
+        explanation: 'If characters match, we can either use or skip the current character in s. If they don\'t match, we skip the character in s.',
+        algorithm: [
+          'Create 2D DP table of size (m+1) × (n+1)',
+          'Initialize dp[i][0] = 1 (empty string can be formed in one way)',
+          'For each i from 1 to m:',
+          '  For each j from 1 to n:',
+          '    - dp[i][j] = dp[i-1][j] (skip s[i-1])',
+          '    - If s[i-1] == t[j-1]: dp[i][j] += dp[i-1][j-1]',
+          'Return dp[m][n]'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function numDistinct(s, t) {
+  const m = s.length, n = t.length;
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  
+  for (let i = 0; i <= m; i++) {
+    dp[i][0] = 1;
+  }
+  
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = dp[i - 1][j];
+      if (s[i - 1] === t[j - 1]) {
+        dp[i][j] += dp[i - 1][j - 1];
+      }
+    }
+  }
+  
+  return dp[m][n];
+}
+
+module.exports = numDistinct;`
+          },
+          {
+            language: 'typescript',
+            code: `function numDistinct(s: string, t: string): number {
+  const m = s.length, n = t.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  
+  for (let i = 0; i <= m; i++) {
+    dp[i][0] = 1;
+  }
+  
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = dp[i - 1][j];
+      if (s[i - 1] === t[j - 1]) {
+        dp[i][j] += dp[i - 1][j - 1];
+      }
+    }
+  }
+  
+  return dp[m][n];
+}
+
+export default numDistinct;`
+          },
+          {
+            language: 'python',
+            code: `def numDistinct(s, t):
+    m, n = len(s), len(t)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    
+    for i in range(m + 1):
+        dp[i][0] = 1
+    
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            dp[i][j] = dp[i - 1][j]
+            if s[i - 1] == t[j - 1]:
+                dp[i][j] += dp[i - 1][j - 1]
+    
+    return dp[m][n]`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int numDistinct(String s, String t) {
+        int m = s.length(), n = t.length();
+        long[][] dp = new long[m + 1][n + 1];
+        
+        for (int i = 0; i <= m; i++) {
+            dp[i][0] = 1;
+        }
+        
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                dp[i][j] = dp[i - 1][j];
+                if (s.charAt(i - 1) == t.charAt(j - 1)) {
+                    dp[i][j] += dp[i - 1][j - 1];
+                }
+            }
+        }
+        
+        return (int) dp[m][n];
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int numDistinct(string s, string t) {
+        int m = s.length(), n = t.length();
+        vector<vector<long long>> dp(m + 1, vector<long long>(n + 1, 0));
+        
+        for (int i = 0; i <= m; i++) {
+            dp[i][0] = 1;
+        }
+        
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                dp[i][j] = dp[i - 1][j];
+                if (s[i - 1] == t[j - 1]) {
+                    dp[i][j] += dp[i - 1][j - 1];
+                }
+            }
+        }
+        
+        return dp[m][n];
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(M × N)',
+          space: 'O(M × N)',
+          explanation: 'We fill a 2D table of size M×N. Space can be optimized to O(N) using rolling array.'
+        },
+        pros: ['Classic DP solution', 'Handles all subsequence counting', 'Can be space-optimized'],
+        cons: ['O(M×N) space in basic form', 'Can overflow for large counts']
+      }
+    ],
+    solved: false
+  },
+  {
+    id: 'interleaving-string',
+    slug: 'interleaving-string',
+    title: 'Interleaving String',
+    difficulty: 'medium',
+    topics: ['String', 'DP'],
+    prompt: 'Given strings s1, s2, and s3, find whether s3 is formed by an interleaving of s1 and s2.',
+    constraints: ['0 <= s1.length, s2.length <= 100'],
+    examples: [{ input: 's1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac"', output: 'true' }],
+    hints: ['DP: dp[i][j] = can s3[0:i+j] be formed from s1[0:i] and s2[0:j]'],
+    starterCode: [
+      { language: 'javascript', functionName: 'isInterleave', code: 'function isInterleave(s1, s2, s3) {\n  return false;\n}\n\nmodule.exports = isInterleave;' },
+      { language: 'typescript', functionName: 'isInterleave', code: 'function isInterleave(s1: string, s2: string, s3: string): boolean {\n  return false;\n}\n\nexport default isInterleave;' },
+      { language: 'python', functionName: 'isInterleave', code: 'def isInterleave(s1, s2, s3):\n    return False' },
+      { language: 'java', functionName: 'isInterleave', code: 'class Solution {\n    public boolean isInterleave(String s1, String s2, String s3) {\n        return false;\n    }\n}' },
+      { language: 'cpp', functionName: 'isInterleave', code: '#include <string>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool isInterleave(string s1, string s2, string s3) {\n        return false;\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { s1: 'aabcc', s2: 'dbbca', s3: 'aadbbcbcac' }, output: true }],
+    solutions: [
+      {
+        methodName: 'dp-2d',
+        title: '2D Dynamic Programming',
+        intuition: 'Use DP where dp[i][j] represents whether s3[0:i+j] can be formed by interleaving s1[0:i] and s2[0:j].',
+        explanation: 'Check if current character in s3 matches s1[i-1] or s2[j-1], and if previous state was valid.',
+        algorithm: [
+          'If lengths don\'t match, return false',
+          'Create 2D DP table of size (m+1) × (n+1)',
+          'Initialize dp[0][0] = true',
+          'Fill first row and column',
+          'For each i, j:',
+          '  - If s1[i-1] == s3[i+j-1] and dp[i-1][j]: dp[i][j] = true',
+          '  - If s2[j-1] == s3[i+j-1] and dp[i][j-1]: dp[i][j] = true',
+          'Return dp[m][n]'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function isInterleave(s1, s2, s3) {
+  const m = s1.length, n = s2.length;
+  if (m + n !== s3.length) return false;
+  
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(false));
+  dp[0][0] = true;
+  
+  for (let i = 1; i <= m; i++) {
+    dp[i][0] = dp[i - 1][0] && s1[i - 1] === s3[i - 1];
+  }
+  
+  for (let j = 1; j <= n; j++) {
+    dp[0][j] = dp[0][j - 1] && s2[j - 1] === s3[j - 1];
+  }
+  
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = (dp[i - 1][j] && s1[i - 1] === s3[i + j - 1]) ||
+                 (dp[i][j - 1] && s2[j - 1] === s3[i + j - 1]);
+    }
+  }
+  
+  return dp[m][n];
+}
+
+module.exports = isInterleave;`
+          },
+          {
+            language: 'typescript',
+            code: `function isInterleave(s1: string, s2: string, s3: string): boolean {
+  const m = s1.length, n = s2.length;
+  if (m + n !== s3.length) return false;
+  
+  const dp: boolean[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(false));
+  dp[0][0] = true;
+  
+  for (let i = 1; i <= m; i++) {
+    dp[i][0] = dp[i - 1][0] && s1[i - 1] === s3[i - 1];
+  }
+  
+  for (let j = 1; j <= n; j++) {
+    dp[0][j] = dp[0][j - 1] && s2[j - 1] === s3[j - 1];
+  }
+  
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = (dp[i - 1][j] && s1[i - 1] === s3[i + j - 1]) ||
+                 (dp[i][j - 1] && s2[j - 1] === s3[i + j - 1]);
+    }
+  }
+  
+  return dp[m][n];
+}
+
+export default isInterleave;`
+          },
+          {
+            language: 'python',
+            code: `def isInterleave(s1, s2, s3):
+    m, n = len(s1), len(s2)
+    if m + n != len(s3):
+        return False
+    
+    dp = [[False] * (n + 1) for _ in range(m + 1)]
+    dp[0][0] = True
+    
+    for i in range(1, m + 1):
+        dp[i][0] = dp[i - 1][0] and s1[i - 1] == s3[i - 1]
+    
+    for j in range(1, n + 1):
+        dp[0][j] = dp[0][j - 1] and s2[j - 1] == s3[j - 1]
+    
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            dp[i][j] = (dp[i - 1][j] and s1[i - 1] == s3[i + j - 1]) or \\
+                       (dp[i][j - 1] and s2[j - 1] == s3[i + j - 1])
+    
+    return dp[m][n]`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public boolean isInterleave(String s1, String s2, String s3) {
+        int m = s1.length(), n = s2.length();
+        if (m + n != s3.length()) return false;
+        
+        boolean[][] dp = new boolean[m + 1][n + 1];
+        dp[0][0] = true;
+        
+        for (int i = 1; i <= m; i++) {
+            dp[i][0] = dp[i - 1][0] && s1.charAt(i - 1) == s3.charAt(i - 1);
+        }
+        
+        for (int j = 1; j <= n; j++) {
+            dp[0][j] = dp[0][j - 1] && s2.charAt(j - 1) == s3.charAt(j - 1);
+        }
+        
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                dp[i][j] = (dp[i - 1][j] && s1.charAt(i - 1) == s3.charAt(i + j - 1)) ||
+                           (dp[i][j - 1] && s2.charAt(j - 1) == s3.charAt(i + j - 1));
+            }
+        }
+        
+        return dp[m][n];
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <string>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        int m = s1.length(), n = s2.length();
+        if (m + n != s3.length()) return false;
+        
+        vector<vector<bool>> dp(m + 1, vector<bool>(n + 1, false));
+        dp[0][0] = true;
+        
+        for (int i = 1; i <= m; i++) {
+            dp[i][0] = dp[i - 1][0] && s1[i - 1] == s3[i - 1];
+        }
+        
+        for (int j = 1; j <= n; j++) {
+            dp[0][j] = dp[0][j - 1] && s2[j - 1] == s3[j - 1];
+        }
+        
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                dp[i][j] = (dp[i - 1][j] && s1[i - 1] == s3[i + j - 1]) ||
+                           (dp[i][j - 1] && s2[j - 1] == s3[i + j - 1]);
+            }
+        }
+        
+        return dp[m][n];
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(M × N)',
+          space: 'O(M × N)',
+          explanation: 'We fill a 2D table of size M×N. Space can be optimized to O(N) using rolling array.'
+        },
+        pros: ['Clear DP solution', 'Handles all interleaving cases', 'Can be space-optimized'],
+        cons: ['O(M×N) space in basic form', 'Requires understanding of 2D DP']
+      }
+    ],
+    solved: false
+  },
   { id: 'scramble-string', slug: 'scramble-string', title: 'Scramble String', difficulty: 'hard', topics: ['String', 'DP'], prompt: 'Given two strings s1 and s2 of the same length, return true if s2 is a scrambled string of s1.', constraints: ['s1.length == s2.length'], examples: [{ input: 's1 = "great", s2 = "rgeat"', output: 'true' }], hints: ['Recursion with memoization', 'Try all split points'], starterCode: [{ language: 'javascript', functionName: 'isScramble', code: 'function isScramble(s1, s2) {\n  return false;\n}\n\nmodule.exports = isScramble;' }, { language: 'typescript', functionName: 'isScramble', code: 'function isScramble(s1: string, s2: string): boolean {\n  return false;\n}\n\nexport default isScramble;' }, { language: 'python', functionName: 'isScramble', code: 'def isScramble(s1, s2):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { s1: 'great', s2: 'rgeat' }, output: true }], solution: 'Recursion: try all split points, check if scrambled.' },
-  { id: 'course-schedule-ii', slug: 'course-schedule-ii', title: 'Course Schedule II', difficulty: 'medium', topics: ['Graph', 'Topological Sort'], prompt: 'Return the ordering of courses you should take to finish all courses.', constraints: ['1 <= numCourses <= 2000'], examples: [{ input: 'numCourses = 2, prerequisites = [[1,0]]', output: '[0,1]' }], hints: ['Topological sort with DFS or Kahn'], starterCode: [{ language: 'javascript', functionName: 'findOrder', code: 'function findOrder(numCourses, prerequisites) {\n  return [];\n}\n\nmodule.exports = findOrder;' }, { language: 'typescript', functionName: 'findOrder', code: 'function findOrder(numCourses: number, prerequisites: number[][]): number[] {\n  return [];\n}\n\nexport default findOrder;' }, { language: 'python', functionName: 'findOrder', code: 'def findOrder(numCourses, prerequisites):\n    return []' }], tests: [{ id: 's1', type: 'sample', input: { numCourses: 2, prerequisites: [[1, 0]] }, output: [0, 1] }], solution: 'Topological sort: return order if no cycle.' },
+  {
+    id: 'course-schedule-ii',
+    slug: 'course-schedule-ii',
+    title: 'Course Schedule II',
+    difficulty: 'medium',
+    topics: ['Graph', 'Topological Sort'],
+    prompt: 'Return the ordering of courses you should take to finish all courses.',
+    constraints: ['1 <= numCourses <= 2000'],
+    examples: [{ input: 'numCourses = 2, prerequisites = [[1,0]]', output: '[0,1]' }],
+    hints: ['Topological sort with DFS or Kahn'],
+    starterCode: [
+      { language: 'javascript', functionName: 'findOrder', code: 'function findOrder(numCourses, prerequisites) {\n  return [];\n}\n\nmodule.exports = findOrder;' },
+      { language: 'typescript', functionName: 'findOrder', code: 'function findOrder(numCourses: number, prerequisites: number[][]): number[] {\n  return [];\n}\n\nexport default findOrder;' },
+      { language: 'python', functionName: 'findOrder', code: 'def findOrder(numCourses, prerequisites):\n    return []' },
+      { language: 'java', functionName: 'findOrder', code: 'class Solution {\n    public int[] findOrder(int numCourses, int[][] prerequisites) {\n        return new int[]{};\n    }\n}' },
+      { language: 'cpp', functionName: 'findOrder', code: '#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {\n        return {};\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { numCourses: 2, prerequisites: [[1, 0]] }, output: [0, 1] }],
+    solutions: [
+      {
+        methodName: 'dfs-topological',
+        title: 'DFS Topological Sort',
+        intuition: 'Use DFS to detect cycles and build topological order. Add courses to result in post-order (after visiting all dependencies).',
+        explanation: 'Similar to Course Schedule I, but also track the order. Use post-order DFS to add courses after all dependencies are processed.',
+        algorithm: [
+          'Build adjacency list from prerequisites',
+          'Create state array: 0=unvisited, 1=visiting, 2=visited',
+          'Create result array',
+          'For each course, run DFS if unvisited',
+          'DFS: mark as visiting, visit neighbors, mark as visited, add to result',
+          'If cycle detected, return empty array',
+          'Reverse result and return'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function findOrder(numCourses, prerequisites) {
+  const graph = Array.from({ length: numCourses }, () => []);
+  for (const [course, prereq] of prerequisites) {
+    graph[prereq].push(course);
+  }
+  
+  const state = new Array(numCourses).fill(0);
+  const result = [];
+  
+  function dfs(course) {
+    if (state[course] === 1) return false; // Cycle
+    if (state[course] === 2) return true;  // Already visited
+    
+    state[course] = 1;
+    for (const next of graph[course]) {
+      if (!dfs(next)) return false;
+    }
+    state[course] = 2;
+    result.push(course);
+    return true;
+  }
+  
+  for (let i = 0; i < numCourses; i++) {
+    if (state[i] === 0 && !dfs(i)) {
+      return [];
+    }
+  }
+  
+  return result.reverse();
+}
+
+module.exports = findOrder;`
+          },
+          {
+            language: 'typescript',
+            code: `function findOrder(numCourses: number, prerequisites: number[][]): number[] {
+  const graph: number[][] = Array.from({ length: numCourses }, () => []);
+  for (const [course, prereq] of prerequisites) {
+    graph[prereq].push(course);
+  }
+  
+  const state: number[] = new Array(numCourses).fill(0);
+  const result: number[] = [];
+  
+  function dfs(course: number): boolean {
+    if (state[course] === 1) return false;
+    if (state[course] === 2) return true;
+    
+    state[course] = 1;
+    for (const next of graph[course]) {
+      if (!dfs(next)) return false;
+    }
+    state[course] = 2;
+    result.push(course);
+    return true;
+  }
+  
+  for (let i = 0; i < numCourses; i++) {
+    if (state[i] === 0 && !dfs(i)) {
+      return [];
+    }
+  }
+  
+  return result.reverse();
+}
+
+export default findOrder;`
+          },
+          {
+            language: 'python',
+            code: `def findOrder(numCourses, prerequisites):
+    graph = [[] for _ in range(numCourses)]
+    for course, prereq in prerequisites:
+        graph[prereq].append(course)
+    
+    state = [0] * numCourses
+    result = []
+    
+    def dfs(course):
+        if state[course] == 1:
+            return False
+        if state[course] == 2:
+            return True
+        
+        state[course] = 1
+        for next_course in graph[course]:
+            if not dfs(next_course):
+                return False
+        state[course] = 2
+        result.append(course)
+        return True
+    
+    for i in range(numCourses):
+        if state[i] == 0 and not dfs(i):
+            return []
+    
+    return result[::-1]`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<Integer>[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] prereq : prerequisites) {
+            graph[prereq[1]].add(prereq[0]);
+        }
+        
+        int[] state = new int[numCourses];
+        List<Integer> result = new ArrayList<>();
+        
+        for (int i = 0; i < numCourses; i++) {
+            if (state[i] == 0 && !dfs(i, graph, state, result)) {
+                return new int[]{};
+            }
+        }
+        
+        Collections.reverse(result);
+        return result.stream().mapToInt(i -> i).toArray();
+    }
+    
+    private boolean dfs(int course, List<Integer>[] graph, int[] state, List<Integer> result) {
+        if (state[course] == 1) return false;
+        if (state[course] == 2) return true;
+        
+        state[course] = 1;
+        for (int next : graph[course]) {
+            if (!dfs(next, graph, state, result)) return false;
+        }
+        state[course] = 2;
+        result.add(course);
+        return true;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> graph(numCourses);
+        for (auto& prereq : prerequisites) {
+            graph[prereq[1]].push_back(prereq[0]);
+        }
+        
+        vector<int> state(numCourses, 0);
+        vector<int> result;
+        
+        for (int i = 0; i < numCourses; i++) {
+            if (state[i] == 0 && !dfs(i, graph, state, result)) {
+                return {};
+            }
+        }
+        
+        reverse(result.begin(), result.end());
+        return result;
+    }
+    
+private:
+    bool dfs(int course, vector<vector<int>>& graph, vector<int>& state, vector<int>& result) {
+        if (state[course] == 1) return false;
+        if (state[course] == 2) return true;
+        
+        state[course] = 1;
+        for (int next : graph[course]) {
+            if (!dfs(next, graph, state, result)) return false;
+        }
+        state[course] = 2;
+        result.push_back(course);
+        return true;
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(V + E)',
+          space: 'O(V + E)',
+          explanation: 'V is number of courses, E is number of prerequisites. We visit each node once and traverse each edge once.'
+        },
+        pros: ['Returns topological order', 'Detects cycles', 'Optimal solution'],
+        cons: ['Requires understanding of topological sort', 'Recursive (uses call stack)']
+      }
+    ],
+    solved: false
+  },
   { id: 'word-search-ii', slug: 'word-search-ii', title: 'Word Search II', difficulty: 'hard', topics: ['Array', 'Backtracking', 'Trie'], prompt: 'Given an m x n board and a list of words, return all words on the board.', constraints: ['m == board.length'], examples: [{ input: 'board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]', output: '["eat","oath"]' }], hints: ['Build Trie from words', 'DFS with Trie'], starterCode: [{ language: 'javascript', functionName: 'findWords', code: 'function findWords(board, words) {\n  return [];\n}\n\nmodule.exports = findWords;' }, { language: 'typescript', functionName: 'findWords', code: 'function findWords(board: string[][], words: string[]): string[] {\n  return [];\n}\n\nexport default findWords;' }, { language: 'python', functionName: 'findWords', code: 'def findWords(board, words):\n    return []' }], tests: [{ id: 's1', type: 'sample', input: { board: [['o', 'a', 'a', 'n'], ['e', 't', 'a', 'e'], ['i', 'h', 'k', 'r'], ['i', 'f', 'l', 'v']], words: ['oath', 'pea', 'eat', 'rain'] }, output: ['eat', 'oath'] }], solution: 'Trie + DFS backtracking.' },
   { id: 'surrounded-regions', slug: 'surrounded-regions', title: 'Surrounded Regions', difficulty: 'medium', topics: ['Array', 'DFS', 'BFS'], prompt: 'Given an m x n matrix board containing X and O, capture all regions that are 4-directionally surrounded by X.', constraints: ['m == board.length'], examples: [{ input: 'board = [["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]', output: '[["X","X","X","X"],["X","X","X","X"],["X","X","X","X"],["X","O","X","X"]]' }], hints: ['DFS from border Os', 'Mark them as safe'], starterCode: [{ language: 'javascript', functionName: 'solve', code: 'function solve(board) {\n  // Modify board in-place\n}\n\nmodule.exports = solve;' }, { language: 'typescript', functionName: 'solve', code: 'function solve(board: string[][]): void {\n  // Modify board in-place\n}\n\nexport default solve;' }, { language: 'python', functionName: 'solve', code: 'def solve(board):\n    pass' }], tests: [{ id: 's1', type: 'sample', input: { board: [['X', 'X', 'X', 'X'], ['X', 'O', 'O', 'X'], ['X', 'X', 'O', 'X'], ['X', 'O', 'X', 'X']] }, output: [['X', 'X', 'X', 'X'], ['X', 'X', 'X', 'X'], ['X', 'X', 'X', 'X'], ['X', 'O', 'X', 'X']] }], solution: 'DFS from border Os, mark as safe, flip others.' },
   { id: 'pacific-atlantic-water-flow', slug: 'pacific-atlantic-water-flow', title: 'Pacific Atlantic Water Flow', difficulty: 'medium', topics: ['Array', 'DFS', 'BFS'], prompt: 'Given an m x n matrix of heights, return coordinates that can flow to both Pacific and Atlantic oceans.', constraints: ['m == heights.length'], examples: [{ input: 'heights = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]', output: '[[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]' }], hints: ['DFS from Pacific border', 'DFS from Atlantic border', 'Find intersection'], starterCode: [{ language: 'javascript', functionName: 'pacificAtlantic', code: 'function pacificAtlantic(heights) {\n  return [];\n}\n\nmodule.exports = pacificAtlantic;' }, { language: 'typescript', functionName: 'pacificAtlantic', code: 'function pacificAtlantic(heights: number[][]): number[][] {\n  return [];\n}\n\nexport default pacificAtlantic;' }, { language: 'python', functionName: 'pacificAtlantic', code: 'def pacificAtlantic(heights):\n    return []' }], tests: [{ id: 's1', type: 'sample', input: { heights: [[1, 2, 2, 3, 5], [3, 2, 3, 4, 4], [2, 4, 5, 3, 1], [6, 7, 1, 4, 5], [5, 1, 1, 2, 4]] }, output: [[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] }], solution: 'DFS from both oceans, find cells reachable from both.' },
-  { id: 'graph-valid-tree', slug: 'graph-valid-tree', title: 'Graph Valid Tree', difficulty: 'medium', topics: ['Graph', 'DFS', 'BFS'], prompt: 'Given n nodes labeled from 0 to n-1 and a list of undirected edges, check if these edges make up a valid tree.', constraints: ['1 <= n <= 2000'], examples: [{ input: 'n = 5, edges = [[0,1],[0,2],[0,3],[1,4]]', output: 'true' }], hints: ['Tree has n-1 edges', 'No cycles', 'All nodes connected'], starterCode: [{ language: 'javascript', functionName: 'validTree', code: 'function validTree(n, edges) {\n  return false;\n}\n\nmodule.exports = validTree;' }, { language: 'typescript', functionName: 'validTree', code: 'function validTree(n: number, edges: number[][]): boolean {\n  return false;\n}\n\nexport default validTree;' }, { language: 'python', functionName: 'validTree', code: 'def validTree(n, edges):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { n: 5, edges: [[0, 1], [0, 2], [0, 3], [1, 4]] }, output: true }], solution: 'Check: edges.length == n-1, no cycles (DFS), all connected.' },
-  { id: 'find-peak-element', slug: 'find-peak-element', title: 'Find Peak Element', difficulty: 'medium', topics: ['Array', 'Binary Search'], prompt: 'A peak element is an element that is strictly greater than its neighbors. Find a peak element and return its index.', constraints: ['1 <= nums.length <= 1000'], examples: [{ input: 'nums = [1,2,3,1]', output: '2' }], hints: ['Binary search', 'Move towards higher neighbor'], starterCode: [{ language: 'javascript', functionName: 'findPeakElement', code: 'function findPeakElement(nums) {\n  return 0;\n}\n\nmodule.exports = findPeakElement;' }, { language: 'typescript', functionName: 'findPeakElement', code: 'function findPeakElement(nums: number[]): number {\n  return 0;\n}\n\nexport default findPeakElement;' }, { language: 'python', functionName: 'findPeakElement', code: 'def findPeakElement(nums):\n    return 0' }], tests: [{ id: 's1', type: 'sample', input: { nums: [1, 2, 3, 1] }, output: 2 }], solution: 'Binary search: if nums[mid] < nums[mid+1], search right, else left.' },
-  { id: 'search-in-rotated-sorted-array-ii', slug: 'search-in-rotated-sorted-array-ii', title: 'Search in Rotated Sorted Array II', difficulty: 'medium', topics: ['Array', 'Binary Search'], prompt: 'Given the array nums after rotation and an integer target, return true if target is in nums, or false otherwise. Array may contain duplicates.', constraints: ['1 <= nums.length <= 5000'], examples: [{ input: 'nums = [2,5,6,0,0,1,2], target = 0', output: 'true' }], hints: ['Binary search with duplicate handling', 'Skip duplicates at boundaries'], starterCode: [{ language: 'javascript', functionName: 'search', code: 'function search(nums, target) {\n  return false;\n}\n\nmodule.exports = search;' }, { language: 'typescript', functionName: 'search', code: 'function search(nums: number[], target: number): boolean {\n  return false;\n}\n\nexport default search;' }, { language: 'python', functionName: 'search', code: 'def search(nums, target):\n    return False' }], tests: [{ id: 's1', type: 'sample', input: { nums: [2, 5, 6, 0, 0, 1, 2], target: 0 }, output: true }], solution: 'Binary search: handle duplicates by incrementing left when nums[left]==nums[mid].' }
+  {
+    id: 'graph-valid-tree',
+    slug: 'graph-valid-tree',
+    title: 'Graph Valid Tree',
+    difficulty: 'medium',
+    topics: ['Graph', 'DFS', 'BFS'],
+    prompt: 'Given n nodes labeled from 0 to n-1 and a list of undirected edges, check if these edges make up a valid tree.',
+    constraints: ['1 <= n <= 2000'],
+    examples: [{ input: 'n = 5, edges = [[0,1],[0,2],[0,3],[1,4]]', output: 'true' }],
+    hints: ['Tree has n-1 edges', 'No cycles', 'All nodes connected'],
+    starterCode: [
+      { language: 'javascript', functionName: 'validTree', code: 'function validTree(n, edges) {\n  return false;\n}\n\nmodule.exports = validTree;' },
+      { language: 'typescript', functionName: 'validTree', code: 'function validTree(n: number, edges: number[][]): boolean {\n  return false;\n}\n\nexport default validTree;' },
+      { language: 'python', functionName: 'validTree', code: 'def validTree(n, edges):\n    return False' },
+      { language: 'java', functionName: 'validTree', code: 'class Solution {\n    public boolean validTree(int n, int[][] edges) {\n        return false;\n    }\n}' },
+      { language: 'cpp', functionName: 'validTree', code: '#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool validTree(int n, vector<vector<int>>& edges) {\n        return false;\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { n: 5, edges: [[0, 1], [0, 2], [0, 3], [1, 4]] }, output: true }],
+    solutions: [
+      {
+        methodName: 'dfs',
+        title: 'DFS with Cycle Detection',
+        intuition: 'A valid tree must have exactly n-1 edges, no cycles, and all nodes connected. Use DFS to check connectivity and cycles.',
+        explanation: 'First check if edges.length == n-1. Then use DFS to verify all nodes are connected and there are no cycles.',
+        algorithm: [
+          'If edges.length != n-1, return false',
+          'Build adjacency list',
+          'Use DFS with visited set and parent tracking',
+          'If we visit a node that\'s already visited (and not parent), cycle exists',
+          'After DFS, check if all nodes were visited',
+          'Return true if connected and no cycles'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function validTree(n, edges) {
+  if (edges.length !== n - 1) return false;
+  
+  const graph = Array.from({ length: n }, () => []);
+  for (const [u, v] of edges) {
+    graph[u].push(v);
+    graph[v].push(u);
+  }
+  
+  const visited = new Set();
+  
+  function dfs(node, parent) {
+    visited.add(node);
+    for (const neighbor of graph[node]) {
+      if (neighbor === parent) continue;
+      if (visited.has(neighbor)) return false;
+      if (!dfs(neighbor, node)) return false;
+    }
+    return true;
+  }
+  
+  return dfs(0, -1) && visited.size === n;
+}
+
+module.exports = validTree;`
+          },
+          {
+            language: 'typescript',
+            code: `function validTree(n: number, edges: number[][]): boolean {
+  if (edges.length !== n - 1) return false;
+  
+  const graph: number[][] = Array.from({ length: n }, () => []);
+  for (const [u, v] of edges) {
+    graph[u].push(v);
+    graph[v].push(u);
+  }
+  
+  const visited = new Set<number>();
+  
+  function dfs(node: number, parent: number): boolean {
+    visited.add(node);
+    for (const neighbor of graph[node]) {
+      if (neighbor === parent) continue;
+      if (visited.has(neighbor)) return false;
+      if (!dfs(neighbor, node)) return false;
+    }
+    return true;
+  }
+  
+  return dfs(0, -1) && visited.size === n;
+}
+
+export default validTree;`
+          },
+          {
+            language: 'python',
+            code: `def validTree(n, edges):
+    if len(edges) != n - 1:
+        return False
+    
+    graph = [[] for _ in range(n)]
+    for u, v in edges:
+        graph[u].append(v)
+        graph[v].append(u)
+    
+    visited = set()
+    
+    def dfs(node, parent):
+        visited.add(node)
+        for neighbor in graph[node]:
+            if neighbor == parent:
+                continue
+            if neighbor in visited:
+                return False
+            if not dfs(neighbor, node):
+                return False
+        return True
+    
+    return dfs(0, -1) and len(visited) == n`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public boolean validTree(int n, int[][] edges) {
+        if (edges.length != n - 1) return false;
+        
+        List<Integer>[] graph = new ArrayList[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        for (int[] edge : edges) {
+            graph[edge[0]].add(edge[1]);
+            graph[edge[1]].add(edge[0]);
+        }
+        
+        Set<Integer> visited = new HashSet<>();
+        return dfs(0, -1, graph, visited) && visited.size() == n;
+    }
+    
+    private boolean dfs(int node, int parent, List<Integer>[] graph, Set<Integer> visited) {
+        visited.add(node);
+        for (int neighbor : graph[node]) {
+            if (neighbor == parent) continue;
+            if (visited.contains(neighbor)) return false;
+            if (!dfs(neighbor, node, graph, visited)) return false;
+        }
+        return true;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+#include <unordered_set>
+using namespace std;
+
+class Solution {
+public:
+    bool validTree(int n, vector<vector<int>>& edges) {
+        if (edges.size() != n - 1) return false;
+        
+        vector<vector<int>> graph(n);
+        for (auto& edge : edges) {
+            graph[edge[0]].push_back(edge[1]);
+            graph[edge[1]].push_back(edge[0]);
+        }
+        
+        unordered_set<int> visited;
+        return dfs(0, -1, graph, visited) && visited.size() == n;
+    }
+    
+private:
+    bool dfs(int node, int parent, vector<vector<int>>& graph, unordered_set<int>& visited) {
+        visited.insert(node);
+        for (int neighbor : graph[node]) {
+            if (neighbor == parent) continue;
+            if (visited.count(neighbor)) return false;
+            if (!dfs(neighbor, node, graph, visited)) return false;
+        }
+        return true;
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(V + E)',
+          space: 'O(V + E)',
+          explanation: 'V is number of nodes, E is number of edges. We visit each node once and traverse each edge once.'
+        },
+        pros: ['Checks all tree properties', 'Simple DFS approach', 'Optimal solution'],
+        cons: ['Requires understanding of graph traversal', 'Recursive (uses call stack)']
+      }
+    ],
+    solved: false
+  },
+  {
+    id: 'find-peak-element',
+    slug: 'find-peak-element',
+    title: 'Find Peak Element',
+    difficulty: 'medium',
+    topics: ['Array', 'Binary Search'],
+    prompt: 'A peak element is an element that is strictly greater than its neighbors. Find a peak element and return its index.',
+    constraints: ['1 <= nums.length <= 1000'],
+    examples: [{ input: 'nums = [1,2,3,1]', output: '2' }],
+    hints: ['Binary search', 'Move towards higher neighbor'],
+    starterCode: [
+      { language: 'javascript', functionName: 'findPeakElement', code: 'function findPeakElement(nums) {\n  return 0;\n}\n\nmodule.exports = findPeakElement;' },
+      { language: 'typescript', functionName: 'findPeakElement', code: 'function findPeakElement(nums: number[]): number {\n  return 0;\n}\n\nexport default findPeakElement;' },
+      { language: 'python', functionName: 'findPeakElement', code: 'def findPeakElement(nums):\n    return 0' },
+      { language: 'java', functionName: 'findPeakElement', code: 'class Solution {\n    public int findPeakElement(int[] nums) {\n        return 0;\n    }\n}' },
+      { language: 'cpp', functionName: 'findPeakElement', code: '#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findPeakElement(vector<int>& nums) {\n        return 0;\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { nums: [1, 2, 3, 1] }, output: 2 }],
+    solutions: [
+      {
+        methodName: 'binary-search',
+        title: 'Binary Search',
+        intuition: 'Use binary search. Always move towards the higher neighbor - this guarantees finding a peak.',
+        explanation: 'If nums[mid] < nums[mid+1], there must be a peak on the right. Otherwise, there must be a peak on the left (or mid itself).',
+        algorithm: [
+          'Initialize left = 0, right = nums.length - 1',
+          'While left < right:',
+          '  - Calculate mid',
+          '  - If nums[mid] < nums[mid + 1]: left = mid + 1',
+          '  - Else: right = mid',
+          'Return left'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function findPeakElement(nums) {
+  let left = 0;
+  let right = nums.length - 1;
+  
+  while (left < right) {
+    const mid = Math.floor((left + right) / 2);
+    
+    if (nums[mid] < nums[mid + 1]) {
+      left = mid + 1;
+    } else {
+      right = mid;
+    }
+  }
+  
+  return left;
+}
+
+module.exports = findPeakElement;`
+          },
+          {
+            language: 'typescript',
+            code: `function findPeakElement(nums: number[]): number {
+  let left = 0;
+  let right = nums.length - 1;
+  
+  while (left < right) {
+    const mid = Math.floor((left + right) / 2);
+    
+    if (nums[mid] < nums[mid + 1]) {
+      left = mid + 1;
+    } else {
+      right = mid;
+    }
+  }
+  
+  return left;
+}
+
+export default findPeakElement;`
+          },
+          {
+            language: 'python',
+            code: `def findPeakElement(nums):
+    left, right = 0, len(nums) - 1
+    
+    while left < right:
+        mid = (left + right) // 2
+        
+        if nums[mid] < nums[mid + 1]:
+            left = mid + 1
+        else:
+            right = mid
+    
+    return left`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public int findPeakElement(int[] nums) {
+        int left = 0;
+        int right = nums.length - 1;
+        
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] < nums[mid + 1]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        
+        return left;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int findPeakElement(vector<int>& nums) {
+        int left = 0;
+        int right = nums.size() - 1;
+        
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] < nums[mid + 1]) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        
+        return left;
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(log N)',
+          space: 'O(1)',
+          explanation: 'Binary search halves the search space each iteration. Only constant extra space used.'
+        },
+        pros: ['Optimal logarithmic time', 'Simple and elegant', 'No extra space needed'],
+        cons: ['Requires understanding of binary search', 'May not find the highest peak']
+      }
+    ],
+    solved: false
+  },
+  {
+    id: 'search-in-rotated-sorted-array-ii',
+    slug: 'search-in-rotated-sorted-array-ii',
+    title: 'Search in Rotated Sorted Array II',
+    difficulty: 'medium',
+    topics: ['Array', 'Binary Search'],
+    prompt: 'Given the array nums after rotation and an integer target, return true if target is in nums, or false otherwise. Array may contain duplicates.',
+    constraints: ['1 <= nums.length <= 5000'],
+    examples: [{ input: 'nums = [2,5,6,0,0,1,2], target = 0', output: 'true' }],
+    hints: ['Binary search with duplicate handling', 'Skip duplicates at boundaries'],
+    starterCode: [
+      { language: 'javascript', functionName: 'search', code: 'function search(nums, target) {\n  return false;\n}\n\nmodule.exports = search;' },
+      { language: 'typescript', functionName: 'search', code: 'function search(nums: number[], target: number): boolean {\n  return false;\n}\n\nexport default search;' },
+      { language: 'python', functionName: 'search', code: 'def search(nums, target):\n    return False' },
+      { language: 'java', functionName: 'search', code: 'class Solution {\n    public boolean search(int[] nums, int target) {\n        return false;\n    }\n}' },
+      { language: 'cpp', functionName: 'search', code: '#include <vector>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool search(vector<int>& nums, int target) {\n        return false;\n    }\n};' }
+    ],
+    tests: [{ id: 's1', type: 'sample', input: { nums: [2, 5, 6, 0, 0, 1, 2], target: 0 }, output: true }],
+    solutions: [
+      {
+        methodName: 'binary-search-duplicates',
+        title: 'Binary Search with Duplicate Handling',
+        intuition: 'Similar to regular rotated array search, but handle duplicates by skipping them when nums[left] == nums[mid] == nums[right].',
+        explanation: 'When we can\'t determine which half is sorted due to duplicates, increment left and decrement right to skip duplicates.',
+        algorithm: [
+          'Initialize left = 0, right = nums.length - 1',
+          'While left <= right:',
+          '  - If nums[mid] == target, return true',
+          '  - If nums[left] == nums[mid] == nums[right]: left++, right--',
+          '  - Else if left half sorted: check if target in range',
+          '  - Else right half sorted: check if target in range',
+          'Return false'
+        ],
+        code: [
+          {
+            language: 'javascript',
+            code: `function search(nums, target) {
+  let left = 0;
+  let right = nums.length - 1;
+  
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    
+    if (nums[mid] === target) return true;
+    
+    if (nums[left] === nums[mid] && nums[mid] === nums[right]) {
+      left++;
+      right--;
+    } else if (nums[left] <= nums[mid]) {
+      if (nums[left] <= target && target < nums[mid]) {
+        right = mid - 1;
+      } else {
+        left = mid + 1;
+      }
+    } else {
+      if (nums[mid] < target && target <= nums[right]) {
+        left = mid + 1;
+      } else {
+        right = mid - 1;
+      }
+    }
+  }
+  
+  return false;
+}
+
+module.exports = search;`
+          },
+          {
+            language: 'typescript',
+            code: `function search(nums: number[], target: number): boolean {
+  let left = 0;
+  let right = nums.length - 1;
+  
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    
+    if (nums[mid] === target) return true;
+    
+    if (nums[left] === nums[mid] && nums[mid] === nums[right]) {
+      left++;
+      right--;
+    } else if (nums[left] <= nums[mid]) {
+      if (nums[left] <= target && target < nums[mid]) {
+        right = mid - 1;
+      } else {
+        left = mid + 1;
+      }
+    } else {
+      if (nums[mid] < target && target <= nums[right]) {
+        left = mid + 1;
+      } else {
+        right = mid - 1;
+      }
+    }
+  }
+  
+  return false;
+}
+
+export default search;`
+          },
+          {
+            language: 'python',
+            code: `def search(nums, target):
+    left, right = 0, len(nums) - 1
+    
+    while left <= right:
+        mid = (left + right) // 2
+        
+        if nums[mid] == target:
+            return True
+        
+        if nums[left] == nums[mid] == nums[right]:
+            left += 1
+            right -= 1
+        elif nums[left] <= nums[mid]:
+            if nums[left] <= target < nums[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        else:
+            if nums[mid] < target <= nums[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
+    
+    return False`
+          },
+          {
+            language: 'java',
+            code: `class Solution {
+    public boolean search(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] == target) return true;
+            
+            if (nums[left] == nums[mid] && nums[mid] == nums[right]) {
+                left++;
+                right--;
+            } else if (nums[left] <= nums[mid]) {
+                if (nums[left] <= target && target < nums[mid]) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            } else {
+                if (nums[mid] < target && target <= nums[right]) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+        }
+        
+        return false;
+    }
+}`
+          },
+          {
+            language: 'cpp',
+            code: `#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    bool search(vector<int>& nums, int target) {
+        int left = 0;
+        int right = nums.size() - 1;
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] == target) return true;
+            
+            if (nums[left] == nums[mid] && nums[mid] == nums[right]) {
+                left++;
+                right--;
+            } else if (nums[left] <= nums[mid]) {
+                if (nums[left] <= target && target < nums[mid]) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            } else {
+                if (nums[mid] < target && target <= nums[right]) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+        }
+        
+        return false;
+    }
+};`
+          }
+        ],
+        complexity: {
+          time: 'O(log N) average, O(N) worst case',
+          space: 'O(1)',
+          explanation: 'Binary search is O(log N) on average. Worst case O(N) when all elements are duplicates.'
+        },
+        pros: ['Handles duplicates correctly', 'O(1) space', 'Efficient on average'],
+        cons: ['Worst case O(N) time', 'More complex than standard binary search']
+      }
+    ],
+    solved: false
+  }
 ];
 
 export const practiceProblems = [...baseProblems, ...mysqlCodingProblems];
