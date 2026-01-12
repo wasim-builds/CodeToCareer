@@ -44,7 +44,7 @@ export default function DailyChallengePage() {
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600 dark:text-gray-400">Loading today's challenge...</p>
+                    <p className="text-gray-600 dark:text-gray-400">Loading today&apos;s challenge...</p>
                 </div>
             </div>
         );
@@ -60,7 +60,7 @@ export default function DailyChallengePage() {
                         Daily Challenge
                     </h1>
                     <p className="text-gray-600 dark:text-gray-400">
-                        Complete today's challenge to earn bonus XP and climb the leaderboard!
+                        Complete today&apos;s challenge to earn bonus XP and climb the leaderboard!
                     </p>
                 </div>
 
@@ -98,8 +98,8 @@ export default function DailyChallengePage() {
                             <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg p-6 text-white mb-4">
                                 <div className="flex items-center justify-between mb-4">
                                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${challenge.difficulty === 'easy' ? 'bg-green-400/30' :
-                                            challenge.difficulty === 'medium' ? 'bg-yellow-400/30' :
-                                                'bg-red-400/30'
+                                        challenge.difficulty === 'medium' ? 'bg-yellow-400/30' :
+                                            'bg-red-400/30'
                                         }`}>
                                         {challenge.difficulty.charAt(0).toUpperCase() + challenge.difficulty.slice(1)}
                                     </span>
@@ -140,7 +140,7 @@ export default function DailyChallengePage() {
                         <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                                 <FiTrendingUp className="w-5 h-5 text-yellow-500" />
-                                Today's Leaderboard
+                                Today&apos;s Leaderboard
                             </h3>
 
                             {leaderboard.length > 0 ? (
@@ -153,9 +153,9 @@ export default function DailyChallengePage() {
                                         >
                                             <div className="flex items-center gap-3">
                                                 <span className={`text-lg font-bold ${index === 0 ? 'text-yellow-500' :
-                                                        index === 1 ? 'text-gray-400' :
-                                                            index === 2 ? 'text-orange-600' :
-                                                                'text-gray-600 dark:text-gray-400'
+                                                    index === 1 ? 'text-gray-400' :
+                                                        index === 2 ? 'text-orange-600' :
+                                                            'text-gray-600 dark:text-gray-400'
                                                     }`}>
                                                     {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
                                                 </span>

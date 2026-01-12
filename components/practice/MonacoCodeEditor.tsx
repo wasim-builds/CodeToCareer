@@ -11,6 +11,8 @@ interface MonacoCodeEditorProps {
     language: string;
     onRun?: () => void;
     fontSize?: number;
+    theme?: string;
+    onEditorReady?: (editor: editor.IStandaloneCodeEditor) => void;
 }
 
 // Map our language names to Monaco's language IDs
@@ -26,7 +28,7 @@ const LANGUAGE_MAP: Record<string, string> = {
     go: 'go',
 };
 
-export function MonacoCodeEditor({ value, onChange, language, onRun, fontSize = 14 }: MonacoCodeEditorProps) {
+export function MonacoCodeEditor({ value, onChange, language, onRun, fontSize = 14, theme = 'vs-dark', onEditorReady }: MonacoCodeEditorProps) {
     const [isEditorReady, setIsEditorReady] = useState(false);
     const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
@@ -34,12 +36,22 @@ export function MonacoCodeEditor({ value, onChange, language, onRun, fontSize = 
         editorRef.current = editor;
         setIsEditorReady(true);
 
+        // Notify parent component that editor is ready
+        if (onEditorReady) {
+            onEditorReady(editor);
+        }
+
         // Add keyboard shortcuts
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
             // Prevent default save behavior
             if (onRun) {
                 onRun();
             }
+        });
+
+        // Add format shortcut (Ctrl/Cmd + Shift + F)
+        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyF, () => {
+            editor.getAction('editor.action.formatDocument')?.run();
         });
 
         // Format on paste
@@ -70,7 +82,7 @@ export function MonacoCodeEditor({ value, onChange, language, onRun, fontSize = 
                 value={value}
                 onChange={handleEditorChange}
                 onMount={handleEditorDidMount}
-                theme="vs-dark"
+                theme={theme}
                 options={{
                     minimap: {
                         enabled: true,

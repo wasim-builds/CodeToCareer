@@ -7,7 +7,7 @@ export default function ContactPage() {
         <div>
           <h2 className="text-2xl font-semibold mb-6">Get in Touch</h2>
           <p className="text-gray-700 mb-6">
-            Have a question or want to place a custom order? We'd love to hear from you!
+            Have a question or want to place a custom order? We&apos;d love to hear from you!
           </p>
 
           <div className="space-y-4">

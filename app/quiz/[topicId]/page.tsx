@@ -11,6 +11,8 @@ import { getTopicIcon } from '@/data/topicIcons';
 import { FiArrowLeft, FiPlay, FiClock, FiTarget, FiAward, FiTrendingUp, FiBook, FiZap } from 'react-icons/fi';
 import QuizModeSelector from '@/components/quiz/QuizModeSelector';
 import { calculateTimeLimit, TimerMode } from '@/lib/timerUtils';
+import { StackOverflowQuestions } from '@/components/stackoverflow/StackOverflowQuestions';
+import { YouTubeVideos } from '@/components/youtube/YouTubeVideos';
 
 export const dynamic = 'force-dynamic';
 
@@ -240,6 +242,16 @@ export default function TopicPage() {
             <FiZap className="w-5 h-5" />
             Quick Practice (10 Qs)
           </button>
+        </div>
+
+        {/* Stack Overflow Community Q&A */}
+        <div className="mt-8 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6">
+          <StackOverflowQuestions topicId={topicId} limit={5} />
+        </div>
+
+        {/* YouTube Tutorial Videos */}
+        <div className="mt-8 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6">
+          <YouTubeVideos topicId={topicId} limit={4} />
         </div>
       </div>
 

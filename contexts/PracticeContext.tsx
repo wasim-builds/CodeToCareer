@@ -6,6 +6,7 @@ import { PracticeAttempt } from '@/types/practice';
 interface PracticeContextType {
   attempts: PracticeAttempt[];
   addAttempt: (attempt: PracticeAttempt) => void;
+  updateAttempt: (problemId: string, timestamp: number, updates: Partial<PracticeAttempt>) => void;
   clearAttempts: () => void;
   getAttemptsForProblem: (problemId: string) => PracticeAttempt[];
 }
@@ -63,10 +64,20 @@ export function PracticeProvider({ children }: { children: ReactNode }) {
     persist([]);
   };
 
+  const updateAttempt = (problemId: string, timestamp: number, updates: Partial<PracticeAttempt>) => {
+    const updated = attempts.map(attempt => {
+      if (attempt.problemId === problemId && attempt.timestamp === timestamp) {
+        return { ...attempt, ...updates };
+      }
+      return attempt;
+    });
+    persist(updated);
+  };
+
   const getAttemptsForProblem = (problemId: string) => attempts.filter((a) => a.problemId === problemId);
 
   return (
-    <PracticeContext.Provider value={{ attempts, addAttempt, clearAttempts, getAttemptsForProblem }}>
+    <PracticeContext.Provider value={{ attempts, addAttempt, updateAttempt, clearAttempts, getAttemptsForProblem }}>
       {children}
     </PracticeContext.Provider>
   );

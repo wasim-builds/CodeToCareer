@@ -1,5 +1,5 @@
 
-import { practiceProblems } from './data/practice/problems';
+import { practiceProblems } from '../../data/practice/problems';
 
 console.log(`Total Problems: ${practiceProblems.length}`);
 

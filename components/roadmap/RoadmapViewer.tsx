@@ -132,7 +132,7 @@ export function RoadmapViewer({ phases }: RoadmapViewerProps) {
                                                     {/* Skills */}
                                                     <div>
                                                         <h5 className="text-sm font-semibold text-gray-300 mb-2 mt-4">
-                                                            Skills You'll Learn
+                                                            Skills You&apos;ll Learn
                                                         </h5>
                                                         <div className="flex flex-wrap gap-2">
                                                             {step.skills.map((skill) => (

@@ -50,7 +50,7 @@ export default function QuizResultsPage() {
             No Results Found
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            You haven't completed any quizzes for {topic.name} yet.
+            You haven&apos;t completed any quizzes for {topic.name} yet.
           </p>
           <Link
             href={`/quiz/${topicId}`}
@@ -159,8 +159,8 @@ export default function QuizResultsPage() {
 
         <div className="mb-4">
           <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${latestResult.difficulty === 'easy' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-              latestResult.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+            latestResult.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+              'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
             }`}>
             {latestResult.difficulty.toUpperCase()}
           </span>

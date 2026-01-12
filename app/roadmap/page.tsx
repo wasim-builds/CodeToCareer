@@ -41,7 +41,7 @@ export default function RoadmapPage() {
                     Your Path to Tech Success
                 </h1>
                 <p className="text-gray-400 max-w-3xl text-lg">
-                    Comprehensive, step-by-step learning paths for various tech careers. From beginner to expert, we've got you covered.
+                    Comprehensive, step-by-step learning paths for various tech careers. From beginner to expert, we&apos;ve got you covered.
                 </p>
             </div>
 

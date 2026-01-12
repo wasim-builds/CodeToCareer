@@ -1,6 +1,7 @@
 "use client";
 
-import { FiZoomIn, FiZoomOut, FiRotateCcw, FiMaximize2, FiMinimize2 } from 'react-icons/fi';
+import { FiZoomIn, FiZoomOut, FiRotateCcw, FiMaximize2, FiMinimize2, FiCopy, FiCheck, FiAlignLeft } from 'react-icons/fi';
+import { useState } from 'react';
 
 interface EditorToolbarProps {
     fontSize: number;
@@ -8,6 +9,8 @@ interface EditorToolbarProps {
     onReset: () => void;
     isFullScreen: boolean;
     onToggleFullScreen: () => void;
+    onFormat?: () => void;
+    onCopy?: () => void;
 }
 
 export function EditorToolbar({
@@ -16,7 +19,18 @@ export function EditorToolbar({
     onReset,
     isFullScreen,
     onToggleFullScreen,
+    onFormat,
+    onCopy,
 }: EditorToolbarProps) {
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = () => {
+        if (onCopy) {
+            onCopy();
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
+    };
     return (
         <div className="flex items-center gap-1 border-l border-gray-700 pl-2 ml-2">
             {/* Font Size Controls */}
@@ -39,6 +53,32 @@ export function EditorToolbar({
                     <FiZoomIn className="w-4 h-4 text-gray-300" />
                 </button>
             </div>
+
+            {/* Format Code Button */}
+            {onFormat && (
+                <button
+                    onClick={onFormat}
+                    className="p-2 hover:bg-gray-700 text-gray-300 rounded transition-colors"
+                    title="Format code (Ctrl+Shift+F)"
+                >
+                    <FiAlignLeft className="w-4 h-4" />
+                </button>
+            )}
+
+            {/* Copy Code Button */}
+            {onCopy && (
+                <button
+                    onClick={handleCopy}
+                    className="p-2 hover:bg-gray-700 text-gray-300 rounded transition-colors relative"
+                    title="Copy code to clipboard"
+                >
+                    {copied ? (
+                        <FiCheck className="w-4 h-4 text-green-400" />
+                    ) : (
+                        <FiCopy className="w-4 h-4" />
+                    )}
+                </button>
+            )}
 
             {/* Reset Code Button */}
             <button

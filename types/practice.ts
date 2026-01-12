@@ -75,4 +75,8 @@ export interface PracticeAttempt {
   passed: boolean;
   timestamp: number; // For consistency with API payload
   createdAt?: string; // Keep for backward compatibility
+  // Submission annotations
+  notes?: string;
+  tags?: string[];
+  isFavorite?: boolean;
 }

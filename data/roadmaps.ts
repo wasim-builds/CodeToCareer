@@ -300,8 +300,8 @@ export const roadmaps: Roadmap[] = [
                         estimatedHours: 80,
                         resources: [
                             { title: 'JavaScript.info', url: 'https://javascript.info/', type: 'documentation' },
-                            { title: 'You Don\\'t Know JS', url: 'https://github.com/getify/You-Dont-Know-JS', type: 'book' }
-            ],
+                            { title: "You Don't Know JS", url: 'https://github.com/getify/You-Dont-Know-JS', type: 'book' }
+                        ],
                         projects: ['Build a todo app', 'Create an API client']
                     }
                 ]

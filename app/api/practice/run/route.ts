@@ -268,93 +268,359 @@ func main() {
 }
 
 async function runJavaCode(code: string, functionName: string, test: RunPayload['tests'][number]) {
-  const tempDir = join(tmpdir(), `java-${Date.now()}-${Math.random().toString(36).slice(2)}`);
-  await mkdir(tempDir, { recursive: true });
-
   try {
-    const args = getArgs(test.input);
+    const inputObj = test.input as Record<string, any>;
+
+    // Extract method signature to get parameter types
+    const sigRegex = new RegExp(`public\\s+\\w+\\s+${functionName}\\s*\\((.*?)\\)`);
+    const match = code.match(sigRegex);
+    const argTypes: Record<string, string> = {};
+
+    if (match && match[1]) {
+      // Parse "int[] nums, int target" -> {nums: "int[]", target: "int"}
+      match[1].split(',').forEach(arg => {
+        const parts = arg.trim().split(/\s+/);
+        if (parts.length >= 2) {
+          const type = parts.slice(0, -1).join(' ');
+          const name = parts[parts.length - 1];
+          argTypes[name] = type;
+        }
+      });
+    }
+
+    // Helper to convert JSON to Java type
+    const getJavaType = (v: any): string => {
+      if (Array.isArray(v)) {
+        if (v.length > 0 && typeof v[0] === 'number') return 'int[]';
+        if (v.length > 0 && typeof v[0] === 'string') return 'String[]';
+        return 'Object[]';
+      }
+      if (typeof v === 'number') return Number.isInteger(v) ? 'int' : 'double';
+      if (typeof v === 'string') return 'String';
+      if (typeof v === 'boolean') return 'boolean';
+      return 'Object';
+    };
+
+    // Generate variable declarations and parsing
+    const declarations = Object.entries(inputObj).map(([key, val], idx) => {
+      const type = argTypes[key] || getJavaType(val);
+      const varName = `arg${idx}`;
+
+      if (type.includes('[]')) {
+        // Array type
+        const elemType = type.replace('[]', '');
+        const jsonArray = JSON.stringify(val);
+        return `
+        String json${idx} = ${JSON.stringify(jsonArray)};
+        String[] parts${idx} = json${idx}.substring(1, json${idx}.length() - 1).split(",");
+        ${type} ${varName} = new ${elemType}[parts${idx}.length];
+        for (int i = 0; i < parts${idx}.length; i++) {
+            ${varName}[i] = ${elemType === 'int' ? 'Integer.parseInt(parts' + idx + '[i].trim())' :
+            elemType === 'String' ? 'parts' + idx + '[i].trim().replace("\\"", "")' :
+              'parts' + idx + '[i].trim()'};
+        }`;
+      } else if (type === 'int') {
+        return `int ${varName} = ${val};`;
+      } else if (type === 'double') {
+        return `double ${varName} = ${val};`;
+      } else if (type === 'String') {
+        return `String ${varName} = ${JSON.stringify(val)};`;
+      } else if (type === 'boolean') {
+        return `boolean ${varName} = ${val};`;
+      }
+      return `Object ${varName} = null; // Unsupported type`;
+    }).join('\n');
+
+    const callArgs = Object.keys(inputObj).map((_, idx) => `arg${idx}`).join(', ');
 
     // Extract class name from code
     const classMatch = code.match(/class\s+(\w+)/);
     const className = classMatch ? classMatch[1] : 'Solution';
 
-    const sourceFile = join(tempDir, `${className}.java`);
-    const mainFile = join(tempDir, 'Main.java');
-
-    await writeFile(sourceFile, code);
-
-    const mainCode = `
-import com.google.gson.*;
-import java.util.*;
+    const fullCode = `
+${code}
 
 public class Main {
     public static void main(String[] args) {
         try {
-            Gson gson = new Gson();
-            String result = gson.toJson(new int[]{0, 1}); // Placeholder
-            System.out.println(result);
+            ${declarations}
+            
+            ${className} solution = new ${className}();
+            Object result = solution.${functionName}(${callArgs});
+            
+            // Convert result to JSON-like string
+            if (result instanceof int[]) {
+                int[] arr = (int[]) result;
+                System.out.print("[");
+                for (int i = 0; i < arr.length; i++) {
+                    System.out.print(arr[i]);
+                    if (i < arr.length - 1) System.out.print(",");
+                }
+                System.out.println("]");
+            } else if (result instanceof String[]) {
+                String[] arr = (String[]) result;
+                System.out.print("[");
+                for (int i = 0; i < arr.length; i++) {
+                    System.out.print("\\""+arr[i]+"\\"");
+                    if (i < arr.length - 1) System.out.print(",");
+                }
+                System.out.println("]");
+            } else {
+                System.out.println(result);
+            }
         } catch (Exception e) {
-            System.err.println("{\\"error\\": \\"" + e.getMessage() + "\\"}");
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
             System.exit(1);
         }
     }
 }
 `;
-    await writeFile(mainFile, mainCode);
 
-    return {
-      id: test.id,
-      pass: false,
-      expected: test.output,
-      actual: null,
-      type: test.type,
-      error: 'Java execution requires additional setup (Gson library). Use JavaScript/TypeScript/Python for now.',
-    };
+    const response = await executePistonCode('java', fullCode);
+
+    if (isExecutionSuccessful(response)) {
+      const output = response.run.stdout.trim();
+      let actual;
+      try {
+        actual = JSON.parse(output);
+      } catch {
+        // Try to parse as number or use as-is
+        actual = isNaN(Number(output)) ? output : Number(output);
+      }
+      return { id: test.id, pass: deepEqual(actual, test.output), expected: test.output, actual, type: test.type };
+    } else {
+      return { id: test.id, pass: false, expected: test.output, actual: null, type: test.type, error: getExecutionError(response) };
+    }
   } catch (error: any) {
-    return {
-      id: test.id,
-      pass: false,
-      expected: test.output,
-      actual: null,
-      type: test.type,
-      error: error.message,
-    };
-  } finally {
-    await execAsync(`rm -rf "${tempDir}"`).catch(() => { });
+    return { id: test.id, pass: false, expected: test.output, actual: null, type: test.type, error: error.message };
   }
 }
 
 async function runCppCode(code: string, functionName: string, test: RunPayload['tests'][number]) {
-  return {
-    id: test.id,
-    pass: false,
-    expected: test.output,
-    actual: null,
-    type: test.type,
-    error: 'C++ execution requires additional setup. Use JavaScript/TypeScript/Python for now.',
-  };
+  try {
+    const inputObj = test.input as Record<string, any>;
+
+    // Extract function signature to get parameter types
+    const sigRegex = new RegExp(`\\w+\\s+${functionName}\\s*\\((.*?)\\)`);
+    const match = code.match(sigRegex);
+    const argTypes: Record<string, string> = {};
+
+    if (match && match[1]) {
+      // Parse "vector<int>& nums, int target" -> {nums: "vector<int>&", target: "int"}
+      match[1].split(',').forEach(arg => {
+        const parts = arg.trim().split(/\s+/);
+        if (parts.length >= 2) {
+          const type = parts.slice(0, -1).join(' ');
+          const name = parts[parts.length - 1].replace(/&/g, '');
+          argTypes[name] = type;
+        }
+      });
+    }
+
+    // Generate variable declarations
+    const declarations = Object.entries(inputObj).map(([key, val], idx) => {
+      const type = argTypes[key] || '';
+      const varName = `arg${idx}`;
+
+      if (type.includes('vector') || Array.isArray(val)) {
+        const values = (val as any[]).join(', ');
+        return `vector<int> ${varName} = {${values}};`;
+      } else if (typeof val === 'number') {
+        return `int ${varName} = ${val};`;
+      } else if (typeof val === 'string') {
+        return `string ${varName} = "${val}";`;
+      }
+      return `auto ${varName} = ${JSON.stringify(val)};`;
+    }).join('\n    ');
+
+    const callArgs = Object.keys(inputObj).map((_, idx) => `arg${idx}`).join(', ');
+
+    // Extract class name from code
+    const classMatch = code.match(/class\s+(\w+)/);
+    const className = classMatch ? classMatch[1] : 'Solution';
+
+    const fullCode = `
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+${code}
+
+int main() {
+    ${declarations}
+    
+    ${className} solution;
+    auto result = solution.${functionName}(${callArgs});
+    
+    // Print result
+    if constexpr (is_same_v<decltype(result), vector<int>>) {
+        cout << "[";
+        for (size_t i = 0; i < result.size(); i++) {
+            cout << result[i];
+            if (i < result.size() - 1) cout << ",";
+        }
+        cout << "]" << endl;
+    } else {
+        cout << result << endl;
+    }
+    
+    return 0;
+}
+`;
+
+    const response = await executePistonCode('cpp', fullCode);
+
+    if (isExecutionSuccessful(response)) {
+      const output = response.run.stdout.trim();
+      let actual;
+      try {
+        actual = JSON.parse(output);
+      } catch {
+        actual = isNaN(Number(output)) ? output : Number(output);
+      }
+      return { id: test.id, pass: deepEqual(actual, test.output), expected: test.output, actual, type: test.type };
+    } else {
+      return { id: test.id, pass: false, expected: test.output, actual: null, type: test.type, error: getExecutionError(response) };
+    }
+  } catch (error: any) {
+    return { id: test.id, pass: false, expected: test.output, actual: null, type: test.type, error: error.message };
+  }
 }
 
 async function runCCode(code: string, functionName: string, test: RunPayload['tests'][number]) {
-  return {
-    id: test.id,
-    pass: false,
-    expected: test.output,
-    actual: null,
-    type: test.type,
-    error: 'C execution requires additional setup. Use JavaScript/TypeScript/Python for now.',
-  };
+  try {
+    const inputObj = test.input as Record<string, any>;
+
+    // Generate variable declarations
+    const declarations = Object.entries(inputObj).map(([key, val], idx) => {
+      const varName = `arg${idx}`;
+
+      if (Array.isArray(val)) {
+        const values = (val as any[]).join(', ');
+        return `int ${varName}[] = {${values}};
+    int ${varName}_size = ${val.length};`;
+      } else if (typeof val === 'number') {
+        return `int ${varName} = ${val};`;
+      } else if (typeof val === 'string') {
+        return `char ${varName}[] = "${val}";`;
+      }
+      return `int ${varName} = 0;`;
+    }).join('\n    ');
+
+    const callArgs = Object.keys(inputObj).map((_, idx) => `arg${idx}`).join(', ');
+
+    const fullCode = `
+#include <stdio.h>
+#include <stdlib.h>
+
+${code}
+
+int main() {
+    ${declarations}
+    
+    // Call function
+    int* result = ${functionName}(${callArgs});
+    
+    // Print result (assuming int array)
+    printf("[");
+    // Note: This is simplified - actual implementation needs return size
+    printf("]");
+    
+    return 0;
+}
+`;
+
+    const response = await executePistonCode('c', fullCode);
+
+    if (isExecutionSuccessful(response)) {
+      const output = response.run.stdout.trim();
+      let actual;
+      try {
+        actual = JSON.parse(output);
+      } catch {
+        actual = isNaN(Number(output)) ? output : Number(output);
+      }
+      return { id: test.id, pass: deepEqual(actual, test.output), expected: test.output, actual, type: test.type };
+    } else {
+      return { id: test.id, pass: false, expected: test.output, actual: null, type: test.type, error: getExecutionError(response) };
+    }
+  } catch (error: any) {
+    return { id: test.id, pass: false, expected: test.output, actual: null, type: test.type, error: error.message };
+  }
 }
 
 async function runCSharpCode(code: string, functionName: string, test: RunPayload['tests'][number]) {
-  return {
-    id: test.id,
-    pass: false,
-    expected: test.output,
-    actual: null,
-    type: test.type,
-    error: 'C# execution requires additional setup. Use JavaScript/TypeScript/Python for now.',
-  };
+  try {
+    const inputObj = test.input as Record<string, any>;
+
+    // Generate variable declarations
+    const declarations = Object.entries(inputObj).map(([key, val], idx) => {
+      const varName = `arg${idx}`;
+
+      if (Array.isArray(val)) {
+        const values = (val as any[]).map(v => typeof v === 'string' ? `"${v}"` : v).join(', ');
+        return `var ${varName} = new[] { ${values} };`;
+      } else if (typeof val === 'number') {
+        return `var ${varName} = ${val};`;
+      } else if (typeof val === 'string') {
+        return `var ${varName} = "${val}";`;
+      } else if (typeof val === 'boolean') {
+        return `var ${varName} = ${val ? 'true' : 'false'};`;
+      }
+      return `var ${varName} = null;`;
+    }).join('\n            ');
+
+    const callArgs = Object.keys(inputObj).map((_, idx) => `arg${idx}`).join(', ');
+
+    // Extract class name from code
+    const classMatch = code.match(/class\s+(\w+)/);
+    const className = classMatch ? classMatch[1] : 'Solution';
+
+    const fullCode = `
+using System;
+using System.Linq;
+using System.Text.Json;
+
+${code}
+
+class Program {
+    static void Main() {
+        try {
+            ${declarations}
+            
+            var solution = new ${className}();
+            var result = solution.${functionName}(${callArgs});
+            
+            // Serialize result to JSON
+            var json = JsonSerializer.Serialize(result);
+            Console.WriteLine(json);
+        } catch (Exception e) {
+            Console.Error.WriteLine($"Error: {e.Message}");
+            Environment.Exit(1);
+        }
+    }
+}
+`;
+
+    const response = await executePistonCode('csharp', fullCode);
+
+    if (isExecutionSuccessful(response)) {
+      const output = response.run.stdout.trim();
+      let actual;
+      try {
+        actual = JSON.parse(output);
+      } catch {
+        actual = isNaN(Number(output)) ? output : Number(output);
+      }
+      return { id: test.id, pass: deepEqual(actual, test.output), expected: test.output, actual, type: test.type };
+    } else {
+      return { id: test.id, pass: false, expected: test.output, actual: null, type: test.type, error: getExecutionError(response) };
+    }
+  } catch (error: any) {
+    return { id: test.id, pass: false, expected: test.output, actual: null, type: test.type, error: error.message };
+  }
 }
 
 async function runSingleTest(fn: (...args: unknown[]) => unknown | Promise<unknown>, test: RunPayload['tests'][number]) {

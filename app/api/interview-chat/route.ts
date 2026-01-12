@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
 
         // Check if Groq is available
         if (!groq) {
-            return useFallbackResponse(message, mode, currentSessionId);
+            return getFallbackResponse(message, mode, currentSessionId);
         }
 
         // Get current difficulty state
@@ -228,7 +228,7 @@ export async function POST(req: NextRequest) {
         console.error('Interview Chat Error:', error);
 
         // Fallback to basic response
-        return useFallbackResponse(
+        return getFallbackResponse(
             (error as any).message || 'Error',
             'dsa',
             `session_${Date.now()}`
@@ -237,7 +237,7 @@ export async function POST(req: NextRequest) {
 }
 
 // Fallback when Groq is unavailable
-function useFallbackResponse(message: string, mode: string, sessionId: string) {
+function getFallbackResponse(message: string, mode: string, sessionId: string) {
     const fallbackQuestions = {
         dsa: [
             'Given an array of integers, find two numbers that add up to a target sum. What approach would you use?',

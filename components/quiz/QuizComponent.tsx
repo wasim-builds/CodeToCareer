@@ -308,7 +308,7 @@ export default function QuizComponent({
             <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <FiAlertCircle className="w-10 h-10 text-red-500" />
             </div>
-            <h2 className="text-3xl font-bold text-white mb-2">Time's Up!</h2>
+            <h2 className="text-3xl font-bold text-white mb-2">Time&apos;s Up!</h2>
             <p className="text-gray-400 mb-6">
               The quiz timer has expired. You can submit your answers now or continue without a timer.
             </p>

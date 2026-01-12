@@ -110,7 +110,7 @@ export function HintsButton({
 
             {currentLevel === 3 && (
                 <p className="text-xs text-gray-500 italic">
-                    💡 You've used all 3 hints. Try implementing the solution!
+                    💡 You&apos;ve used all 3 hints. Try implementing the solution!
                 </p>
             )}
         </div>

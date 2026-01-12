@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getAllRoadmaps, getRoadmapBySlug } from '@/data/roadmaps';
 import { RoadmapViewer } from '@/components/roadmap/RoadmapViewer';
 import { FiArrowLeft, FiClock, FiTrendingUp, FiUsers, FiAward } from 'react-icons/fi';
+import { YouTubeVideos } from '@/components/youtube/YouTubeVideos';
 
 interface RoadmapDetailPageProps {
     params: {
@@ -132,6 +133,17 @@ export default function RoadmapDetailPage({ params }: RoadmapDetailPageProps) {
                 </div>
 
                 <RoadmapViewer phases={roadmap.phases} />
+
+                {/* Recommended Learning Videos */}
+                <div className="mt-12">
+                    <div className="mb-6">
+                        <h2 className="text-2xl font-bold text-white mb-2">Recommended Learning Videos</h2>
+                        <p className="text-gray-400">
+                            Curated video tutorials to help you master this career path.
+                        </p>
+                    </div>
+                    <YouTubeVideos topicId={roadmap.slug} limit={6} />
+                </div>
             </div>
         </div>
     );

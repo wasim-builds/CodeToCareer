@@ -4,9 +4,11 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { topics } from '@/data/quiz/topics';
 import { practiceProblems } from '@/data/practice/problems';
+import { getAllRoadmaps } from '@/data/roadmaps';
+import { RoadmapCard } from '@/components/roadmap/RoadmapCard';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuiz } from '@/contexts/QuizContext';
-import { FiSearch, FiPlay, FiBook, FiAward, FiTrendingUp, FiZap, FiTarget, FiMessageCircle } from 'react-icons/fi';
+import { FiSearch, FiPlay, FiBook, FiAward, FiTrendingUp, FiZap, FiTarget, FiMessageCircle, FiMap } from 'react-icons/fi';
 import { topicIcons } from '@/data/topicIcons';
 
 export default function Home() {
@@ -192,7 +194,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <p className="text-gray-400">No topics found matching "{searchQuery}"</p>
+              <p className="text-gray-400">No topics found matching &quot;{searchQuery}&quot;</p>
             </div>
           )}
 
@@ -353,6 +355,33 @@ export default function Home() {
                 Solve Now
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Career Roadmaps Section */}
+      <section className="py-16 bg-gray-800/50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                <FiMap className="w-7 h-7 text-green-400" />
+                🗺️ Career Roadmaps
+              </h2>
+              <p className="text-gray-400">Step-by-step learning paths for various tech careers</p>
+            </div>
+            <Link
+              href="/roadmap"
+              className="text-green-500 hover:text-green-400 font-medium flex items-center gap-1"
+            >
+              View All Roadmaps →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {getAllRoadmaps().slice(0, 4).map((roadmap) => (
+              <RoadmapCard key={roadmap.id} roadmap={roadmap} />
+            ))}
           </div>
         </div>
       </section>

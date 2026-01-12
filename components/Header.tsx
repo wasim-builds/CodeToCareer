@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { FiUser, FiLogIn, FiBookmark } from 'react-icons/fi'
+import { useState } from 'react'
+import { FiUser, FiLogIn, FiBookmark, FiMenu, FiX, FiMap } from 'react-icons/fi'
 import { useAuth } from '@/contexts/AuthContext'
 import { useBookmark } from '@/contexts/BookmarkContext'
 import ThemeToggle from './ThemeToggle'
@@ -10,6 +11,9 @@ export default function Header() {
   const { user, isLoading } = useAuth()
   const { getBookmarkCount } = useBookmark()
   const bookmarkCount = getBookmarkCount()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const closeMobileMenu = () => setMobileMenuOpen(false)
 
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-sm transition-colors duration-300">
@@ -19,7 +23,30 @@ export default function Header() {
             CodeToCareer
           </Link>
 
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-6">
+            <Link
+              href="/roadmap"
+              className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 font-medium transition-colors"
+            >
+              Career Roadmaps
+            </Link>
+          </nav>
+
           <div className="flex items-center gap-4">
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
+              aria-label="Toggle mobile menu"
+            >
+              {mobileMenuOpen ? (
+                <FiX className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+              ) : (
+                <FiMenu className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+              )}
+            </button>
+
             <ThemeToggle />
 
             {/* Bookmarks Link */}
@@ -59,7 +86,7 @@ export default function Header() {
                 {user ? (
                   <Link
                     href="/profile"
-                    className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    className="hidden sm:flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     <FiUser className="w-4 h-4" />
                     <span className="hidden sm:inline">{user.name}</span>
@@ -67,7 +94,7 @@ export default function Header() {
                 ) : (
                   <Link
                     href="/login"
-                    className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    className="hidden sm:flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     <FiLogIn className="w-4 h-4" />
                     <span>Sign In</span>
@@ -77,6 +104,44 @@ export default function Header() {
             )}
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-4 space-y-3">
+            <Link
+              href="/roadmap"
+              onClick={closeMobileMenu}
+              className="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            >
+              <FiMap className="w-5 h-5 text-green-600 dark:text-green-400" />
+              <span className="font-medium text-gray-700 dark:text-gray-300">Career Roadmaps</span>
+            </Link>
+
+            {!isLoading && (
+              <>
+                {user ? (
+                  <Link
+                    href="/profile"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors"
+                  >
+                    <FiUser className="w-5 h-5" />
+                    <span className="font-medium">{user.name}</span>
+                  </Link>
+                ) : (
+                  <Link
+                    href="/login"
+                    onClick={closeMobileMenu}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors"
+                  >
+                    <FiLogIn className="w-5 h-5" />
+                    <span className="font-medium">Sign In</span>
+                  </Link>
+                )}
+              </>
+            )}
+          </div>
+        )}
       </div>
     </header>
   )

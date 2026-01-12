@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
         // Check if Groq is available
         if (!groq) {
-            return useFallbackHint(hintLevel);
+            return getFallbackHint(hintLevel);
         }
 
         const hintLevelDescriptions = {
@@ -81,12 +81,12 @@ Guidelines:
 
     } catch (error: any) {
         console.error('Hints API Error:', error);
-        return useFallbackHint(1);
+        return getFallbackHint(1);
     }
 }
 
 // Fallback hints when Groq is unavailable
-function useFallbackHint(level: number) {
+function getFallbackHint(level: number) {
     const fallbackHints = {
         1: [
             "Think about what data structure would be most efficient for this problem.",

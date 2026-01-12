@@ -35,7 +35,7 @@ export default function LoginPage() {
     }
 
     const success = await login(formData.email, formData.password)
-    
+
     if (success) {
       router.push('/profile')
     } else {
@@ -155,7 +155,7 @@ export default function LoginPage() {
 
           <div className="text-center">
             <p className="text-sm text-gray-400">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <Link href="/register" className="font-medium text-green-500 hover:text-green-400">
                 Sign up
               </Link>

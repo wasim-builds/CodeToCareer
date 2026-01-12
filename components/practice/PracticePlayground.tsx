@@ -9,6 +9,7 @@ import { MonacoCodeEditor } from './MonacoCodeEditor';
 import { TestResultsPanel } from './TestResultsPanel';
 import { SuccessConfetti } from './SuccessConfetti';
 import { SolutionViewer } from './SolutionViewer';
+import { YouTubeVideos } from '@/components/youtube/YouTubeVideos';
 
 interface RunResult {
   id: string;
@@ -430,6 +431,20 @@ func main() {
                       </details>
                     </div>
                   )}
+
+                  {/* Video Tutorials */}
+                  {problem.topics && problem.topics.length > 0 && (
+                    <div>
+                      <details className="group">
+                        <summary className="cursor-pointer font-semibold text-white hover:text-red-400 flex items-center gap-2">
+                          🎥 Video Tutorials
+                        </summary>
+                        <div className="mt-4">
+                          <YouTubeVideos topicId={problem.topics[0]} limit={2} />
+                        </div>
+                      </details>
+                    </div>
+                  )}
                 </div>
               ) : activeTab === 'submissions' ? (
                 <div className="space-y-3">
@@ -481,7 +496,7 @@ func main() {
                       <div className="text-6xl mb-4">🔒</div>
                       <h3 className="text-xl font-semibold text-white mb-2">Solution Not Available</h3>
                       <p className="text-gray-400 max-w-md">
-                        This problem doesn't have a detailed solution yet. Try solving it yourself or check back later!
+                        This problem doesn&apos;t have a detailed solution yet. Try solving it yourself or check back later!
                       </p>
                     </div>
                   )}

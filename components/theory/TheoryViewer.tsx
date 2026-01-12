@@ -21,6 +21,7 @@ import { CodeBlock } from './CodeBlock';
 import { Callout } from './Callout';
 import AITutor from './AITutor';
 import { TheorySidebar } from './TheorySidebar';
+import { YouTubeVideos } from '@/components/youtube/YouTubeVideos';
 
 interface TheoryViewerProps {
   theory: TheoryTopic;
@@ -392,7 +393,7 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
                   Ready to test your knowledge?
                 </h3>
                 <p className="text-gray-400 text-sm">
-                  Take a quiz on {theory.topicName} to practice what you've learned and earn XP!
+                  Take a quiz on {theory.topicName} to practice what you&apos;ve learned and earn XP!
                 </p>
               </div>
               <Link
@@ -413,10 +414,15 @@ export default function TheoryViewer({ theory }: TheoryViewerProps) {
                 Congratulations!
               </h3>
               <p className="text-gray-400">
-                You've completed all sections of {theory.topicName}. Now test your knowledge with a quiz!
+                You&apos;ve completed all sections of {theory.topicName}. Now test your knowledge with a quiz!
               </p>
             </div>
           )}
+
+          {/* YouTube Video Tutorials */}
+          <div className="mt-10">
+            <YouTubeVideos topicId={theory.topicId} limit={4} />
+          </div>
         </div>
       </div>
 

@@ -107,7 +107,7 @@ export default function DatabasePracticePage() {
                 <div className="mt-12 text-center bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl p-8 text-white">
                     <h2 className="text-2xl font-bold mb-2">More Problems Coming Soon!</h2>
                     <p className="opacity-90">
-                        We're adding JOINs, GROUP BY, subqueries, and advanced SQL topics
+                        We&apos;re adding JOINs, GROUP BY, subqueries, and advanced SQL topics
                     </p>
                 </div>
             </div>
