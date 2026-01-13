@@ -53,13 +53,14 @@ export async function executePistonCode(
     language: string,
     code: string,
     stdin?: string,
-    version: string = '*'
+    version: string = '*',
+    filename?: string
 ): Promise<PistonExecuteResponse> {
     try {
         const request: PistonExecuteRequest = {
             language,
             version,
-            files: [{ content: code }],
+            files: [{ name: filename, content: code }],
             stdin,
             compile_timeout: 10000, // 10 seconds
             run_timeout: 3000, // 3 seconds

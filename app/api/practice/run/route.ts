@@ -307,18 +307,15 @@ async function runJavaCode(code: string, functionName: string, test: RunPayload[
       const varName = `arg${idx}`;
 
       if (type.includes('[]')) {
-        // Array type
+        // Array type - use direct initialization
         const elemType = type.replace('[]', '');
-        const jsonArray = JSON.stringify(val);
-        return `
-        String json${idx} = ${JSON.stringify(jsonArray)};
-        String[] parts${idx} = json${idx}.substring(1, json${idx}.length() - 1).split(",");
-        ${type} ${varName} = new ${elemType}[parts${idx}.length];
-        for (int i = 0; i < parts${idx}.length; i++) {
-            ${varName}[i] = ${elemType === 'int' ? 'Integer.parseInt(parts' + idx + '[i].trim())' :
-            elemType === 'String' ? 'parts' + idx + '[i].trim().replace("\\"", "")' :
-              'parts' + idx + '[i].trim()'};
-        }`;
+        if (elemType === 'int') {
+          const values = (val as any[]).join(', ');
+          return `${type} ${varName} = new ${elemType}[]{${values}};`;
+        } else if (elemType === 'String') {
+          const values = (val as any[]).map(v => `"${v}"`).join(', ');
+          return `${type} ${varName} = new ${elemType}[]{${values}};`;
+        }
       } else if (type === 'int') {
         return `int ${varName} = ${val};`;
       } else if (type === 'double') {
@@ -329,7 +326,7 @@ async function runJavaCode(code: string, functionName: string, test: RunPayload[
         return `boolean ${varName} = ${val};`;
       }
       return `Object ${varName} = null; // Unsupported type`;
-    }).join('\n');
+    }).join('\n            ');
 
     const callArgs = Object.keys(inputObj).map((_, idx) => `arg${idx}`).join(', ');
 
@@ -337,15 +334,26 @@ async function runJavaCode(code: string, functionName: string, test: RunPayload[
     const classMatch = code.match(/class\s+(\w+)/);
     const className = classMatch ? classMatch[1] : 'Solution';
 
-    const fullCode = `
-${code}
+    // Extract imports from user code
+    const importMatches = code.match(/import\s+[\w.*]+;/g) || [];
+    const imports = importMatches.join('\n');
 
-public class Main {
+    // Remove imports and class declaration from user code
+    let codeWithoutImports = code.replace(/import\s+[\w.*]+;/g, '');
+    const codeWithoutClass = codeWithoutImports.replace(/class\s+\w+\s*\{/, '').replace(/\}\s*$/, '').trim();
+
+    const fullCode = `
+import java.util.*;
+${imports}
+
+public class Solution {
+    ${codeWithoutClass}
+    
     public static void main(String[] args) {
         try {
             ${declarations}
             
-            ${className} solution = new ${className}();
+            Solution solution = new Solution();
             Object result = solution.${functionName}(${callArgs});
             
             // Convert result to JSON-like string
@@ -377,7 +385,7 @@ public class Main {
 }
 `;
 
-    const response = await executePistonCode('java', fullCode);
+    const response = await executePistonCode('java', fullCode, undefined, '*', 'Solution.java');
 
     if (isExecutionSuccessful(response)) {
       const output = response.run.stdout.trim();
@@ -454,17 +462,13 @@ int main() {
     ${className} solution;
     auto result = solution.${functionName}(${callArgs});
     
-    // Print result
-    if constexpr (is_same_v<decltype(result), vector<int>>) {
-        cout << "[";
-        for (size_t i = 0; i < result.size(); i++) {
-            cout << result[i];
-            if (i < result.size() - 1) cout << ",";
-        }
-        cout << "]" << endl;
-    } else {
-        cout << result << endl;
+    // Print result (always assume vector<int> for simplicity)
+    cout << "[";
+    for (size_t i = 0; i < result.size(); i++) {
+        cout << result[i];
+        if (i < result.size() - 1) cout << ",";
     }
+    cout << "]" << endl;
     
     return 0;
 }
@@ -555,19 +559,27 @@ async function runCSharpCode(code: string, functionName: string, test: RunPayloa
   try {
     const inputObj = test.input as Record<string, any>;
 
-    // Generate variable declarations
+    // Generate variable declarations with explicit types
     const declarations = Object.entries(inputObj).map(([key, val], idx) => {
       const varName = `arg${idx}`;
 
       if (Array.isArray(val)) {
-        const values = (val as any[]).map(v => typeof v === 'string' ? `"${v}"` : v).join(', ');
-        return `var ${varName} = new[] { ${values} };`;
+        // Determine array type from first element
+        if (val.length > 0 && typeof val[0] === 'number') {
+          const values = val.join(', ');
+          return `int[] ${varName} = new int[] { ${values} };`;
+        } else if (val.length > 0 && typeof val[0] === 'string') {
+          const values = val.map(v => `"${v}"`).join(', ');
+          return `string[] ${varName} = new string[] { ${values} };`;
+        } else {
+          return `var ${varName} = new object[] { };`;
+        }
       } else if (typeof val === 'number') {
-        return `var ${varName} = ${val};`;
+        return `int ${varName} = ${val};`;
       } else if (typeof val === 'string') {
-        return `var ${varName} = "${val}";`;
+        return `string ${varName} = "${val}";`;
       } else if (typeof val === 'boolean') {
-        return `var ${varName} = ${val ? 'true' : 'false'};`;
+        return `bool ${varName} = ${val ? 'true' : 'false'};`;
       }
       return `var ${varName} = null;`;
     }).join('\n            ');
@@ -581,7 +593,6 @@ async function runCSharpCode(code: string, functionName: string, test: RunPayloa
     const fullCode = `
 using System;
 using System.Linq;
-using System.Text.Json;
 
 ${code}
 
@@ -591,11 +602,32 @@ class Program {
             ${declarations}
             
             var solution = new ${className}();
-            var result = solution.${functionName}(${callArgs});
+            object result = solution.${functionName}(${callArgs});
             
-            // Serialize result to JSON
-            var json = JsonSerializer.Serialize(result);
-            Console.WriteLine(json);
+            // Manual JSON serialization - use 'as' operator with object type
+            var intArray = result as int[];
+            if (intArray != null) {
+                Console.Write("[");
+                for (int i = 0; i < intArray.Length; i++) {
+                    Console.Write(intArray[i]);
+                    if (i < intArray.Length - 1) Console.Write(",");
+                }
+                Console.WriteLine("]");
+                return;
+            }
+            
+            var stringArray = result as string[];
+            if (stringArray != null) {
+                Console.Write("[");
+                for (int i = 0; i < stringArray.Length; i++) {
+                    Console.Write($"\\"{stringArray[i]}\\"");
+                    if (i < stringArray.Length - 1) Console.Write(",");
+                }
+                Console.WriteLine("]");
+                return;
+            }
+            
+            Console.WriteLine(result);
         } catch (Exception e) {
             Console.Error.WriteLine($"Error: {e.Message}");
             Environment.Exit(1);
@@ -712,8 +744,20 @@ export async function POST(req: NextRequest) {
         const res = await runGoCode(code, functionName, test);
         results.push(res);
       }
+    } else if (language === 'typescript') {
+      // TypeScript - strip type annotations and run as JavaScript
+      const jsCode = code
+        .replace(/:\s*\w+\[\]/g, '') // Remove array type annotations
+        .replace(/:\s*\w+/g, '') // Remove simple type annotations
+        .replace(/\<[^>]+\>/g, '') // Remove generic types
+        .replace(/!/g, ''); // Remove non-null assertions
+      const fn = buildFunction(jsCode);
+      for (const test of tests) {
+        const res = await runSingleTest(fn, test);
+        results.push(res);
+      }
     } else {
-      // JavaScript/TypeScript - use VM
+      // JavaScript - use VM
       const fn = buildFunction(code);
       for (const test of tests) {
         const res = await runSingleTest(fn, test);

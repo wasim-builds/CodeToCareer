@@ -12,6 +12,11 @@ import { GamificationProvider } from '@/contexts/GamificationContext'
 import { PracticeProvider } from '@/contexts/PracticeContext'
 import { BookmarkProvider } from '@/contexts/BookmarkContext'
 import GlobalKeyboardShortcuts from '@/components/GlobalKeyboardShortcuts'
+import PWAInstallPrompt from '@/components/PWAInstallPrompt'
+import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
+import SkipNavigation from '@/components/SkipNavigation'
+import MobileNavigation from '@/components/MobileNavigation'
+import { ContestProvider } from '@/contexts/ContestContext'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -21,6 +26,22 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "CodeToCareer - Master Technical Skills for Your Dream Job",
   description: 'Your journey from code to career. Master 35+ technical topics with 5000+ interview questions. Learn theory, take quizzes, and land your dream tech job.',
+  manifest: '/manifest.json',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#3B82F6' },
+    { media: '(prefers-color-scheme: dark)', color: '#1E40AF' }
+  ],
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'CodeToCareer'
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  }
 }
 
 export default function RootLayout({
@@ -39,12 +60,18 @@ export default function RootLayout({
                   <QuizProvider>
                     <BookmarkProvider>
                       <PracticeProvider>
-                        <GlobalKeyboardShortcuts />
-                        <Header />
-                        <main className="min-h-screen">
-                          {children}
-                        </main>
-                        <Footer />
+                        <ContestProvider>
+                          <SkipNavigation />
+                          <GlobalKeyboardShortcuts />
+                          <ServiceWorkerRegistration />
+                          <PWAInstallPrompt />
+                          <Header />
+                          <main id="main-content" className="min-h-screen pb-20 md:pb-0" role="main">
+                            {children}
+                          </main>
+                          <Footer />
+                          <MobileNavigation />
+                        </ContestProvider>
                       </PracticeProvider>
                     </BookmarkProvider>
                   </QuizProvider>

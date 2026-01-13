@@ -10,6 +10,7 @@ import { TestResultsPanel } from './TestResultsPanel';
 import { SuccessConfetti } from './SuccessConfetti';
 import { SolutionViewer } from './SolutionViewer';
 import { YouTubeVideos } from '@/components/youtube/YouTubeVideos';
+import { AICodeReview } from './AICodeReview';
 
 interface RunResult {
   id: string;
@@ -69,7 +70,7 @@ export function PracticePlayground({ problem }: PracticePlaygroundProps) {
   });
   const [results, setResults] = useState<RunResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
-  const [activeTab, setActiveTab] = useState<'description' | 'submissions' | 'solution'>('description');
+  const [activeTab, setActiveTab] = useState<'description' | 'submissions' | 'solution' | 'review'>('description');
   const [solutionUnlocked, setSolutionUnlocked] = useState(false);
   const [showTestCase, setShowTestCase] = useState(true);
   const [fontSize, setFontSize] = useState(14);
@@ -302,7 +303,7 @@ func main() {
             <div className="flex items-center gap-2 p-1.5 mx-4 mt-4 mb-2 bg-gray-800/50 rounded-xl border border-gray-800">
               <button
                 onClick={() => setActiveTab('description')}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${activeTab === 'description'
+                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${activeTab === 'description'
                   ? 'bg-gray-700 text-white shadow-sm ring-1 ring-inset ring-gray-600'
                   : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
                   }`}
@@ -311,7 +312,7 @@ func main() {
               </button>
               <button
                 onClick={() => setActiveTab('submissions')}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${activeTab === 'submissions'
+                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${activeTab === 'submissions'
                   ? 'bg-gray-700 text-white shadow-sm ring-1 ring-inset ring-gray-600'
                   : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
                   }`}
@@ -319,8 +320,18 @@ func main() {
                 Submissions
               </button>
               <button
+                onClick={() => setActiveTab('review')}
+                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${activeTab === 'review'
+                  ? 'bg-gray-700 text-white shadow-sm ring-1 ring-inset ring-gray-600'
+                  : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
+                  }`}
+              >
+                <span>AI Review</span>
+                <span className="text-xs">✨</span>
+              </button>
+              <button
                 onClick={() => setActiveTab('solution')}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${activeTab === 'solution'
+                className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${activeTab === 'solution'
                   ? 'bg-gray-700 text-white shadow-sm ring-1 ring-inset ring-gray-600'
                   : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
                   }`}
@@ -486,6 +497,15 @@ func main() {
                       ))}
                     </div>
                   )}
+                </div>
+              ) : activeTab === 'review' ? (
+                <div className="h-full overflow-y-auto">
+                  <AICodeReview
+                    code={code}
+                    language={selectedLanguage}
+                    problemId={problem.id}
+                    problemContext={problem.prompt}
+                  />
                 </div>
               ) : (
                 <div className="h-full">
